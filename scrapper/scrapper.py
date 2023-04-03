@@ -40,35 +40,19 @@ def on_message(client: mqtt.Client, userdata, msg: str):
             base64_payload = json_frame['uplink_message']['frm_payload']
             str_payload = base64.b64decode(base64_payload)
             int_payload = int.from_bytes(str_payload, 'big')
-            
-            print("Payload (debug) :" + str(int_payload))
 
-            current_timestamp = time()
-            delay_array = []
-            
-            # Extract the delays
-            while int_payload != 0:
-                temp = int_payload & 0xFFFFFFFF
-                int_payload = int_payload >> 32
+            int_value = ((int_payload >> 0) & 0xFF) << 24
+            int_value += ((int_payload >> 8) & 0xFF) << 16
+            int_value += ((int_payload >> 16) & 0xFF) << 8
+            int_value += ((int_payload >> 24) & 0xFF) << 0
 
-                int_value = ((temp >> 0) & 0xFF) << 24
-                int_value += ((temp >> 8) & 0xFF) << 16
-                int_value += ((temp >> 16) & 0xFF) << 8
-                int_value += ((temp >> 24) & 0xFF) << 0
-                delay_array.append(int_value)
+            print("Payload (extracted) :" + str(int_value))
 
-                time_struct = gmtime(current_timestamp - int_value/1000)
-                time_str = strftime('%Y-%m-%d %H:%M', time_struct)
-                add_sensor_data(sensor_name=device_id, time=time_str, value=1.0) # time must have the following format: '%Y-%m-%d %H:%M'
-
-
-            print("Payload (extracted) :" + str(delay_array))
-
+            time_str = strftime('%Y-%m-%d %H:%M', gmtime())
+            #add_sensor_data(sensor_name=device_id, time=time_str, value=int_value) # time must have the following format: '%Y-%m-%d %H:%M'
             return
 
-    print("Payload (debug) : None")
-    print(json_frame.get('uplink_message'))
-    print(json_frame['uplink_message'].get('frm_payload'))
+    print("Unknown payload")
     
     print(json.dumps(json_frame, indent=2))
 
