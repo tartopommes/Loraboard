@@ -14,3 +14,9 @@ To install and run venv please do as follow:
 
 5. python -m pip install --upgrade pip
 6. pip install -r requirements.txt
+
+# How to start scrapper :
+1. Make sure requierements are installed
+2. Make sure "super_secret.py" settings are correct
+3. Run scrapper
+ $ python scrapper.py 
