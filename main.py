@@ -30,23 +30,23 @@ def mqtt_thread(mqttc):
 
 if __name__ == "__main__":
 
-    '''connection = database.connect(USERS_DB)
+    connection = database.connect(USERS_DB)
     try:
-        # init_database(connection)
+        #init_database(connection)
         read_tables(connection)
     except Exception as error:
         print("[ERROR] : SQL connection failed:", error)
     finally:
         connection.close()
-'''
+
     
 
     # create a new thread and pass the mqttc object as an argument
-    # thread = Thread(target=mqtt_thread, args=(mqttc,))
-    # # start the thread
-    # thread.start()
+    thread = Thread(target=mqtt_thread, args=(mqttc,))
+    # start the thread
+    thread.start()
 
-    mqtt_thread(mqttc)
+    # mqtt_thread(mqttc)
 
     # Run website
-    # app.run(debug=True)
+    app.run(debug=True)

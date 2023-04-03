@@ -19,7 +19,7 @@ def get_random_value(sensor_id, start_time = None, end_time = None) -> List[Tupl
     data = []
     current_time = start_time
     while current_time <= end_time:
-        time_str = current_time.strftime('%Y-%m-%d %H:%M')
+        time_str = current_time.strftime('%Y-%m-%d %H::%S')
         value = round(random.uniform(0.0, 15.0), 1)
         data.append((sensor_id, time_str, value))
         current_time += time_step
@@ -62,7 +62,7 @@ def get_sensor_data(connection: database.Connection, sensor_name: str) -> List[T
     result = read(connection, request)
 
     # Convert the data to a pandas DataFrame
-    time_list = [datetime.strptime(t[0], '%Y-%m-%d %H:%M') for t in result]
+    time_list = [datetime.strptime(t[0], '%Y-%m-%d %H:%M:%S') for t in result]
     value_list = [float(t[1]) for t in result]
 
     df = pd.DataFrame({'Time': time_list, 'Value': value_list})

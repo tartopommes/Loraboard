@@ -8,6 +8,7 @@ from database.mail import get_all_emails, send_email
 from database.addUser import hash_password, verify_password, verify_username, get_username, add_user
 from database.deleteUser import get_user_id, delete_user
 from database.sensor import get_sensor_data, simulate_received_date as simulate_data
+from scrapper.super_secret import device_ID
 
 current_user = {
     'is_authenticated': False,
@@ -45,7 +46,7 @@ def index():
 
         # Get the sensor data from the database
         connection = database.connect(USERS_DB)
-        plot['dataframe'] = get_sensor_data(connection, 'test_sensor')
+        plot['dataframe'] = get_sensor_data(connection, device_ID)
 
         # Create a Plotly line plot, set the labels, and add a horizontal line at the alert limit
         plot['fig'] = go.Figure(data=go.Scatter(x=plot['dataframe']['Time'], y=plot['dataframe']['Value'], mode='lines'))

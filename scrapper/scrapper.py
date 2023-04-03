@@ -3,7 +3,7 @@ import paho.mqtt.client as mqtt
 import json
 import base64
 from database.sensor import add_sensor_data
-from time import time, gmtime, strftime
+from time import gmtime, strftime
 
 
 def on_connect(client: mqtt.Client, userdata, flags, rc: int):
@@ -48,8 +48,8 @@ def on_message(client: mqtt.Client, userdata, msg: str):
 
             print("Payload (extracted) :" + str(int_value))
 
-            time_str = strftime('%Y-%m-%d %H:%M', gmtime())
-            #add_sensor_data(sensor_name=device_id, time=time_str, value=int_value) # time must have the following format: '%Y-%m-%d %H:%M'
+            time_str = strftime('%Y-%m-%d %H:%M:%S', gmtime())
+            add_sensor_data(sensor_name=device_id, time=time_str, value=int_value) # time must have the following format: '%Y-%m-%d %H:%M'
             return
 
     print("Unknown payload")
@@ -88,3 +88,6 @@ if __name__ == "__main__":
 
         # loop wait for data
         mqttc.loop()
+else:
+    print("test")
+    pass
