@@ -9,8 +9,8 @@ To install and run venv please do as follow:
 1. python -m pip install --upgrade pip
 2. python -m pip install --user virtualenv
 3. python -m venv venv
-4. UNIX - source env/bin/activate
-     WIN  - .\env\Scripts\activate 
+4. UNIX - source venv/bin/activate
+     WIN  - .\venv\Scripts\activate 
 
 5. python -m pip install --upgrade pip
 6. pip install -r requirements.txt
