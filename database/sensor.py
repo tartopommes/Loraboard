@@ -104,5 +104,5 @@ def simulate_received_date(connection: database.Connection):
 
     # Add the data to the database
     add_sensor_data(sensor_name,
-                    new_time.strftime('%Y-%m-%d %H:%M'), 
+                    new_time.strftime('%Y-%m-%d %H:%M:%S'), 
                     round(random.uniform(0.0, 15.0), 1))
