@@ -4,6 +4,7 @@ from database.printDatabase import read_tables
 from database.sensor import get_sensor_id, get_random_value
 # from sys import argv
 from traceback import print_exc
+from scrapper.super_secret import device_ID
 
 
 
@@ -55,20 +56,18 @@ def create_tables(connection):
 def fill_user(connection):
     """Fill the users table with some data."""
 
+    # Add some users into users table
     request = f'INSERT INTO {USERS_TABLE} (email, username, password_hash) values(?, ?, ?)'
     data = [
-        # ('alices@mail.com', 'Alice', sha256('Merveille'.encode()).hexdigest()),
-        # ('bob@mail.com',    'Bob',   sha256('Chapeau'.encode()).hexdigest()),
-        # ('chris@mail.com',  'Chris', sha256('Tof'.encode()).hexdigest()),
         ('alexis.vandemoortele.av@gmail.com', 'a', sha256('a'.encode()).hexdigest()) ]
     write(connection, (request, data), many=True)
 
+    # Add some sensors into sensors table
     request = f'INSERT INTO {SENSORS_TABLE} (name, alert_value) values(?, ?)'
-    data = [
-        ('test_sensor', '14.9') ]
+    data = [ ('test_sensor', '14.7'), (device_ID, '5.0') ]
     write(connection, (request, data), many=True)
 
-
+    # Add some data into data table
     request = f'INSERT INTO {DATA_TABLE} (sensor_id, time, value) values(?, ?, ?)'
     sensor_id = get_sensor_id(connection, 'test_sensor')
     data = get_random_value(sensor_id)
@@ -78,26 +77,20 @@ def fill_user(connection):
 
 def init_database(connection):
     """Initialise the database."""
-
     connection = database.connect(USERS_DB)
-
     try:
         create_tables(connection)
         fill_user(connection)
-
     except Exception as error:
         print_exc()
         print("[ERROR] : SQL connection failed, the database couldn't be initialised:", error)
-
     finally:
         connection.close()
-
-    return
 
 
 
 def main():
-
+    """Main function."""
     connection = database.connect(USERS_TABLE) # create if doesn't exist
 
     try:

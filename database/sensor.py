@@ -81,15 +81,12 @@ def add_sensor_data(sensor_name: int, time: str, value: float):
     connection = database.Connection(USERS_DB)
 
     query = f'INSERT INTO {DATA_TABLE} (sensor_id, time, value) VALUES (?, ?, ?)'
-
     sensor_id = get_sensor_id(connection, sensor_name)
-
     data = (sensor_id, time, value) # Add the sensor ID to the data (time, value)
 
     write(connection, (query, data))
 
     connection.close()
-
     print("[INFO] : The data of the sensor", sensor_id, "has been added to the database.")
 
 
@@ -106,6 +103,6 @@ def simulate_received_date(connection: database.Connection):
     new_time = last_time + timedelta(minutes=5)
 
     # Add the data to the database
-    add_sensor_data(sensor_name, 
+    add_sensor_data(sensor_name,
                     new_time.strftime('%Y-%m-%d %H:%M'), 
                     round(random.uniform(0.0, 15.0), 1))

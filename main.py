@@ -4,6 +4,9 @@ from database.mail import get_all_emails, send_email, get_creds
 from database.addUser import add_user
 from database.deleteUser import delete_user
 from server.website import app
+from scrapper.scrapper import mqttc, public_address_url, public_address_port
+from threading import Thread
+
 
 
 # 🚧                                                                                     🚧
@@ -12,21 +15,38 @@ from server.website import app
 # 🚧                                                                                     🚧
 
 
+def mqtt_thread(mqttc):
+    # connect to the MQTT broker
+    mqttc.connect(
+        public_address_url, 
+        port=public_address_port, 
+        keepalive=60, 
+        bind_address="")
+
+    # loop wait for data
+    while True:
+        mqttc.loop()
+
+
 if __name__ == "__main__":
 
     connection = database.connect(USERS_DB)
-
     try:
-        init_database(connection)
-        # add_user(connection, 'comando117000@gmail.com', "comando117000", "supermdp")
-        # delete_user(connection, 1)
+        # init_database(connection)
         read_tables(connection)
-
     except Exception as error:
         print("[ERROR] : SQL connection failed:", error)
-
     finally:
         connection.close()
+
+    
+
+    # create a new thread and pass the mqttc object as an argument
+    # thread = Thread(target=mqtt_thread, args=(mqttc,))
+    # # start the thread
+    # thread.start()
+
+    # mqtt_thread(mqttc)
 
     # Run website
     app.run(debug=True)
