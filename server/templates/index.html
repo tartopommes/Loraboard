@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container my-5">
+		<div class="row justify-content-center">
+			<div class="col-md-8 text-center">
+				{% if current_user.delete_success %}
+				<div class="alert alert-success" role="alert">
+					Account successful deleted
+				</div>
+				{% endif %}
+
+				<img src="{{ url_for('static', filename='mkr.png') }}" class="img-fluid">
+				
+				<br>
+                {% if current_user.is_authenticated %}
+				<!-- PLOT -->
+				<div class="card my-5">
+					<div class="card-body">
+						<div id="plot-div">
+							{{ plot.html|safe }}
+						</div>
+					</div>
+					<!-- CHANGE LIMIT -->
+					<div class="row justify-content-center my-3">
+						<div class="col-md-4">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Alert value:</span>
+								</div>
+								<input type="number" class="form-control" id="input-limit" name="limit" min="0.0" max="15.0" step="0.1" value="{{ plot.limit }}">
+								<small id="emailHelp" class="form-text text-muted">Set the value limit for email alerts.</small>
+							</div>
+						</div>	
+					</div>
+				</div>
+							  
+				<!-- Simulate received data -->
+				<div class="row justify-content-center">
+					<div class="col-md-6">
+						<form action="{{ url_for('simulate_received_data') }}" method="POST" enctype="multipart/form-data">
+							<div class="form-group">
+								<button type="submit" class="btn btn-primary btn-block">Simulate received data</button>
+							</div>
+						</form>
+					</div>
+				</div>
+							  
+				<!-- SEND TEST MAILS -->
+				<div class="row justify-content-center">
+					<div class="col-md-6">
+						<form action="{{ url_for('send_test_mail') }}" method="POST" enctype="multipart/form-data">
+							<div class="form-group">
+								<button type="submit" class="btn btn-primary btn-block">Send test mails</button>
+							</div>
+						</form>
+					</div>
+				</div>
+
+				<!-- JQUERY -->
+				<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+				<script>
+					$(document).ready(function() {
+						let inputLimit = $('#input-limit');
+						let plotDiv = $('#plot-div');
+
+						function update() {
+							$.ajax({
+								url: "/update",
+								method: "POST",
+								data: { data: inputLimit.val() },
+								dataType: "json",
+								success: function(data) { plotDiv.html(data.plot) }
+							});
+						}
+						inputLimit.change(update);
+					});
+				</script>
+
+				{% else %}
+				<div class="row align-items-center justify-content-center my-5">
+					<div class="text-center">
+						<h3 class="mb-4">Please log in or register first to perform actions.</h3>
+						<!-- <a href="{{ url_for('login') }}" class="btn btn-primary">Login</a> -->
+					</div>
+				</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+{% endblock %}
+</html>
