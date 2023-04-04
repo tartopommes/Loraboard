@@ -1,6 +1,6 @@
 import plotly.graph_objs as go
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from werkzeug.exceptions import NotFound
 
 from database.gestion import database, USERS_DB
@@ -217,6 +217,25 @@ def update():
     plot['html'] = plot['fig'].to_html(full_html=False)
 
     return {'limit': plot['limit'], 'plot': plot['html']}
+
+
+# Endpoint to return new data for the Plotly trace
+@app.route('/data')
+def data():
+    # Get the up to date data from the database
+    connection = database.connect(USERS_DB)
+    plot['dataframe'] = get_sensor_data(connection, device_ID)
+
+    # Recreate the plot
+    plot['fig'] = go.Figure(data=go.Scatter(x=plot['dataframe']['Time'], y=plot['dataframe']['Value'], mode='lines'))
+    plot['fig'].update_layout(title='Test sensor', xaxis_title='Time', yaxis_title='Value')
+    plot['fig'].add_hline(y=plot['limit'], line_width=1, line_dash="dash", line_color="red", name="limit")
+
+    # Convert the Plotly figure to an HTML string
+    plot['html'] = plot['fig'].to_html(full_html=False)
+
+    # Return the data as a JSON object
+    return jsonify(plot=plot['html'])
 
 
 

@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     connection = database.connect(USERS_DB)
     try:
-        #init_database(connection)
+        # init_database(connection)
         read_tables(connection)
     except Exception as error:
         print("[ERROR] : SQL connection failed:", error)

@@ -35,17 +35,6 @@
 					</div>
 				</div>
 							  
-				<!-- Simulate received data -->
-				<div class="row justify-content-center">
-					<div class="col-md-6">
-						<form action="{{ url_for('simulate_received_data') }}" method="POST" enctype="multipart/form-data">
-							<div class="form-group">
-								<button type="submit" class="btn btn-primary btn-block">Simulate received data</button>
-							</div>
-						</form>
-					</div>
-				</div>
-							  
 				<!-- SEND TEST MAILS -->
 				<div class="row justify-content-center">
 					<div class="col-md-6">
@@ -63,7 +52,7 @@
 					$(document).ready(function() {
 						let inputLimit = $('#input-limit');
 						let plotDiv = $('#plot-div');
-
+						
 						function update() {
 							$.ajax({
 								url: "/update",
@@ -73,8 +62,17 @@
 								success: function(data) { plotDiv.html(data.plot) }
 							});
 						}
+						
 						inputLimit.change(update);
+						
+						setInterval(function() {
+							$.getJSON('/data', function(data) {
+								plotDiv.html(data.plot)
+							});
+						}, 10000); // Update every 10 seconds
+
 					});
+
 				</script>
 
 				{% else %}
