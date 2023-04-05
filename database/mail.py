@@ -3,7 +3,7 @@ from email.mime.text import MIMEText
 import os.path
 import base64
 
-from database.gestion import database, read, exit_error, SENDER, USERS_TABLE, API_CREDS, API_SCOPES, API_TOKEN
+from database.gestion import database, read, exit_error, SENDER, USERS_DB, USERS_TABLE, API_CREDS, API_SCOPES, API_TOKEN
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -42,7 +42,6 @@ def get_creds() -> Credentials:
 
 
 
-
 def send_email(recipient: str, subject: str, body: str):
     """
     Sends an email to the specified recipient using the Gmail API.
@@ -68,11 +67,11 @@ def send_email(recipient: str, subject: str, body: str):
 
         # Send the email using the Gmail API
         send_message = service.users().messages().send(userId=SENDER, body={'raw': raw}).execute()
-        print(F'sent message to {recipient} Message Id: {send_message["id"]}')
+        # print(f'[DEBUG] sent message to {recipient} Message Id: {send_message["id"]}', flush=True)
 
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
-        print(f'An error occurred: {error}')
+        print(f'An error occurred: {error}', flush=True)
 
 
 
@@ -101,6 +100,20 @@ def get_all_emails(connection: database.Connection) -> list[str]:
     emails = [email[0] for email in result]
 
     return emails
+
+
+
+def send_mail_to_all(subject: str, body: str):
+    """
+    Sends an email to all users in the database.
+    
+    Args:
+        subject (string): subject of the notification.
+        body (string): body the notification.
+    """
+    connection = database.connect(USERS_DB)
+    for email in get_all_emails(connection):
+        send_email(email, subject, body)
 
 
 

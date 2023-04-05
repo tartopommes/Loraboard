@@ -1,11 +1,11 @@
 from scrapper.super_secret import *
+
 import paho.mqtt.client as mqtt
 import json
 import base64
 from database.sensor import add_sensor_data
-from time import gmtime, strftime
-from struct import unpack
-
+from datetime import datetime
+from pytz import timezone
 
 def on_connect(client: mqtt.Client, userdata, flags, rc: int):
     """The callback for when the client receives a CONNACK response from the server."""
@@ -59,7 +59,7 @@ def on_message(client: mqtt.Client, userdata, msg: str):
     payload_value += ((decoded_payload >> 24) & 0xFF) << 0 
     print("Payload (converted) :" + str(payload_value))
 
-    time = strftime('%Y-%m-%d %H:%M:%S', gmtime()) # TODO : get the time from the packet with received_at obj.
+    time = datetime.now(timezone('America/Montreal')).strftime('%Y-%m-%d %H:%M:%S') # TODO : get the time from the packet with received_at obj.
     add_sensor_data(sensor_name=device_id, rssi=rssi, time=time, value=payload_value) # time must have the following format: '%Y-%m-%d %H:%M'
 
     # try:

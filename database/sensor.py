@@ -2,11 +2,13 @@ import random
 import pandas as pd
 import plotly.graph_objs as go
 from datetime import datetime, timedelta
+
 from database.gestion import database, USERS_DB, SENSORS_TABLE, DATA_TABLE, write, read, List, Tuple
+from database.mail import send_mail_to_all
 from scrapper.super_secret import device_ID
 
 
-sensor_name_for_initial_plot = device_ID
+SNESOR_NAME_FOR_INITIAL_PLOT = device_ID
 
 
 def generate_table(df) -> str:
@@ -34,9 +36,9 @@ def generate_table(df) -> str:
     table_html += '</tr>'
     table_html += '</thead>'
     
-    # Add the table rows
+    # Add the table rows (10 max) from the most recent to the oldest
     table_html += '<tbody>'
-    for i, row in df.iterrows():
+    for i, row in df.iloc[-1:-10:-1].iterrows():
         table_html += '<tr>'
         for col in df.columns:
             table_html += f'<td>{row[col]}</td>'
@@ -74,6 +76,8 @@ def update_plot(plot: dict, limit: int = None) -> dict:
 
     # Update the table
     plot['table'] = generate_table(plot['dataframe'])
+
+    print('[INFO] Plot object updated')
     
     return plot
 
@@ -178,18 +182,24 @@ def add_sensor_data(sensor_name: int, rssi:int, time: str, value: int):
         sensor_id: An integer representing the ID of the sensor.
         data: A list of tuples containing the data of the sensor.
     """
+    # Prepare the query with the data for the database
     connection = database.Connection(USERS_DB)
-
     query = f'INSERT INTO {DATA_TABLE} (sensor_id, rssi, time, value) VALUES (?, ?, ?, ?)'
     sensor_id = get_sensor_id(connection, sensor_name)
     data = (sensor_id, rssi, time, value)
-
+    
+    # Add the data to the database
     write(connection, (query, data))
     connection.close()
 
+    # Get the plot of the sensor
+    if float(value) >= float(plot['limit']):
+        send_mail_to_all("IoT Alert", f"The sensor {plot['sensor_name']} has exceeded the threshold {plot['limit']} with a value of {value}!")
+        print('[INFO]: Mail alert sent!')
+
     # Update the plot for the web interface (even if it's not for the current sensor)
     update_plot(plot)
-    print(f"[INFO] : The data {data} of the sensor {sensor_id} has been added to the database.")
+    print(f"[INFO] The data {data} of the sensor {sensor_id} has been added to the database.")
 
 
 
@@ -235,7 +245,7 @@ def simulate_received_date(connection: database.Connection):
 
 # Plotly plot object for the sensor data
 plot = {
-    'sensor_name': sensor_name_for_initial_plot,
+    'sensor_name': SNESOR_NAME_FOR_INITIAL_PLOT,
     'dataframe': '',
     'fig': '',
     'html': '',

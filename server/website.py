@@ -1,11 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask_socketio import SocketIO
 from werkzeug.exceptions import NotFound
 
 from database.gestion import database, USERS_DB
 from database.mail import get_all_emails, send_email
 from database.addUser import hash_password, verify_password, verify_username, get_username, add_user
 from database.deleteUser import get_user_id, delete_user
-from database.sensor import plot, update_plot
+from database.sensor import plot, update_plot, set_sensor_alert_value
 
 
 # User object for the current user (used for the login and register pages as well as in the navbar and index page)
@@ -21,10 +22,19 @@ current_user = {
 }
 
 
-
 app = Flask(__name__)
+socketio = SocketIO(app)
 
 
+
+def example():
+    return "Hello World"
+
+@socketio.on('trigger_function')
+def trigger_function():
+    print("Triggered function")
+    result = example()
+    socketio.emit('function_result', result)
 
 # ----------------------------------------------------- #
 # ---------------------- PAGES ------------------------ #
@@ -37,6 +47,8 @@ def index():
     current_user['delete_success'] = False
     
     if current_user['is_authenticated']:
+        socketio.emit('trigger_function', namespace='/')
+
         return render_template('index.html', current_user=current_user, plot=plot)
 
     return render_template('index.html', current_user=current_user)
@@ -161,11 +173,12 @@ def delete_account():
 
 @app.route('/send_test_mail', methods=['POST'])
 def send_test_mail():
+    current_value = 15
     try: # send notification to all users      
         connection = database.connect(USERS_DB)
         email_list = get_all_emails(connection)
         for email in email_list:
-            send_email(email, "Notification", "Hello, this is a notification")
+            send_email(email, "IoT Alert", f"The sensor {plot['sensor_name']} has exceeded the threshold {plot['limit']} with a value of {current_value}!")
 
     except Exception as error:
         print("[ERROR] : SQL connection failed:", error)
@@ -178,15 +191,15 @@ def send_test_mail():
 
 @app.route("/update", methods=["POST"])
 def update():
-    plot['limit'] = request.form["data"]
+    set_sensor_alert_value(plot["sensor_name"], request.form["data"])
 
-    return {'': update_plot(plot)['html']}
+    return {'html_plot': update_plot(plot)['html']}
 
 
 # Endpoint to return new data for the Plotly trace
 @app.route('/data')
 def data():
-    print(plot['table'])
+    print('[INFO] Returning new html plot and table', flush=True)
     # Return the data as a JSON object
     return jsonify(plot=plot['html'], table=plot['table'])
 

@@ -33,7 +33,7 @@ python -m pip pip install -r requirements.txt
 ```
 <br />
 
-> 👉 **Step 2** - Make sure `super_secret.py` exists and is correct
+> 👉 **Step 3** - Make sure `super_secret.py` exists and is correct
 ```py
 Username = "you-ttn-project-name"
 Username_ssh = f"{Username}@ttn"
@@ -50,12 +50,28 @@ AppKey = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 ```
 <br />
 
+> 👉 **Step 4** - Setup the alert sender mail address 
 
+Go to `Loraboard/database/gestion.py` and edit the variable `SENDER`
+```py
+# MAILS
+SENDER = 'your-email@gmail.com' # set your email address here, must belong to gmail.com
+```
 
-> 👉 **Step 3** - Start the App with `python`
+Then the application will need to create a `token.json` file. Once you strated the application, you will automatically be redirected to a google connextion page to `select your google account`. Then you will have a danger alert, because the Google application we are using hasn't been verified by Google yet. However it's competly fine, the Google application is only used for this project to send email alert, you can clic on `Advanced settings` and then clic on `Access`. You are free not to accept, in this case you purposely reject email alert notifications.
+
+<br />
+
+> 👉 **Step 5** - Start the App with `python`
 ```pwsh
 python main.py
 ```
+<br />
+
+> 👉 **Step 6** - Visit the dashboard `python`
+
+Go to the default url: [http://localhost:5000/](http://localhost:5000/)
+
 <br />
 
 ## ✨ Run with python virtual environment 

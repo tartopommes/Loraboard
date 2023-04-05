@@ -9,7 +9,7 @@ DATA_TABLE = 'data' # table name
 USERS_DB = 'database/users.db' #database file name
 
 # MAILS
-SENDER = 'comando117000@gmail.com' #TODO(developer) set your email address here
+SENDER = 'comando117000@gmail.com' # set your email address here, must belong to gmail.com
 API_CREDS = 'database/credentials.json' #TODO(developer) set your credentials.json file here
 API_SCOPES = ['https://www.googleapis.com/auth/gmail.send'] # If modifying these scopes, delete the file token.json. 
                                                             # The scope is used to give access on what we can do with the gmail API (edit, read, etc).
