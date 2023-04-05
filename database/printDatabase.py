@@ -2,7 +2,7 @@ from database.gestion import database, USERS_DB, USERS_TABLE, SENSORS_TABLE, DAT
 from tabulate import tabulate
 
 
-def read_tables(connection):
+def print_tables(connection):
     """Read and print the content of all tables in the database.
 
     Args:
@@ -34,7 +34,7 @@ def read_tables(connection):
                 content[row] = list(content[row])
 
         elif table == DATA_TABLE:
-            header = ('id', 'sensor_id', 'time', 'value')
+            header = ('id', 'sensor_id', 'rssi', 'time', 'value')
             for row in range(len(content)):
                 content[row] = list(content[row])
         
@@ -59,7 +59,7 @@ def main():
     connection = database.connect(USERS_DB)
 
     try:
-        read_tables(connection)
+        print_tables(connection)
 
     except Exception as error:
         print("[ERROR] : SQL connection failed, the database couldn't be printed:", error)

@@ -1,6 +1,6 @@
 from database.gestion import database, USERS_DB, USERS_TABLE, SENSORS_TABLE, DATA_TABLE, write, read
 from hashlib import sha256
-from database.printDatabase import read_tables
+from database.printDatabase import print_tables
 from database.sensor import get_sensor_id, get_random_value
 # from sys import argv
 from traceback import print_exc
@@ -44,8 +44,10 @@ def create_tables(connection):
     request = f"""CREATE TABLE IF NOT EXISTS {DATA_TABLE} (
                       id            integer PRIMARY KEY,
                       sensor_id     text NOT NULL,
+                      rssi          text NOT NULL,
                       time          text NOT NULL,
-                      value         text NOT NULL
+                      value         text NOT NULL,
+                      unique(time, value)
                   );"""
     write(connection, request)
     connection.commit()
@@ -68,7 +70,7 @@ def fill_user(connection):
     write(connection, (request, data), many=True)
 
     # Add some data into data table
-    request = f'INSERT INTO {DATA_TABLE} (sensor_id, time, value) values(?, ?, ?)'
+    request = f'INSERT INTO {DATA_TABLE} (sensor_id, rssi, time, value) values(?, ?, ?, ?)'
     sensor_id = get_sensor_id(connection, 'test_sensor')
     data = get_random_value(sensor_id)
     write(connection, (request, data), many=True)
@@ -96,7 +98,7 @@ def main():
     try:
         create_tables(connection)
         fill_user(connection)
-        read_tables(connection)
+        print_tables(connection)
 
     except Exception as error:
         print_exc()

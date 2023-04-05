@@ -4,6 +4,7 @@ import json
 import base64
 from database.sensor import add_sensor_data
 from time import gmtime, strftime
+from struct import unpack
 
 
 def on_connect(client: mqtt.Client, userdata, flags, rc: int):
@@ -23,39 +24,48 @@ def on_connect(client: mqtt.Client, userdata, flags, rc: int):
 def on_message(client: mqtt.Client, userdata, msg: str):
     """The callback for when a PUBLISH message is received from the server."""
 
+    # Return -1 if the packet is invalid
+    def invalid_packet(json_frame, obj:str) -> int:
+        """Print the invalid packet and return -1."""
+        print(f"Invalid packet received, {obj} is None payload:\n", json.dumps(json_frame, indent=2))
+        return -1
+
+    def get_field_from_json(json_object, field: str) -> str:
+        """Get the field from the json object."""
+        json_field = json_object.get(field)
+        if not json_field: return invalid_packet(json_object, field)
+        return json_field
+
+    # Retrieve the data from the packet as a json object
     json_frame = json.loads(msg.payload)
     print("\n === Packet recevied! ===")
 
-    # Check if the packet is a valid LoRaWAN packet
-    if not (json_frame.get('end_device_ids') is None):
-        if not (json_frame['end_device_ids'].get('device_id') is None):
-            device_id = json_frame['end_device_ids']['device_id']
-            print("End device ID :" + device_id)
+    # Check if the following fields are present in the packet
+    end_device_ids = get_field_from_json(json_frame, 'end_device_ids')
+    device_id = get_field_from_json(end_device_ids, 'device_id')
+    print("End device ID :" + device_id)
 
-    # Retrieve the payload if it exists
-    if not (json_frame.get('uplink_message') is None):
-        if not (json_frame['uplink_message'].get('frm_payload') is None):
+    uplink_message = get_field_from_json(json_frame, 'uplink_message')
+    frm_payload = get_field_from_json(uplink_message, 'frm_payload')
+    rx_metadata = get_field_from_json(uplink_message, 'rx_metadata')
+    rssi = get_field_from_json(rx_metadata[0], 'rssi')
 
-            # Convert the payload to an int
-            base64_payload = json_frame['uplink_message']['frm_payload']
-            str_payload = base64.b64decode(base64_payload)
-            int_payload = int.from_bytes(str_payload, 'big')
+    # Converte 4 bytes to int
+    decoded_payload = int.from_bytes(base64.b64decode(frm_payload), 'big')
+    # Extract and reconstruct in reverse (shiffting) the individual bytes of the decoded payload to obtain the final payload value
+    payload_value =  ((decoded_payload >> 0)  & 0xFF) << 24
+    payload_value += ((decoded_payload >> 8)  & 0xFF) << 16
+    payload_value += ((decoded_payload >> 16) & 0xFF) << 8 
+    payload_value += ((decoded_payload >> 24) & 0xFF) << 0 
+    print("Payload (converted) :" + str(payload_value))
 
-            int_value = ((int_payload >> 0) & 0xFF) << 24
-            int_value += ((int_payload >> 8) & 0xFF) << 16
-            int_value += ((int_payload >> 16) & 0xFF) << 8
-            int_value += ((int_payload >> 24) & 0xFF) << 0
+    time = strftime('%Y-%m-%d %H:%M:%S', gmtime()) # TODO : get the time from the packet with received_at obj.
+    add_sensor_data(sensor_name=device_id, rssi=rssi, time=time, value=payload_value) # time must have the following format: '%Y-%m-%d %H:%M'
 
-            print("Payload (extracted) :" + str(int_value))
-
-            time_str = strftime('%Y-%m-%d %H:%M:%S', gmtime())
-            add_sensor_data(sensor_name=device_id, time=time_str, value=int_value) # time must have the following format: '%Y-%m-%d %H:%M'
-            return
-
-    print("Unknown payload")
-    
-    print(json.dumps(json_frame, indent=2))
-
+    # try:
+    #     add_sensor_data(sensor_name=device_id, rssi=rssi, time=time, value=payload_value) # time must have the following format: '%Y-%m-%d %H:%M'
+    # except Exception as e:
+    #     print("[ERROR] Data already exist:", e)
 
 
 
@@ -88,6 +98,3 @@ if __name__ == "__main__":
 
         # loop wait for data
         mqttc.loop()
-else:
-    print("test")
-    pass

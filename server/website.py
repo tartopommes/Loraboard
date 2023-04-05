@@ -1,5 +1,3 @@
-import plotly.graph_objs as go
-
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from werkzeug.exceptions import NotFound
 
@@ -7,9 +5,10 @@ from database.gestion import database, USERS_DB
 from database.mail import get_all_emails, send_email
 from database.addUser import hash_password, verify_password, verify_username, get_username, add_user
 from database.deleteUser import get_user_id, delete_user
-from database.sensor import get_sensor_data, simulate_received_date as simulate_data
-from scrapper.super_secret import device_ID
+from database.sensor import plot, update_plot
 
+
+# User object for the current user (used for the login and register pages as well as in the navbar and index page)
 current_user = {
     'is_authenticated': False,
     'login_failed': False,
@@ -21,12 +20,7 @@ current_user = {
     'delete_success': False,
 }
 
-plot = {
-    'dataframe': '',
-    'fig': '',
-    'html': '',
-    'limit': 14.7,
-}
+
 
 app = Flask(__name__)
 
@@ -43,18 +37,6 @@ def index():
     current_user['delete_success'] = False
     
     if current_user['is_authenticated']:
-
-        # Get the sensor data from the database
-        connection = database.connect(USERS_DB)
-        plot['dataframe'] = get_sensor_data(connection, device_ID)
-
-        # Create a Plotly line plot, set the labels, and add a horizontal line at the alert limit
-        plot['fig'] = go.Figure(data=go.Scatter(x=plot['dataframe']['Time'], y=plot['dataframe']['Value'], mode='lines'))
-        plot['fig'].update_layout(title='Test sensor', xaxis_title='Time', yaxis_title='Value')
-        plot['fig'].add_hline(y=plot['limit'], line_width=1, line_dash="dash", line_color="red", name="limit")
-
-        # Convert the Plotly figure to an HTML string
-        plot['html'] = plot['fig'].to_html(full_html=False)
         return render_template('index.html', current_user=current_user, plot=plot)
 
     return render_template('index.html', current_user=current_user)
@@ -194,48 +176,23 @@ def send_test_mail():
 
 
 
-@app.route('/simulate_received_data', methods=['POST'])
-def simulate_received_data():
-    connection = database.connect(USERS_DB)
-    simulate_data(connection)
-    plot['dataframe'] = get_sensor_data(connection, 'test_sensor')
-    plot['fig'] = go.Figure(data=go.Scatter(x=plot['dataframe']['Time'], y=plot['dataframe']['Value'], mode='lines'))
-    plot['fig'].update_layout(title='Test sensor', xaxis_title='Time', yaxis_title='Value')
-    plot['fig'].add_hline(y=plot['limit'], line_width=1, line_dash="dash", line_color="red", name="limit")
-    plot['html'] = plot['fig'].to_html(full_html=False)
-    connection.close()
-    return redirect(url_for('index'))
-
-
-
 @app.route("/update", methods=["POST"])
 def update():
     plot['limit'] = request.form["data"]
-    plot['fig'] = go.Figure(data=go.Scatter(x=plot['dataframe']['Time'], y=plot['dataframe']['Value'], mode='lines'))
-    plot['fig'].update_layout(title='Test sensor', xaxis_title='Time', yaxis_title='Value')
-    plot['fig'].add_hline(y=plot['limit'], line_width=1, line_dash="dash", line_color="red", name="limit")
-    plot['html'] = plot['fig'].to_html(full_html=False)
 
-    return {'limit': plot['limit'], 'plot': plot['html']}
+    return {'': update_plot(plot)['html']}
 
 
 # Endpoint to return new data for the Plotly trace
 @app.route('/data')
 def data():
-    # Get the up to date data from the database
-    connection = database.connect(USERS_DB)
-    plot['dataframe'] = get_sensor_data(connection, device_ID)
-
-    # Recreate the plot
-    plot['fig'] = go.Figure(data=go.Scatter(x=plot['dataframe']['Time'], y=plot['dataframe']['Value'], mode='lines'))
-    plot['fig'].update_layout(title='Test sensor', xaxis_title='Time', yaxis_title='Value')
-    plot['fig'].add_hline(y=plot['limit'], line_width=1, line_dash="dash", line_color="red", name="limit")
-
-    # Convert the Plotly figure to an HTML string
-    plot['html'] = plot['fig'].to_html(full_html=False)
-
+    print(plot['table'])
     # Return the data as a JSON object
-    return jsonify(plot=plot['html'])
+    return jsonify(plot=plot['html'], table=plot['table'])
+
+
+# app.add_url_rule('/favicon.ico',
+#     redirect_to=url_for('static', filename='ForensicsParisLogo.ico'))
 
 
 

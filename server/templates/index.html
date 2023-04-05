@@ -9,10 +9,7 @@
 					Account successful deleted
 				</div>
 				{% endif %}
-
-				<img src="{{ url_for('static', filename='mkr.png') }}" class="img-fluid">
 				
-				<br>
                 {% if current_user.is_authenticated %}
 				<!-- PLOT -->
 				<div class="card my-5">
@@ -36,7 +33,7 @@
 				</div>
 							  
 				<!-- SEND TEST MAILS -->
-				<div class="row justify-content-center">
+				<!-- <div class="row justify-content-center">
 					<div class="col-md-6">
 						<form action="{{ url_for('send_test_mail') }}" method="POST" enctype="multipart/form-data">
 							<div class="form-group">
@@ -44,6 +41,11 @@
 							</div>
 						</form>
 					</div>
+				</div> -->
+
+				<!-- LIVE DATA TABLE -->
+				<div class="card my-5" id="plot-table">
+					{{ plot.table|safe }}
 				</div>
 
 				<!-- JQUERY -->
@@ -52,6 +54,7 @@
 					$(document).ready(function() {
 						let inputLimit = $('#input-limit');
 						let plotDiv = $('#plot-div');
+						let plotTable = $('#plot-table');
 						
 						function update() {
 							$.ajax({
@@ -59,7 +62,7 @@
 								method: "POST",
 								data: { data: inputLimit.val() },
 								dataType: "json",
-								success: function(data) { plotDiv.html(data.plot) }
+								success: function(received_data) { plotDiv.html(received_data.html_plot) }
 							});
 						}
 						
@@ -68,14 +71,15 @@
 						setInterval(function() {
 							$.getJSON('/data', function(data) {
 								plotDiv.html(data.plot)
+								plotTable.html(data.table)
 							});
 						}, 10000); // Update every 10 seconds
-
 					});
-
 				</script>
 
 				{% else %}
+				<br>
+				<img src="{{ url_for('static', filename='mkr.png') }}" class="img-fluid">
 				<div class="row align-items-center justify-content-center my-5">
 					<div class="text-center">
 						<h3 class="mb-4">Please log in or register first to perform actions.</h3>
