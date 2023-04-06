@@ -27,10 +27,12 @@ def mqtt_thread(mqttc):
 
     # loop wait for data
     while True:
-        try:
-            mqttc.loop()
-        except Exception as error:
-            print("[ERROR] : MQTT eror:", error, "Continuing loop...")        
+        mqttc.loop()
+
+        # try:
+        #     mqttc.loop()
+        # except Exception as error:
+        #     print("[ERROR] : MQTT eror:", error, "Continuing loop...")        
 
 
 

@@ -2,7 +2,6 @@ import sqlite3 as database
 from typing import List, Tuple, Union
 from flask import Flask
 from flask_socketio import SocketIO
-from scrapper.super_secret import device_ID
 
 
 # DATABASE
@@ -22,9 +21,7 @@ API_TOKEN = 'database/token.json' # The token is used to store the credentials o
                                   # time.
 
 # SENSOR
-DEV_EUI = 'a8610a34351b7a0f' #TODO(developer) set your device EUI here
-APP_EUI = '2D6E11958DB25B0F732BE52BD80914D7' #TODO(developer) set your application EUI here
-SENSOR_NAME_FOR_INITIAL_PLOT = 'test_sensor' #device_ID
+SENSOR_NAME_FOR_INITIAL_PLOT = 'Newton' #device_ID #eui-a8610a34351b7a0f
 
 # website
 WEBSITE_MODULE_NAME = 'server.website'

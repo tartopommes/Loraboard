@@ -1,10 +1,9 @@
-from database.gestion import database, USERS_DB, USERS_TABLE, SENSORS_TABLE, DATA_TABLE, write, read
+from database.gestion import database, USERS_DB, USERS_TABLE, SENSORS_TABLE, DATA_TABLE, write, read, SENSOR_NAME_FOR_INITIAL_PLOT
 from hashlib import sha256
 from database.printDatabase import print_tables
 from database.sensor import get_sensor_id, get_random_value
 # from sys import argv
 from traceback import print_exc
-from scrapper.super_secret import device_ID
 
 
 
@@ -34,6 +33,7 @@ def create_tables(connection):
     # Create the sensors table
     request = f"""CREATE TABLE IF NOT EXISTS {SENSORS_TABLE} (
                       id            integer PRIMARY KEY,
+                      deveui        text NOT NULL,
                       name          text NOT NULL,
                       alert_value   text NOT NULL
                   );"""
@@ -65,8 +65,13 @@ def fill_user(connection):
     write(connection, (request, data), many=True)
 
     # Add some sensors into sensors table
-    request = f'INSERT INTO {SENSORS_TABLE} (name, alert_value) values(?, ?)'
-    data = [ ('test_sensor', '14.0'), (device_ID, '5.0') ]
+    request = f'INSERT INTO {SENSORS_TABLE} (deveui, name, alert_value) values(?, ?, ?)'
+    data = [ 
+        ('test_sensor',          'test_sensor', '14'),
+        ('eui-a8610a34351b7a0f', 'Newton',      '5' ),
+        ('eui-aaaaaabbbbbbbbbb', 'Racine',      '6' ),
+        ('eui-abababababababab', 'Chenevert',   '7' ),
+    ]
     write(connection, (request, data), many=True)
 
     # Add some data into data table

@@ -124,6 +124,28 @@ def get_sensor_id(connection: database.Connection, sensor_name: str) -> int:
     return result[0][0]
 
 
+def get_sensor_name_from_deveui(deveui: str) -> str:
+    """Get the name of a sensor from the database.
+
+    Args:
+        deveui: A string representing the EUI of the sensor.
+
+    Returns:
+        A string representing the name of the sensor.
+    """
+    connection = database.Connection(USERS_DB)
+
+    request = (f'SELECT name FROM {SENSORS_TABLE} WHERE deveui=?', (deveui, ))
+    result = read(connection, request)
+
+    connection.close()
+
+    if not result: return None
+
+    return result[0][0]
+
+
+
 def get_sensor_alert_value(sensor_name: str) -> int:
     """Get the alert value of a sensor from the database.
 
@@ -174,17 +196,20 @@ def get_sensor_data(sensor_name: str) -> List[Tuple]:
     return df
 
 
-def add_sensor_data(sensor_name: int, rssi:int, time: str, value: int):
+def add_sensor_data(deveui: int, rssi:int, time: str, value: int):
     """Add the data of a sensor to the database.
 
     Args:
-        connection: A sqlite3.Connection object.
         sensor_id: An integer representing the ID of the sensor.
+        rssi: An integer representing the RSSI of the sensor.
         data: A list of tuples containing the data of the sensor.
+        value: An integer representing the value of the sensor.
     """
     # Prepare the query with the data for the database
     connection = database.Connection(USERS_DB)
     query = f'INSERT INTO {DATA_TABLE} (sensor_id, rssi, time, value) VALUES (?, ?, ?, ?)'
+
+    sensor_name = get_sensor_name_from_deveui(deveui) # device id is the deveui
     sensor_id = get_sensor_id(connection, sensor_name)
     data = (sensor_id, rssi, time, value)
     
@@ -192,17 +217,20 @@ def add_sensor_data(sensor_name: int, rssi:int, time: str, value: int):
     write(connection, (query, data))
     connection.close()
 
-    # Get the plot of the sensor
-    if float(value) >= float(plot['limit']):
-        send_mail_to_all("IoT Alert", f"The sensor {plot['sensor_name']} has exceeded the threshold {plot['limit']} with a value of {value}!")
-        socketio.emit('alert', {'''
+    # Retrieve alert value from deveui in databse
+    alert_value = get_sensor_alert_value(sensor_name)
+
+    # If alert
+    if float(value) >= float(alert_value):
+        send_mail_to_all("IoT Alert", f"The sensor {sensor_name} has exceeded the threshold {alert_value} with a value of {value}!")
+        socketio.emit('alert', f'''
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
-					<strong>Treshold alert!</strong> The 'eui-45dsf78df4sdfa' sensor value (<strong>15</strong>) has exceeded the threshold you have set (<strong>12</strong>).
+					<strong>Treshold alert!</strong> The {sensor_name} sensor value (<strong>{value}</strong>) has exceeded the threshold you have set (<strong>{alert_value}</strong>).
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 					  	<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-        '''})
+        ''')
         print('[INFO]: Mail alert sent!')
 
     # Update the plot for the web interface (even if it's not for the current sensor)
@@ -230,24 +258,6 @@ def set_sensor_alert_value(sensor_name: str, alert_value: int):
 
     print("[INFO] The alert value of the sensor", sensor_id, "has been updated in the database.")
 
-
-
-def simulate_received_date(connection: database.Connection):
-    """Simulate the reception of data from a sensor."""
-
-    # Get the last data of the sensor
-    sensor_name = 'test_sensor'
-
-    # Generate the new data
-    sensor_last_data = get_sensor_data(connection, sensor_name).iloc[-1]
-    last_time = sensor_last_data['Time'].to_pydatetime()
-    new_time = last_time + timedelta(minutes=5)
-
-    # Add the data to the database
-    add_sensor_data(sensor_name,
-                    new_time.strftime('%Y-%m-%d %H:%M:%S'), 
-                    round(random.uniform(0.0, 15.0), 1))
-    
 
 # Plotly plot object for the sensor data
 plot = {

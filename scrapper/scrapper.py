@@ -3,18 +3,18 @@ from scrapper.super_secret import *
 import paho.mqtt.client as mqtt
 import json
 import base64
-from database.sensor import add_sensor_data
+from database.sensor import add_sensor_data, get_sensor_name_from_deveui
 from datetime import datetime
 from pytz import timezone
 
 def on_connect(client: mqtt.Client, userdata, flags, rc: int):
     """The callback for when the client receives a CONNACK response from the server."""
-    if   rc == 0: print('Connection successful', flush=True)
-    elif rc == 1: print('Connection refused - incorrect protocol version', flush=True)
-    elif rc == 2: print('Connection refused - invalid client identifier', flush=True)
-    elif rc == 3: print('Connection refused - server unavailable', flush=True)
-    elif rc == 4: print('Connection refused - bad username or password', flush=True)
-    elif rc == 5: print('Connection refused - not authorised', flush=True)
+    if   rc == 0: print('[MQTT] Connection successful', flush=True)
+    elif rc == 1: print('[MQTT] Connection refused - incorrect protocol version', flush=True)
+    elif rc == 2: print('[MQTT] Connection refused - invalid client identifier', flush=True)
+    elif rc == 3: print('[MQTT] Connection refused - server unavailable', flush=True)
+    elif rc == 4: print('[MQTT] Connection refused - bad username or password', flush=True)
+    elif rc == 5: print('[MQTT] Connection refused - not authorised', flush=True)
     #6-255: Currently unused.
     client.subscribe('#', qos=0)
 
@@ -60,7 +60,7 @@ def on_message(client: mqtt.Client, userdata, msg: str):
     print("Payload (converted) :" + str(payload_value))
 
     time = datetime.now(timezone('America/Montreal')).strftime('%Y-%m-%d %H:%M:%S') # TODO : get the time from the packet with received_at obj.
-    add_sensor_data(sensor_name=device_id, rssi=rssi, time=time, value=payload_value) # time must have the following format: '%Y-%m-%d %H:%M'
+    add_sensor_data(deveui=device_id, rssi=rssi, time=time, value=payload_value) # time must have the following format: '%Y-%m-%d %H:%M'
 
     # try:
     #     add_sensor_data(sensor_name=device_id, rssi=rssi, time=time, value=payload_value) # time must have the following format: '%Y-%m-%d %H:%M'
