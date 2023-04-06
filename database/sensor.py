@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.graph_objs as go
 from datetime import datetime, timedelta
 
-from database.gestion import database, USERS_DB, SENSORS_TABLE, DATA_TABLE, write, read, List, Tuple
+from database.gestion import database, USERS_DB, SENSORS_TABLE, DATA_TABLE, write, read, List, Tuple, socketio
 from database.mail import send_mail_to_all
 from scrapper.super_secret import device_ID
 
@@ -61,7 +61,9 @@ def update_plot(plot: dict, limit: int = None) -> dict:
         The updated Plotly plot object.
     """
 
-    if limit: plot['limit'] = limit
+    if limit:
+        plot['limit'] = limit
+        set_sensor_alert_value(plot['sensor_name'], limit)
 
     # Get the sensor data from the database
     plot['dataframe'] = get_sensor_data(plot['sensor_name'])
@@ -76,6 +78,8 @@ def update_plot(plot: dict, limit: int = None) -> dict:
 
     # Update the table
     plot['table'] = generate_table(plot['dataframe'])
+
+    socketio.emit('update', {'html_plot': plot['html'], 'table': plot['table']})
 
     print('[INFO] Plot object updated')
     
@@ -220,9 +224,7 @@ def set_sensor_alert_value(sensor_name: str, alert_value: int):
     write(connection, (query, data))
     connection.close()
 
-    # Update the plot for the web interface (even if it's not for the current sensor)
-    update_plot(plot, alert_value)
-    print("[INFO] : The alert value of the sensor", sensor_id, "has been updated in the database.")
+    print("[INFO] The alert value of the sensor", sensor_id, "has been updated in the database.")
 
 
 

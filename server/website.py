@@ -1,8 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
-from flask_socketio import SocketIO
+from flask import render_template, request, redirect, url_for, jsonify
+from flask_socketio import emit
 from werkzeug.exceptions import NotFound
 
-from database.gestion import database, USERS_DB
+from database.gestion import database, USERS_DB, app, socketio
 from database.mail import get_all_emails, send_email
 from database.addUser import hash_password, verify_password, verify_username, get_username, add_user
 from database.deleteUser import get_user_id, delete_user
@@ -22,19 +22,18 @@ current_user = {
 }
 
 
-app = Flask(__name__)
-socketio = SocketIO(app)
+
+# ------------------------------------------------------ #
+# ---------------------- SOCKET ------------------------ #
+# ------------------------------------------------------ #
 
 
+@socketio.on('set_alert_value')
+def handle_set_alert_value(data):
+    alert_value = data['alert_value']
+    update_plot(plot, alert_value)
 
-def example():
-    return "Hello World"
 
-@socketio.on('trigger_function')
-def trigger_function():
-    print("Triggered function")
-    result = example()
-    socketio.emit('function_result', result)
 
 # ----------------------------------------------------- #
 # ---------------------- PAGES ------------------------ #
@@ -47,8 +46,6 @@ def index():
     current_user['delete_success'] = False
     
     if current_user['is_authenticated']:
-        socketio.emit('trigger_function', namespace='/')
-
         return render_template('index.html', current_user=current_user, plot=plot)
 
     return render_template('index.html', current_user=current_user)
@@ -187,25 +184,6 @@ def send_test_mail():
         connection.close()
     return redirect(url_for('index'))
 
-
-
-@app.route("/update", methods=["POST"])
-def update():
-    set_sensor_alert_value(plot["sensor_name"], request.form["data"])
-
-    return {'html_plot': update_plot(plot)['html']}
-
-
-# Endpoint to return new data for the Plotly trace
-@app.route('/data')
-def data():
-    print('[INFO] Returning new html plot and table', flush=True)
-    # Return the data as a JSON object
-    return jsonify(plot=plot['html'], table=plot['table'])
-
-
-# app.add_url_rule('/favicon.ico',
-#     redirect_to=url_for('static', filename='ForensicsParisLogo.ico'))
 
 
 

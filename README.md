@@ -58,7 +58,7 @@ Go to `Loraboard/database/gestion.py` and edit the variable `SENDER`
 SENDER = 'your-email@gmail.com' # set your email address here, must belong to gmail.com
 ```
 
-Then the application will need to create a `token.json` file. Once you strated the application, you will automatically be redirected to a google connextion page to `select your google account`. Then you will have a danger alert, because the Google application we are using hasn't been verified by Google yet. However it's competly fine, the Google application is only used for this project to send email alert, you can clic on `Advanced settings` and then clic on `Access`. You are free not to accept, in this case you purposely reject email alert notifications.
+Then the application will need to create a `token.json` file. Once you strated the application, you will automatically be redirected to a google connextion page to `select your google account`. Then you will have a danger alert, because the Google application we are using hasn't been verified by Google yet. However it's competly fine, the Google application is only used for this project to send email alert, you can clic on `Advanced settings` and then clic on `Access` and finally `Continue`. You are free not to accept, in this case you purposely reject email alert notifications.
 
 <br />
 

@@ -5,19 +5,6 @@
 		<div class="row justify-content-center">
 			<div class="col-md-8 text-center">
 
-				<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.min.js"></script>
-				<script>
-					$(document).ready(function() {
-						var socket = io.connect('http://' + document.domain + ':' + location.port);
-						
-						socket.on('function_result', function(result) {
-							// Update the DOM to show the alert message
-							alert(result);
-						});
-						console.log("Hello wolllll")
-					});
-				</script> -->
-
 				{% if current_user.delete_success %}
 				<div class="alert alert-success" role="alert">
 					Account successful deleted
@@ -26,7 +13,7 @@
 				
                 {% if current_user.is_authenticated %}
 				<!-- PLOT -->
-				<div class="card my-5">
+				<div class="card">
 					<div class="card-body">
 						<div id="plot-div">
 							{{ plot.html|safe }}
@@ -45,17 +32,6 @@
 						</div>	
 					</div>
 				</div>
-							  
-				<!-- SEND TEST MAILS -->
-				<!-- <div class="row justify-content-center">
-					<div class="col-md-6">
-						<form action="{{ url_for('send_test_mail') }}" method="POST" enctype="multipart/form-data">
-							<div class="form-group">
-								<button type="submit" class="btn btn-primary btn-block">Send test mails</button>
-							</div>
-						</form>
-					</div>
-				</div> -->
 
 				<!-- LIVE DATA TABLE -->
 				<div class="card my-5" id="plot-table">
@@ -64,30 +40,25 @@
 
 				<!-- JQUERY -->
 				<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+				<!-- SOCKET.IO -->
+				<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.min.js"></script>
+				
+				<!-- PLOTLY -->
 				<script>
 					$(document).ready(function() {
-						let inputLimit = $('#input-limit');
-						let plotDiv = $('#plot-div');
-						let plotTable = $('#plot-table');
-						
-						function update() {
-							$.ajax({
-								url: "/update",
-								method: "POST",
-								data: { data: inputLimit.val() },
-								dataType: "json",
-								success: function(received_data) { plotDiv.html(received_data.html_plot) }
-							});
-						}
-						
-						inputLimit.change(update);
-						
-						setInterval(function() {
-							$.getJSON('/data', function(data) {
-								plotDiv.html(data.plot)
-								plotTable.html(data.table)
-							});
-						}, 10000); // Update every 10 seconds
+						let socket = io.connect('http://' + document.domain + ':' + location.port);
+
+						// [RECEIVE] Update plot and table
+						socket.on('update', function(data) {
+							$('#plot-div').html(data.html_plot);
+							$('#plot-table').html(data.table);
+						});
+
+						// [SEND] Update alert value
+						$('#input-limit').change(function() {
+							socket.emit('set_alert_value', {'alert_value': $('#input-limit').val()});
+						});
 					});
 				</script>
 

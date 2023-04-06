@@ -1,5 +1,7 @@
 import sqlite3 as database
 from typing import List, Tuple, Union
+from flask import Flask
+from flask_socketio import SocketIO
 
 
 # DATABASE
@@ -22,6 +24,12 @@ API_TOKEN = 'database/token.json' # The token is used to store the credentials o
 DEV_EUI = 'a8610a34351b7a0f' #TODO(developer) set your device EUI here
 APP_EUI = '2D6E11958DB25B0F732BE52BD80914D7' #TODO(developer) set your application EUI here
 
+
+# website
+WEBSITE_MODULE_NAME = 'server.website'
+app = Flask(WEBSITE_MODULE_NAME)
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
 
 
 def read(connection: database.Connection, request: Union[Tuple, str], many=False) -> List[Tuple]:
