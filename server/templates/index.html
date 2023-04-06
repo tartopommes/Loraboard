@@ -1,19 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container my-5">
-		<div class="row justify-content-center">
-			<div class="col-md-8 text-center">
+    <div class="container-fluid px-5">
+		<div class="row justify-content-center flex-column flex-md-row">
 
-				{% if current_user.delete_success %}
+			{% if current_user.delete_success %}
+			<div class="col-md-8 my-5 text-center">
 				<div class="alert alert-success" role="alert">
 					Account successful deleted
 				</div>
-				{% endif %}
+			</div>
+			{% endif %}
 				
-                {% if current_user.is_authenticated %}
-				<!-- PLOT -->
-				<div class="card">
+			{% if current_user.is_authenticated %}
+			<!-- PLOT -->
+			<div class="col-md-6 text-center">
+				<div class="card my-5">
 					<div class="card-body">
 						<div id="plot-div">
 							{{ plot.html|safe }}
@@ -32,38 +34,17 @@
 						</div>	
 					</div>
 				</div>
-
-				<!-- LIVE DATA TABLE -->
-				<div class="card my-5" id="plot-table">
+			</div>
+			<!-- TABLE -->
+			<div class="col-md-6 text-center my-5">
+				<div class="card" id="plot-table">
 					{{ plot.table|safe }}
 				</div>
+			</div>
 
-				<!-- JQUERY -->
-				<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+			{% else %}
+			<div class="col-md-8 my-5 text-center">
 
-				<!-- SOCKET.IO -->
-				<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.min.js"></script>
-				
-				<!-- PLOTLY -->
-				<script>
-					$(document).ready(function() {
-						let socket = io.connect('http://' + document.domain + ':' + location.port);
-
-						// [RECEIVE] Update plot and table
-						socket.on('update', function(data) {
-							$('#plot-div').html(data.html_plot);
-							$('#plot-table').html(data.table);
-						});
-
-						// [SEND] Update alert value
-						$('#input-limit').change(function() {
-							socket.emit('set_alert_value', {'alert_value': $('#input-limit').val()});
-						});
-					});
-				</script>
-
-				{% else %}
-				<br>
 				<img src="{{ url_for('static', filename='mkr.png') }}" class="img-fluid">
 				<div class="row align-items-center justify-content-center my-5">
 					<div class="text-center">
@@ -71,9 +52,50 @@
 						<!-- <a href="{{ url_for('login') }}" class="btn btn-primary">Login</a> -->
 					</div>
 				</div>
-				{% endif %}
+			</div>
+			{% endif %}
+		</div>
+
+		{% if current_user.is_authenticated %}
+		<!-- ALERT -->
+		<div class="row justify-content-center">
+			<div class="col-md-6 text-center" id="alert-box">
+				<div class="alert alert-warning alert-dismissible fade show" role="alert">
+					<strong>Treshold alert!</strong> The 'eui-45dsf78df4sdfa' sensor value (<strong>15</strong>) has exceeded the threshold you have set (<strong>12</strong>).
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					  	<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
 			</div>
 		</div>
+
+		<!-- JQUERY -->
+		<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+		<!-- SOCKET.IO -->
+		<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.min.js"></script>
+		<!-- PLOTLY -->
+		<script>
+			$(document).ready(function() {
+				let socket = io.connect('http://' + document.domain + ':' + location.port);
+
+				// [RECEIVE] Update plot and table
+				socket.on('update', function(data) {
+					$('#plot-div').html(data.html_plot);
+					$('#plot-table').html(data.table);
+				});
+
+				// [SEND] Update alert value
+				$('#input-limit').change(function() {
+					socket.emit('set_alert_value', {'alert_value': $('#input-limit').val()});
+				});
+				
+				// [RECEIVE] 
+				socket.on('alert', function(data) {
+					$('#alert-box').append(data);
+				});
+			});
+		</script>
+		{% endif %}
 	</div>
 {% endblock %}
 </html>

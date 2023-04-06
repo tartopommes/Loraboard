@@ -3,12 +3,8 @@ import pandas as pd
 import plotly.graph_objs as go
 from datetime import datetime, timedelta
 
-from database.gestion import database, USERS_DB, SENSORS_TABLE, DATA_TABLE, write, read, List, Tuple, socketio
+from database.gestion import database, USERS_DB, SENSORS_TABLE, DATA_TABLE, write, read, List, Tuple, socketio, SENSOR_NAME_FOR_INITIAL_PLOT
 from database.mail import send_mail_to_all
-from scrapper.super_secret import device_ID
-
-
-SNESOR_NAME_FOR_INITIAL_PLOT = device_ID
 
 
 def generate_table(df) -> str:
@@ -199,6 +195,14 @@ def add_sensor_data(sensor_name: int, rssi:int, time: str, value: int):
     # Get the plot of the sensor
     if float(value) >= float(plot['limit']):
         send_mail_to_all("IoT Alert", f"The sensor {plot['sensor_name']} has exceeded the threshold {plot['limit']} with a value of {value}!")
+        socketio.emit('alert', {'''
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+					<strong>Treshold alert!</strong> The 'eui-45dsf78df4sdfa' sensor value (<strong>15</strong>) has exceeded the threshold you have set (<strong>12</strong>).
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					  	<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+        '''})
         print('[INFO]: Mail alert sent!')
 
     # Update the plot for the web interface (even if it's not for the current sensor)
@@ -247,7 +251,7 @@ def simulate_received_date(connection: database.Connection):
 
 # Plotly plot object for the sensor data
 plot = {
-    'sensor_name': SNESOR_NAME_FOR_INITIAL_PLOT,
+    'sensor_name': SENSOR_NAME_FOR_INITIAL_PLOT,
     'dataframe': '',
     'fig': '',
     'html': '',

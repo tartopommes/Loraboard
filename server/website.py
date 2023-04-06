@@ -1,5 +1,4 @@
 from flask import render_template, request, redirect, url_for, jsonify
-from flask_socketio import emit
 from werkzeug.exceptions import NotFound
 
 from database.gestion import database, USERS_DB, app, socketio

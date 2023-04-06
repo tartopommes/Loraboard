@@ -51,7 +51,7 @@ def create_tables(connection):
                   );"""
     write(connection, request)
     connection.commit()
-    
+
 
 
 
@@ -66,7 +66,7 @@ def fill_user(connection):
 
     # Add some sensors into sensors table
     request = f'INSERT INTO {SENSORS_TABLE} (name, alert_value) values(?, ?)'
-    data = [ ('test_sensor', '14.7'), (device_ID, '5.0') ]
+    data = [ ('test_sensor', '14.0'), (device_ID, '5.0') ]
     write(connection, (request, data), many=True)
 
     # Add some data into data table
