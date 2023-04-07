@@ -368,4 +368,4 @@ def get_sensors():
     return sensors
 
 
-SENSORS = get_sensors()
+SENSORS = None

@@ -4,7 +4,6 @@ from traceback import print_exc
 
 from database.gestion import database, USERS_DB, API_TOKEN
 from database.initDatabase import init_database, print_tables
-from database.sensor import get_sensors, SENSORS
 from database.mail import get_creds
 from server.website import app
 from scrapper.scrapper import mqttc, public_address_url, public_address_port
@@ -48,8 +47,6 @@ if __name__ == "__main__":
         else: 
             print("[INFO] : Database already exists")
         print_tables(connection)
-        SENSORS = get_sensors()
-        for s in SENSORS: print(s)
 
         # Initialise the API credentials if they don't exist
         if not exists(API_TOKEN):

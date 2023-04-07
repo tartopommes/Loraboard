@@ -4,7 +4,7 @@ from werkzeug.exceptions import NotFound
 from database.gestion import database, USERS_DB, app, socketio
 from database.addUser import hash_password, verify_password, verify_username, get_username, add_user
 from database.deleteUser import get_user_id, delete_user
-from database.sensor import update_plot, SENSORS
+from database.sensor import update_plot, SENSORS, get_sensors
 
 
 # User object for the current user (used for the login and register pages as well as in the navbar and index page)
@@ -45,6 +45,10 @@ def index():
     current_user['delete_success'] = False
     
     if current_user['is_authenticated']:
+        # intialize Sensors after generating a database
+        global SENSORS
+        if SENSORS == '':
+            SENSORS = get_sensors()
         return render_template('index.html', current_user=current_user, sensors=SENSORS)
 
     return render_template('index.html', current_user=current_user)
