@@ -89,7 +89,8 @@ def make_figure(df, sensor_name: str, limit: int) -> go.Figure:
         layout=go.Layout(
             title=sensor_name,
             xaxis_title='Time',
-            yaxis_title='People')
+            yaxis_title='People',
+            margin=dict(l=0, r=10, t=75, b=0))
     )
 
     fig.add_hline(y=limit, line_width=1, line_dash="dash", line_color="red", name="limit")
@@ -306,7 +307,7 @@ def add_sensor_data(deveui: int, rssi:int, time: str, value: int):
             'sensor_id': sensor_id,
             'message': f'''
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
-					<strong>Treshold alert!</strong> The {sensor_name} sensor value (<strong>{value}</strong>) has exceeded the threshold you have set (<strong>{alert_value}</strong>).
+					<strong>Treshold alert!</strong> The {sensor_name} sensor value (<strong>{value}</strong>) has exceeded the threshold you set (<strong>{alert_value}</strong>).
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 					  	<span aria-hidden="true">&times;</span>
 					</button>

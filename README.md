@@ -14,7 +14,7 @@ Open-source simple dashboard for MKR1310 sensor. The MKR will connect to a [LoRa
 
 <br />
 
-TODO: picture
+![Illustration](ressources/demo.png)
 
 <br />
 
