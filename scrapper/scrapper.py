@@ -28,7 +28,7 @@ def on_message(client: mqtt.Client, userdata, msg: str):
     def invalid_packet(json_frame, obj:str) -> int:
         """Print the invalid packet and return -1."""
         print(f"Invalid packet received, {obj} is None payload:\n", json.dumps(json_frame, indent=2))
-        return -1
+        return None
 
     def get_field_from_json(json_object, field: str) -> str:
         """Get the field from the json object."""
@@ -42,13 +42,23 @@ def on_message(client: mqtt.Client, userdata, msg: str):
 
     # Check if the following fields are present in the packet
     end_device_ids = get_field_from_json(json_frame, 'end_device_ids')
+    if not end_device_ids: return
+    
     device_id = get_field_from_json(end_device_ids, 'device_id')
+    if not device_id: return
     print("End device ID :" + device_id)
 
     uplink_message = get_field_from_json(json_frame, 'uplink_message')
+    if not uplink_message: return
+
     frm_payload = get_field_from_json(uplink_message, 'frm_payload')
+    if not frm_payload: return
+
     rx_metadata = get_field_from_json(uplink_message, 'rx_metadata')
+    if not rx_metadata: return
+
     rssi = get_field_from_json(rx_metadata[0], 'rssi')
+    if not rssi: return
 
     # Converte 4 bytes to int
     decoded_payload = int.from_bytes(base64.b64decode(frm_payload), 'big')

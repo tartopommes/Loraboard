@@ -3,11 +3,27 @@ import pandas as pd
 import plotly.graph_objs as go
 from datetime import datetime, timedelta
 
-from database.gestion import database, USERS_DB, SENSORS_TABLE, DATA_TABLE, write, read, List, Tuple, socketio, SENSOR_NAME_FOR_INITIAL_PLOT
+from database.gestion import database, USERS_DB, SENSORS_TABLE, DATA_TABLE, write, read, List, Tuple, socketio
 from database.mail import send_mail_to_all
 
 
-def generate_table(df) -> str:
+
+# Sensors object
+class Sensor:
+    def __init__(self, id, name, dataframe, fig, html_plot, alert_value, table):
+        self.id = id
+        self.name = name
+        self.dataframe = dataframe
+        self.fig = fig
+        self.html_plot = html_plot
+        self.alert_value = alert_value
+        self.table = table
+
+    def __str__(self):
+        return f"Sensor {self.id} ({self.name})"
+
+
+def make_table(df) -> str:
     """Generate an HTML table from a Pandas DataFrame
     
     Parameters
@@ -47,44 +63,87 @@ def generate_table(df) -> str:
     return table_html
 
 
-def update_plot(plot: dict, limit: int = None) -> dict:
-    """Update the Plotly plot object with the latest sensor data.
+def make_figure(df, sensor_name: str, limit: int) -> go.Figure:
+    """Generate a Plotly figure from a Pandas DataFrame
     
-    Args:
-        plot: A dictionary containing the Plotly plot object for the sensor data.
+    Parameters
+    ----------
+    df : Pandas DataFrame
+        The DataFrame to convert to a Plotly figure
         
-    Returns:
-        The updated Plotly plot object.
+    Returns
+    -------
+    fig : Plotly Figure
     """
 
-    if limit:
-        plot['limit'] = limit
-        set_sensor_alert_value(plot['sensor_name'], limit)
-
-    # Get the sensor data from the database
-    plot['dataframe'] = get_sensor_data(plot['sensor_name'])
-
     # Create a Plotly line plot, set the labels, and add a horizontal line at the alert limit
-    plot['fig'] = go.Figure(data=go.Scatter(x=plot['dataframe']['Time'], y=plot['dataframe']['Value'], mode='lines'))
-    plot['fig'].update_layout(title=plot['sensor_name'], xaxis_title='Time', yaxis_title='Value')
-    plot['fig'].add_hline(y=plot['limit'], line_width=1, line_dash="dash", line_color="red", name="limit")
+    fig = go.Figure(
+        data=go.Scatter(
+            x=df['Time'], 
+            y=df['Value'], 
+            mode='markers',
+            marker=dict(color='blue'),
+            fill='tozeroy'),  # fill the area under the line
+        layout=go.Layout(
+            title=sensor_name,
+            xaxis_title='Time',
+            yaxis_title='Value')
+    )
 
-    # Convert the Plotly figure to an HTML string
-    plot['html'] = plot['fig'].to_html(full_html=False)
-
-    # Update the table
-    plot['table'] = generate_table(plot['dataframe'])
-
-    socketio.emit('update', {'html_plot': plot['html'], 'table': plot['table']})
-
-    print('[INFO] Plot object updated')
+    fig.add_hline(y=limit, line_width=1, line_dash="dash", line_color="red", name="limit")
     
-    return plot
+    return fig
+
+
+def update_plot(sensor: Sensor, alert_value: int = None) -> Sensor:
+    """Update the plot object with the sensor data from the database.
+
+    Parameters
+    ----------
+    sensor : Sensor
+        The sensor object to update
+    limit : int, optional
+        The alert limit to set, by default None
+
+    Returns
+    -------
+    sensor : Sensor
+        The updated sensor object
+    """
+
+    if alert_value:
+        sensor.alert_value = alert_value
+        set_sensor_alert_value(sensor.name, alert_value)
+
+    # Get the sensor data from the database, then make a figure to html and make a table
+    sensor.dataframe = get_sensor_data(sensor.name)
+    sensor.fig = make_figure(sensor.dataframe, sensor.name, sensor.alert_value) 
+    sensor.html_plot = sensor.fig.to_html(full_html=False)
+    sensor.table = make_table(sensor.dataframe)
+
+    socketio.emit('update', {'sensor_id': sensor.id, 'html_plot': sensor.html_plot, 'table': sensor.table})
+    print('[INFO] Plot object updated')
+    return sensor
 
 
 
 def get_random_value(sensor_id, start_time = None, end_time = None) -> List[Tuple]:
-    """Generate a random value between 0 and 15."""
+    """Generate a random value between 0 and 15.
+    
+    Parameters
+    ----------
+    sensor_id : int
+        The ID of the sensor
+    start_time : datetime, optional
+        The start time of the data, by default None
+    end_time : datetime, optional
+        The end time of the data, by default None
+    
+    Returns
+    -------
+    data : List[Tuple]
+        A list of tuples containing the sensor ID, RSSI, time, and value
+    """
     # Define the start and end times for the data
     if start_time is None:
         start_time = datetime(2023, 4, 1, 10, 0) # 2023-04-01 00:00:00
@@ -106,15 +165,31 @@ def get_random_value(sensor_id, start_time = None, end_time = None) -> List[Tupl
     return data
 
 
+
 def get_sensor_id(connection: database.Connection, sensor_name: str) -> int:
     """Get the ID of a sensor from the database.
 
-    Args:
-        connection: A sqlite3.Connection object.
-        sensor_name: A string representing the name of the sensor.
+    Parameters
+    ----------
+    connection : database.Connection
+        The database connection
+    sensor_name : str
+        The name of the sensor
 
-    Returns:
-        An integer representing the ID of the sensor.
+    Returns
+    -------
+    int
+        The ID of the sensor
+
+    Raises
+    ------
+    ValueError
+        If the sensor name is not in the database
+
+    Examples
+    --------
+    >>> get_sensor_id(connection, 'sensor1')
+    1
     """
     request = (f'SELECT id FROM {SENSORS_TABLE} WHERE name=?', (sensor_name, ))
     result = read(connection, request)
@@ -122,6 +197,7 @@ def get_sensor_id(connection: database.Connection, sensor_name: str) -> int:
     if not result: return -1
 
     return result[0][0]
+
 
 
 def get_sensor_name_from_deveui(deveui: str) -> str:
@@ -196,6 +272,7 @@ def get_sensor_data(sensor_name: str) -> List[Tuple]:
     return df
 
 
+
 def add_sensor_data(deveui: int, rssi:int, time: str, value: int):
     """Add the data of a sensor to the database.
 
@@ -223,18 +300,21 @@ def add_sensor_data(deveui: int, rssi:int, time: str, value: int):
     # If alert
     if float(value) >= float(alert_value):
         send_mail_to_all("IoT Alert", f"The sensor {sensor_name} has exceeded the threshold {alert_value} with a value of {value}!")
-        socketio.emit('alert', f'''
+        socketio.emit('alert', {
+            'sensor_id': sensor_id,
+            'message': f'''
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
 					<strong>Treshold alert!</strong> The {sensor_name} sensor value (<strong>{value}</strong>) has exceeded the threshold you have set (<strong>{alert_value}</strong>).
 					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 					  	<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-        ''')
+            '''
+        })
         print('[INFO]: Mail alert sent!')
 
     # Update the plot for the web interface (even if it's not for the current sensor)
-    update_plot(plot)
+    update_plot(SENSORS[sensor_id-1])
     print(f"[INFO] The data {data} of the sensor {sensor_id} has been added to the database.")
 
 
@@ -259,12 +339,30 @@ def set_sensor_alert_value(sensor_name: str, alert_value: int):
     print("[INFO] The alert value of the sensor", sensor_id, "has been updated in the database.")
 
 
-# Plotly plot object for the sensor data
-plot = {
-    'sensor_name': SENSOR_NAME_FOR_INITIAL_PLOT,
-    'dataframe': '',
-    'fig': '',
-    'html': '',
-    'limit': '',
-    'table': ''
-}
+
+def get_sensors():
+    """Get all the sensors from the database.
+
+    Returns:
+        A list of Sensor objects.
+    """
+    connection = database.Connection(USERS_DB)
+    result = read(connection, f'SELECT id, name, alert_value FROM {SENSORS_TABLE}')
+    connection.close()
+
+    sensors = []
+    for row in result[0:3]: # We only want the 1st 3 items for the demo
+        sensor_id = row[0]
+        sensor_name = row[1]
+        alert_value = row[2]
+        dataframe = get_sensor_data(sensor_name)
+        fig = make_figure(dataframe, sensor_name, alert_value)
+        html_plot = fig.to_html(full_html=False)
+        table = make_table(dataframe)
+        sensor = Sensor(sensor_id, sensor_name, dataframe, fig, html_plot, alert_value, table)
+        sensors.append(sensor)
+
+    return sensors
+
+
+SENSORS = get_sensors()

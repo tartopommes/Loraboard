@@ -42,11 +42,6 @@ Password = "XXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXXX
 public_address_url = "nam1.cloud.thethings.network"
 public_address_port = 1883
 public_address = f"{public_address_url}:{public_address_port}"
-
-device_ID = "eui-xxxxxxxxxxxxxxxx"
-AppEUI = "0000000000000000"
-DevEUI = "XXXXXXXXXXXXXXXX"
-AppKey = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 ```
 <br />
 

@@ -1,11 +1,10 @@
-from flask import render_template, request, redirect, url_for, jsonify
+from flask import render_template, request, redirect, url_for
 from werkzeug.exceptions import NotFound
 
 from database.gestion import database, USERS_DB, app, socketio
-from database.mail import get_all_emails, send_email
 from database.addUser import hash_password, verify_password, verify_username, get_username, add_user
 from database.deleteUser import get_user_id, delete_user
-from database.sensor import plot, update_plot, set_sensor_alert_value
+from database.sensor import update_plot, SENSORS
 
 
 # User object for the current user (used for the login and register pages as well as in the navbar and index page)
@@ -29,8 +28,9 @@ current_user = {
 
 @socketio.on('set_alert_value')
 def handle_set_alert_value(data):
+    sensor = SENSORS[data['sensor_id']-1]
     alert_value = data['alert_value']
-    update_plot(plot, alert_value)
+    update_plot(sensor, alert_value)
 
 
 
@@ -45,7 +45,8 @@ def index():
     current_user['delete_success'] = False
     
     if current_user['is_authenticated']:
-        return render_template('index.html', current_user=current_user, plot=plot)
+        print(SENSORS, flush=True)
+        return render_template('index.html', current_user=current_user, sensors=SENSORS)
 
     return render_template('index.html', current_user=current_user)
 
@@ -165,23 +166,6 @@ def delete_account():
     
     return render_template('delete_account.html', current_user=current_user)
 
-
-
-@app.route('/send_test_mail', methods=['POST'])
-def send_test_mail():
-    current_value = 15
-    try: # send notification to all users      
-        connection = database.connect(USERS_DB)
-        email_list = get_all_emails(connection)
-        for email in email_list:
-            send_email(email, "IoT Alert", f"The sensor {plot['sensor_name']} has exceeded the threshold {plot['limit']} with a value of {current_value}!")
-
-    except Exception as error:
-        print("[ERROR] : SQL connection failed:", error)
-
-    finally:
-        connection.close()
-    return redirect(url_for('index'))
 
 
 

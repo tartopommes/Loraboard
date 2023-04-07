@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container-fluid px-5">
-		<div class="row justify-content-center flex-column flex-md-row">
+    <div class="container-fluid">
+		<div class="row justify-content-center flex-column flex-md-row px-2">
 
 			{% if current_user.delete_success %}
 			<div class="col-md-8 my-5 text-center">
@@ -11,35 +11,122 @@
 				</div>
 			</div>
 			{% endif %}
-				
+
+			
 			{% if current_user.is_authenticated %}
-			<!-- PLOT -->
-			<div class="col-md-6 text-center">
-				<div class="card my-5">
-					<div class="card-body">
-						<div id="plot-div">
-							{{ plot.html|safe }}
+			<div class="col-md-10 text-center">
+
+				<!-- SENSOR 1 -->
+				<div class="row justify-content-center my-4">
+					<div class="col-md-8 text-center">
+						<div class="card">
+							<div class="card-body">
+								<!-- PLOT 1 -->
+								<div id="plot-div-1">
+									{{ sensors[0].html_plot|safe }}
+								</div>
+							</div>
+							<div class="row justify-content-center my-3">
+								<div class="col-md-4">
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text">Alert value:</span>
+										</div>
+										<!-- CHANGE LIMIT 1 -->
+										<input type="number" class="form-control" id="input-limit-1" name="limit" min="0.0" max="15.0" step="0.1" value="{{ sensors[0].alert_value }}">
+										<small id="emailHelp" class="form-text text-muted">Set the value limit for email alerts.</small>
+									</div>
+								</div>	
+							</div>
 						</div>
 					</div>
-					<!-- CHANGE LIMIT -->
-					<div class="row justify-content-center my-3">
-						<div class="col-md-4">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">Alert value:</span>
-								</div>
-								<input type="number" class="form-control" id="input-limit" name="limit" min="0.0" max="15.0" step="0.1" value="{{ plot.limit }}">
-								<small id="emailHelp" class="form-text text-muted">Set the value limit for email alerts.</small>
-							</div>
-						</div>	
+					<div class="col-md-4 text-center">
+						<!-- TABLE 1 -->
+						<div class="card" id="plot-table-1">
+							{{ sensors[0].table|safe }}
+						</div>
 					</div>
 				</div>
-			</div>
-			<!-- TABLE -->
-			<div class="col-md-6 text-center my-5">
-				<div class="card" id="plot-table">
-					{{ plot.table|safe }}
+				<!-- ALERT 1 -->
+				<div class="row justify-content-center">
+					<div class="col-md-6 text-center" id="alert-box-1">
+					</div>
 				</div>
+
+				<!-- SENSOR 2 -->
+				<div class="row justify-content-center my-4">
+					<div class="col-md-8 text-center">
+						<div class="card">
+							<div class="card-body">
+								<!-- PLOT 2 -->
+								<div id="plot-div-2">
+									{{ sensors[1].html_plot|safe }}
+								</div>
+							</div>
+							<div class="row justify-content-center my-3">
+								<div class="col-md-4">
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text">Alert value:</span>
+										</div>
+										<!-- CHANGE LIMIT 2 -->
+										<input type="number" class="form-control" id="input-limit-2" name="limit" min="0.0" max="15.0" step="0.1" value="{{ sensors[1].alert_value }}">
+										<small id="emailHelp" class="form-text text-muted">Set the value limit for email alerts.</small>
+									</div>
+								</div>	
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4 text-center">
+						<!-- TABLE 2 -->
+						<div class="card" id="plot-table-2">
+							{{ sensors[1].table|safe }}
+						</div>
+					</div>
+				</div>
+				<!-- ALERT 2 -->
+				<div class="row justify-content-center">
+					<div class="col-md-6 text-center" id="alert-box-2">
+					</div>
+				</div>
+
+				<!-- SENSOR 3 -->
+				<div class="row justify-content-center my-4">
+					<div class="col-md-8 text-center">
+						<div class="card">
+							<div class="card-body">
+								<!-- PLOT 3 -->
+								<div id="plot-div-3">
+									{{ sensors[2].html_plot|safe }}
+								</div>
+							</div>
+							<div class="row justify-content-center my-3">
+								<div class="col-md-4">
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text">Alert value:</span>
+										</div>
+										<!-- CHANGE LIMIT 3 -->
+										<input type="number" class="form-control" id="input-limit-3" name="limit" min="0.0" max="15.0" step="0.1" value="{{ sensors[2].alert_value }}">
+										<small id="emailHelp" class="form-text text-muted">Set the value limit for email alerts.</small>
+									</div>
+								</div>	
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4 text-center">
+						<!-- TABLE 3 -->
+						<div class="card" id="plot-table-3">
+							{{ sensors[2].table|safe }}
+						</div>
+					</div>
+				</div>
+				<!-- ALERT 3 -->
+				<div class="row justify-content-center">
+					<div class="col-md-6 text-center" id="alert-box-3">
+					</div>
+				</div>
+
 			</div>
 
 			{% else %}
@@ -57,12 +144,6 @@
 		</div>
 
 		{% if current_user.is_authenticated %}
-		<!-- ALERT -->
-		<div class="row justify-content-center">
-			<div class="col-md-6 text-center" id="alert-box">
-			</div>
-		</div>
-
 		<!-- JQUERY -->
 		<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 		<!-- SOCKET.IO -->
@@ -72,20 +153,25 @@
 			$(document).ready(function() {
 				let socket = io.connect('http://' + document.domain + ':' + location.port);
 
-				// [RECEIVE] Update plot and table
+				// [RECEIVE] Update plot and table of the specified sensor_id
 				socket.on('update', function(data) {
-					$('#plot-div').html(data.html_plot);
-					$('#plot-table').html(data.table);
+					$('#plot-div-'+data.sensor_id).html(data.html_plot);
+					$('#plot-table-'+data.sensor_id).html(data.table);
 				});
 
 				// [SEND] Update alert value
-				$('#input-limit').change(function() {
-					socket.emit('set_alert_value', {'alert_value': $('#input-limit').val()});
-				});
+				for (let i = 1; i <= 3; i++) {
+					$('#input-limit-'+i).change(function() {
+						socket.emit('set_alert_value', {
+							'sensor_id': i,
+							'alert_value': $('#input-limit-'+i).val()
+						});
+					});
+				}
 				
 				// [RECEIVE] 
 				socket.on('alert', function(data) {
-					$('#alert-box').append(data);
+					$('#alert-box-'+data.sensor_id).append(data.message);
 				});
 			});
 		</script>
