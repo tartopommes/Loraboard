@@ -37,7 +37,8 @@ def make_table(df) -> str:
     """
 
     # Initialize the HTML table
-    table_html =  '<h3 class="mb-4 my-2">Live data</h3>'
+    table_html =  '<h4 class="mb-4 my-2">Live data</h4>'
+    table_html += '<div style="border-radius: 10px; background-color: #fafafa;">'
     table_html += '<table class="table">'
     
     # Add the table headers
@@ -59,6 +60,7 @@ def make_table(df) -> str:
     
     # Finalize the HTML table
     table_html += '</table>'
+    table_html += '</div>'
     
     return table_html
 
@@ -87,7 +89,7 @@ def make_figure(df, sensor_name: str, limit: int) -> go.Figure:
         layout=go.Layout(
             title=sensor_name,
             xaxis_title='Time',
-            yaxis_title='Value')
+            yaxis_title='People')
     )
 
     fig.add_hline(y=limit, line_width=1, line_dash="dash", line_color="red", name="limit")

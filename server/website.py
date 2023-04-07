@@ -45,7 +45,6 @@ def index():
     current_user['delete_success'] = False
     
     if current_user['is_authenticated']:
-        print(SENSORS, flush=True)
         return render_template('index.html', current_user=current_user, sensors=SENSORS)
 
     return render_template('index.html', current_user=current_user)
