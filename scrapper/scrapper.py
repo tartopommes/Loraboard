@@ -18,8 +18,6 @@ def on_connect(client: mqtt.Client, userdata, flags, rc: int):
     #6-255: Currently unused.
     client.subscribe('#', qos=0)
 
-
-
 # https://pypi.org/project/paho-mqtt/#callbacks
 def on_message(client: mqtt.Client, userdata, msg: str):
     """The callback for when a PUBLISH message is received from the server."""
@@ -69,42 +67,93 @@ def on_message(client: mqtt.Client, userdata, msg: str):
     payload_value += ((decoded_payload >> 24) & 0xFF) << 0 
     print("Payload (converted) :" + str(payload_value))
 
+    #time = datetime.now(timezone('America/Montreal')).strftime('%Y-%m-%d %H:%M:%S') # TODO : get the time from the packet with received_at obj.
+    fake_db_upload(deveui=device_id, rssi=rssi, value=payload_value) # time must have the following format: '%Y-%m-%d %H:%M'
+
+test_sensor_rssi = "0"
+test_sensor_payload_value = 0
+a8610a34351b7a0f_rssi = "0"
+a8610a34351b7a0f_payload_value = 0
+aaaaaabbbbbbbbbb_rssi = "0"
+aaaaaabbbbbbbbbb_payload_value = 0
+abababababababab_rssi = "0"
+abababababababab_payload_value = 0
+
+def fake_db_upload(deveui:str, rssi:str, value:int):
+    global test_sensor_rssi, test_sensor_payload_value, a8610a34351b7a0f_rssi, a8610a34351b7a0f_payload_value, aaaaaabbbbbbbbbb_rssi, aaaaaabbbbbbbbbb_payload_value, abababababababab_rssi, abababababababab_payload_value
+    if deveui == 'test_sensor':
+        test_sensor_rssi = rssi
+        test_sensor_payload_value = value
+    elif deveui == 'eui-a8610a34351b7a0f':
+        a8610a34351b7a0f_rssi = rssi
+        a8610a34351b7a0f_payload_value = value
+    elif deveui == 'eui-aaaaaabbbbbbbbbb':
+        aaaaaabbbbbbbbbb_rssi = rssi
+        aaaaaabbbbbbbbbb_payload_value = value
+    elif deveui == 'eui-abababababababab':
+        abababababababab_rssi = rssi
+        abababababababab_payload_value = value
+    else:
+        print(f"Unknown device eui : {deveui}")
+        
+def real_db_upload():
+    global test_sensor_rssi, test_sensor_payload_value, a8610a34351b7a0f_rssi, a8610a34351b7a0f_payload_value, aaaaaabbbbbbbbbb_rssi, aaaaaabbbbbbbbbb_payload_value, abababababababab_rssi, abababababababab_payload_value
     time = datetime.now(timezone('America/Montreal')).strftime('%Y-%m-%d %H:%M:%S') # TODO : get the time from the packet with received_at obj.
-    add_sensor_data(deveui=device_id, rssi=rssi, time=time, value=payload_value) # time must have the following format: '%Y-%m-%d %H:%M'
+            
+    add_sensor_data(deveui='test_sensor', rssi=test_sensor_rssi, time=time, value=test_sensor_payload_value)
+    add_sensor_data(deveui='eui-a8610a34351b7a0f', rssi=a8610a34351b7a0f_rssi, time=time, value=a8610a34351b7a0f_payload_value)
+    add_sensor_data(deveui='eui-aaaaaabbbbbbbbbb', rssi=aaaaaabbbbbbbbbb_rssi, time=time, value=aaaaaabbbbbbbbbb_payload_value)
+    add_sensor_data(deveui='eui-abababababababab', rssi=abababababababab_rssi, time=time, value=abababababababab_payload_value)
 
-    # try:
-    #     add_sensor_data(sensor_name=device_id, rssi=rssi, time=time, value=payload_value) # time must have the following format: '%Y-%m-%d %H:%M'
-    # except Exception as e:
-    #     print("[ERROR] Data already exist:", e)
+    test_sensor_rssi = "0"
+    test_sensor_payload_value = 0
+    a8610a34351b7a0f_rssi = "0"
+    a8610a34351b7a0f_payload_value = 0
+    aaaaaabbbbbbbbbb_rssi = "0"
+    aaaaaabbbbbbbbbb_payload_value = 0
+    abababababababab_rssi = "0"
+    abababababababab_payload_value = 0
 
 
+def run():
+    
+    ### Create a client instance
+    mqttc = mqtt.Client(
+        client_id=Username_ssh, 
+        clean_session=True, 
+        userdata=None, 
+        protocol=mqtt.MQTTv311,
+        transport="tcp"
+    )
 
-### Create a client instance
-mqttc = mqtt.Client(
-    client_id=Username_ssh, 
-    clean_session=True, 
-    userdata=None, 
-    protocol=mqtt.MQTTv311,
-    transport="tcp"
-)
+    mqttc.on_connect = on_connect
+    mqttc.on_message = on_message
 
-mqttc.on_connect = on_connect
-mqttc.on_message = on_message
-
-mqttc.username_pw_set(Username, password=Password)
-
-if __name__ == "__main__":
-    ### Connect to broker
+    mqttc.username_pw_set(Username, password=Password)
+    
+    # connect to the MQTT broker
     mqttc.connect(
         public_address_url, 
         port=public_address_port, 
         keepalive=60, 
-        bind_address=""
-    )
+        bind_address="")
 
-    ### Main loop
-    run = True
-    while run:
+    import time
+    last_time = time.time()
+    DELAY = 10
 
-        # loop wait for data
+    # loop wait for data
+    while True:
+        if (last_time + DELAY < time.time()):
+            real_db_upload()
+            last_time = time.time()
+
         mqttc.loop()
+
+        # try:
+        #     mqttc.loop()
+        # except Exception as error:
+        #     print("[ERROR] : MQTT eror:", error, "Continuing loop...")    
+
+if __name__ == "__main__":
+    run()

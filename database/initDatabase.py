@@ -35,7 +35,9 @@ def create_tables(connection):
                       id            integer PRIMARY KEY,
                       deveui        text NOT NULL,
                       name          text NOT NULL,
-                      alert_value   text NOT NULL
+                      alert_value   text NOT NULL,
+                      lat           real NOT NULL,
+                      long          real NOT NULL
                   );"""
     write(connection, request)
     connection.commit()
@@ -46,9 +48,8 @@ def create_tables(connection):
                       sensor_id     text NOT NULL,
                       rssi          text NOT NULL,
                       time          text NOT NULL,
-                      value         text NOT NULL,
-                      unique(time, value)
-                  );"""
+                      value         text NOT NULL
+                  );""" #ne pas mettre : unique(time, value), sinon 2 capteur ne peuvent pas avoir la même valeur en même temps
     write(connection, request)
     connection.commit()
 
@@ -65,12 +66,12 @@ def fill_user(connection):
     write(connection, (request, data), many=True)
 
     # Add some sensors into sensors table
-    request = f'INSERT INTO {SENSORS_TABLE} (deveui, name, alert_value) values(?, ?, ?)'
+    request = f'INSERT INTO {SENSORS_TABLE} (deveui, name, alert_value, lat, long) values(?, ?, ?, ?, ?)'
     data = [ 
-        ('test_sensor',          'test_sensor', '14'),
-        ('eui-a8610a34351b7a0f', 'Newton',      '5' ),
-        ('eui-aaaaaabbbbbbbbbb', 'Racine',      '6' ),
-        ('eui-abababababababab', 'Chenevert',   '7' ),
+        ('test_sensor',          'test_sensor', '14', 48.420258, -71.048619),
+        ('eui-a8610a34351b7a0f', 'Newton',      '5' , 48.426258, -71.058619),
+        ('eui-aaaaaabbbbbbbbbb', 'Racine',      '6' , 48.420672, -71.043423),
+        ('eui-abababababababab', 'Chenevert',   '7' , 48.427633, -71.061468),
     ]
     write(connection, (request, data), many=True)
 
