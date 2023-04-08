@@ -319,7 +319,7 @@ def add_sensor_data(deveui: int, rssi:int, time: str, value: int):
         print('[INFO]: Mail alert sent!')
 
     # Update the plot for the web interface (even if it's not for the current sensor)
-    update_plot(SENSORS[sensor_id-1])
+    #update_plot(SENSORS[sensor_id-1])
     print(f"[INFO] The data {data} of the sensor {sensor_id} has been added to the database.")
 
 
