@@ -55,6 +55,7 @@ def index():
         for sensor in SENSORS:
             if (len(sensor.dataframe["Time"]) > 0):
                 markers.append({
+                    'id':sensor.id, 
                     'lat':sensor.lat, 
                     'lon':sensor.long, 
                     'name':sensor.name,
@@ -63,6 +64,7 @@ def index():
                 })
             else:
                 markers.append({
+                    'id':sensor.id, 
                     'lat':sensor.lat, 
                     'lon':sensor.long, 
                     'name':sensor.name,

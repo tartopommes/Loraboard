@@ -21,21 +21,13 @@
 					City map
 				</a>
 			</li>
+			{% for marker in markers %}
 			<li class="nav-item">
-				<a href="#test_sensor" class="nav-link link-body-emphasis">
-					test_sensor
+				<a href="#{{ marker['name'] }}" class="nav-link link-body-emphasis">
+					{{ marker['name'] }}
 				</a>
 			</li>
-			<li>
-				<a href="#Newton" class="nav-link link-body-emphasis">
-					Newton
-				</a>
-			</li>
-			<li>
-				<a href="#Racine" class="nav-link link-body-emphasis">
-					Racine
-				</a>
-			</li>
+			{% endfor %}
 		</ul>
 	</div>
 	<script>
@@ -86,16 +78,17 @@
 					</div>
 				</div>
 
-				<!-- SENSOR 1 -->
-				<div class="card my-5" id="test_sensor">
+				{% for marker in markers %}
+				<!-- SENSOR {{ marker['id'] }} -->
+				<div class="card my-5" id="{{ marker['name'] }}">
 					<div class="card-body">
 						<div class="row align-items-center justify-content-center ">
 							<div class="col-md-8 text-center">
 								<div class="card border-0">
 									<div class="card-body">
-										<!-- PLOT 1 -->
-										<div id="plot-div-1">
-											{{ sensors[0].html_plot|safe }}
+										<!-- PLOT {{ marker['id'] }} -->
+										<div id="plot-div-{{ marker['id'] }}">
+											{{ sensors[ marker['id']-1 ].html_plot|safe }}
 										</div>
 									</div>
 									<div class="row justify-content-center my-3">
@@ -104,10 +97,10 @@
 												<div class="input-group-prepend">
 													<span class="input-group-text">Alert value:</span>
 												</div>
-												<!-- CHANGE LIMIT 1 -->
-												<input type="number" class="form-control" id="input-limit-1"
+												<!-- CHANGE LIMIT {{ marker['id'] }} -->
+												<input type="number" class="form-control" id="input-limit-{{ marker['id'] }}"
 													name="limit" min="0.0" max="15.0" step="0.1"
-													value="{{ sensors[0].alert_value }}">
+													value="{{ sensors[ marker['id'] -1].alert_value }}">
 												<small id="emailHelp" class="form-text text-muted">Set the value limit
 													for email
 													alerts.</small>
@@ -117,110 +110,21 @@
 								</div>
 							</div>
 							<div class="col-md-4 text-center">
-								<!-- TABLE 1 -->
-								<div class="card border-0" id="plot-table-1">
-									{{ sensors[0].table|safe }}
+								<!-- TABLE {{ marker['id'] }} -->
+								<div class="card border-0" id="plot-table-{{ marker['id'] }}">
+									{{ sensors[ marker['id']-1 ].table|safe }}
 								</div>
 							</div>
 						</div>
-						<!-- ALERT 1 -->
+						<!-- ALERT {{ marker['id'] }} -->
 						<div class="row justify-content-center">
-							<div class="col-md-6 text-center" id="alert-box-1">
+							<div class="col-md-6 text-center" id="alert-box-{{ marker['id'] }}">
 							</div>
 						</div>
 					</div>
 				</div>
-
-				<!-- SENSOR 2 -->
-				<div class="card my-5" id="Newton">
-					<div class="card-body">
-						<div class="row align-items-center  justify-content-center my-4">
-							<div class="col-md-8 text-center">
-								<div class="card border-0">
-									<div class="card-body">
-										<!-- PLOT 2 -->
-										<div id="plot-div-2">
-											{{ sensors[1].html_plot|safe }}
-										</div>
-									</div>
-									<div class="row justify-content-center my-3">
-										<div class="col-md-4">
-											<div class="input-group">
-												<div class="input-group-prepend">
-													<span class="input-group-text">Alert value:</span>
-												</div>
-												<!-- CHANGE LIMIT 2 -->
-												<input type="number" class="form-control" id="input-limit-2"
-													name="limit" min="0.0" max="15.0" step="0.1"
-													value="{{ sensors[1].alert_value }}">
-												<small id="emailHelp" class="form-text text-muted">Set the value limit
-													for email
-													alerts.</small>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-4 text-center">
-								<!-- TABLE 2 -->
-								<div class="card border-0" id="plot-table-2">
-									{{ sensors[1].table|safe }}
-								</div>
-							</div>
-						</div>
-						<!-- ALERT 2 -->
-						<div class="row justify-content-center">
-							<div class="col-md-8 text-center" id="alert-box-2">
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- SENSOR 3 -->
-				<div class="card my-5" id="Racine">
-					<div class="card-body">
-						<div class="row align-items-center  justify-content-center my-4">
-							<div class="col-md-8 text-center">
-								<div class="card border-0">
-									<div class="card-body">
-										<!-- PLOT 3 -->
-										<div id="plot-div-3">
-											{{ sensors[2].html_plot|safe }}
-										</div>
-									</div>
-									<div class="row justify-content-center my-3">
-										<div class="col-md-4">
-											<div class="input-group">
-												<div class="input-group-prepend">
-													<span class="input-group-text">Alert value:</span>
-												</div>
-												<!-- CHANGE LIMIT 3 -->
-												<input type="number" class="form-control" id="input-limit-3"
-													name="limit" min="0.0" max="15.0" step="0.1"
-													value="{{ sensors[2].alert_value }}">
-												<small id="emailHelp" class="form-text text-muted">Set the value limit
-													for email
-													alerts.</small>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-4 text-center">
-								<!-- TABLE 3 -->
-								<div class="card" id="plot-table-3">
-									{{ sensors[2].table|safe }}
-								</div>
-							</div>
-						</div>
-						<!-- ALERT 3 -->
-						<div class="row justify-content-center">
-							<div class="col-md-6 text-center" id="alert-box-3">
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+				{% endfor %}
+				
 
 			{% else %}
 			<div class="col-md-8 my-5 text-center">
@@ -249,7 +153,7 @@
 				});
 
 				// [SEND] Update alert value
-				for (let i = 1; i <= 3; i++) {
+				for (let i = 0; i <= 3; i++) {
 					$('#input-limit-' + i).change(function () {
 						socket.emit('set_alert_value', {
 							'sensor_id': i,
