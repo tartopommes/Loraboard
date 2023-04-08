@@ -17,6 +17,11 @@
 		</a>
 		<ul class="nav nav-pills flex-column mb-auto">
 			<li class="nav-item">
+				<a href="#map" class="nav-link link-body-emphasis active">
+					City map
+				</a>
+			</li>
+			<li class="nav-item">
 				<a href="#sensor-1" class="nav-link link-body-emphasis active">
 					test_sensor
 				</a>
@@ -64,6 +69,22 @@
 
 			{% if current_user.is_authenticated %}
 			<div class="col-md-10 text-center">
+
+				<!-- City map -->
+				<div class="card my-5" id="map">
+					<div class="card-body">
+						<div id="map"></div>
+						<script src="{{ url_for('static', filename='js/universal.js') }}" /></script>
+						<script>
+							{% for marker in markers %}
+								L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}])
+									.addTo(map)
+									.bindPopup("<b>{{ marker['name'] }}</b><br>time : {{ marker['time'] }}<br>Last value : {{ marker['value'] }}")
+									.openPopup();
+							{% endfor %}
+						</script>
+					</div>
+				</div>
 
 				<!-- SENSOR 1 -->
 				<div class="card my-5" id="sensor-1">

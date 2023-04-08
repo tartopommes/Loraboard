@@ -46,13 +46,34 @@ def index():
     
     if current_user['is_authenticated']:
         # intialize Sensors after generating a database
+
         global SENSORS
-        if SENSORS == '':
+        if SENSORS == None:
             SENSORS = get_sensors()
-        return render_template('index.html', current_user=current_user, sensors=SENSORS)
+
+
+        markers=[]
+        for sensor in SENSORS:
+            if (len(sensor.dataframe["Time"]) > 0):
+                markers.append({
+                    'lat':sensor.lat, 
+                    'lon':sensor.long, 
+                    'name':sensor.name,
+                    'time':sensor.dataframe["Time"].iloc[-1],
+                    'value':sensor.dataframe["Value"].iloc[-1],
+                })
+            else:
+                markers.append({
+                    'lat':sensor.lat, 
+                    'lon':sensor.long, 
+                    'name':sensor.name,
+                    'time':'no data',
+                    'value':'no data',
+                })
+
+        return render_template('index.html', current_user=current_user, sensors=SENSORS, markers=markers)
 
     return render_template('index.html', current_user=current_user)
-
 
 
 # Register page

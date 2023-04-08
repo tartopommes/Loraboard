@@ -4,13 +4,13 @@ import plotly.graph_objs as go
 from datetime import datetime, timedelta
 
 from database.gestion import database, USERS_DB, SENSORS_TABLE, DATA_TABLE, write, read, List, Tuple, socketio
-from database.mail import send_mail_to_all
+#from database.mail import send_mail_to_all
 
 
 
 # Sensors object
 class Sensor:
-    def __init__(self, id, name, dataframe, fig, html_plot, alert_value, table):
+    def __init__(self, id, name, dataframe, fig, html_plot, alert_value, table, lat, long):
         self.id = id
         self.name = name
         self.dataframe = dataframe
@@ -18,6 +18,8 @@ class Sensor:
         self.html_plot = html_plot
         self.alert_value = alert_value
         self.table = table
+        self.lat = lat
+        self.long = long
 
     def __str__(self):
         return f"Sensor {self.id} ({self.name})"
@@ -302,7 +304,7 @@ def add_sensor_data(deveui: int, rssi:int, time: str, value: int):
 
     # If alert
     if float(value) >= float(alert_value):
-        send_mail_to_all("IoT Alert", f"The sensor {sensor_name} has exceeded the threshold {alert_value} with a value of {value}!")
+        #send_mail_to_all("IoT Alert", f"The sensor {sensor_name} has exceeded the threshold {alert_value} with a value of {value}!")
         socketio.emit('alert', {
             'sensor_id': sensor_id,
             'message': f'''
@@ -350,11 +352,11 @@ def get_sensors():
         A list of Sensor objects.
     """
     connection = database.Connection(USERS_DB)
-    result = read(connection, f'SELECT id, name, alert_value FROM {SENSORS_TABLE}')
+    result = read(connection, f'SELECT id, name, alert_value, lat, long FROM {SENSORS_TABLE}')
     connection.close()
 
     sensors = []
-    for row in result[0:3]: # We only want the 1st 3 items for the demo
+    for row in result: # We only want the 1st 3 items for the demo
         sensor_id = row[0]
         sensor_name = row[1]
         alert_value = row[2]
@@ -362,7 +364,9 @@ def get_sensors():
         fig = make_figure(dataframe, sensor_name, alert_value)
         html_plot = fig.to_html(full_html=False)
         table = make_table(dataframe)
-        sensor = Sensor(sensor_id, sensor_name, dataframe, fig, html_plot, alert_value, table)
+        lat = row[3]
+        long = row[4]
+        sensor = Sensor(sensor_id, sensor_name, dataframe, fig, html_plot, alert_value, table, lat, long)
         sensors.append(sensor)
 
     return sensors
