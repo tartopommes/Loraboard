@@ -48,8 +48,9 @@ def create_tables(connection):
                       sensor_id     text NOT NULL,
                       rssi          text NOT NULL,
                       time          text NOT NULL,
-                      value         text NOT NULL
-                  );""" #ne pas mettre : unique(time, value), sinon 2 capteur ne peuvent pas avoir la même valeur en même temps
+                      value         text NOT NULL,
+                      unique(sensor_id, time, value)
+                  );"""
     write(connection, request)
     connection.commit()
 

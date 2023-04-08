@@ -4,9 +4,7 @@ import plotly.graph_objs as go
 from datetime import datetime, timedelta
 
 from database.gestion import database, USERS_DB, SENSORS_TABLE, DATA_TABLE, write, read, List, Tuple, socketio
-from database.mail import send_mail_to_all
-
-
+#from database.mail import send_mail_to_all
 
 # Sensors object
 class Sensor:
@@ -287,6 +285,7 @@ def add_sensor_data(deveui: int, rssi:int, time: str, value: int):
         data: A list of tuples containing the data of the sensor.
         value: An integer representing the value of the sensor.
     """
+    SENSORS = get_sensors()
     # Prepare the query with the data for the database
     connection = database.Connection(USERS_DB)
     query = f'INSERT INTO {DATA_TABLE} (sensor_id, rssi, time, value) VALUES (?, ?, ?, ?)'
@@ -304,7 +303,7 @@ def add_sensor_data(deveui: int, rssi:int, time: str, value: int):
 
     # If alert
     if float(value) >= float(alert_value):
-        send_mail_to_all("IoT Alert", f"The sensor {sensor_name} has exceeded the threshold {alert_value} with a value of {value}!")
+        #send_mail_to_all("IoT Alert", f"The sensor {sensor_name} has exceeded the threshold {alert_value} with a value of {value}!")
         socketio.emit('alert', {
             'sensor_id': sensor_id,
             'message': f'''
@@ -319,7 +318,7 @@ def add_sensor_data(deveui: int, rssi:int, time: str, value: int):
         print('[INFO]: Mail alert sent!')
 
     # Update the plot for the web interface (even if it's not for the current sensor)
-    #update_plot(SENSORS[sensor_id-1])
+    update_plot(SENSORS[sensor_id-1])
     print(f"[INFO] The data {data} of the sensor {sensor_id} has been added to the database.")
 
 
@@ -370,6 +369,3 @@ def get_sensors():
         sensors.append(sensor)
 
     return sensors
-
-
-SENSORS = None

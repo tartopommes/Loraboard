@@ -67,7 +67,6 @@ def on_message(client: mqtt.Client, userdata, msg: str):
     payload_value += ((decoded_payload >> 24) & 0xFF) << 0 
     print("Payload (converted) :" + str(payload_value))
 
-    #time = datetime.now(timezone('America/Montreal')).strftime('%Y-%m-%d %H:%M:%S') # TODO : get the time from the packet with received_at obj.
     fake_db_upload(deveui=device_id, rssi=rssi, value=payload_value) # time must have the following format: '%Y-%m-%d %H:%M'
 
 test_sensor_rssi = "0"

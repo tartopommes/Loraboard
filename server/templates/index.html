@@ -22,26 +22,26 @@
 				</a>
 			</li>
 			<li class="nav-item">
-				<a href="#sensor-1" class="nav-link link-body-emphasis active">
+				<a href="#test_sensor" class="nav-link link-body-emphasis">
 					test_sensor
 				</a>
 			</li>
 			<li>
-				<a href="#sensor-2" class="nav-link link-body-emphasis">
+				<a href="#Newton" class="nav-link link-body-emphasis">
 					Newton
 				</a>
 			</li>
 			<li>
-				<a href="#sensor-3" class="nav-link link-body-emphasis">
+				<a href="#Racine" class="nav-link link-body-emphasis">
 					Racine
 				</a>
 			</li>
 		</ul>
 	</div>
 	<script>
-		$(document).ready(function() {
+		$(document).ready(function () {
 			let navLinks = $('.nav-link');
-			navLinks.click(function() {
+			navLinks.click(function () {
 				navLinks.removeClass('active');
 				$(this).addClass('active');
 			});
@@ -74,20 +74,21 @@
 				<div class="card my-5" id="map">
 					<div class="card-body">
 						<div id="map"></div>
-						<script src="{{ url_for('static', filename='js/universal.js') }}" /></script>
+						<script src="{{ url_for('static', filename='js/universal.js') }}" />
+						</script>
 						<script>
 							{% for marker in markers %}
-								L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}])
-									.addTo(map)
-									.bindPopup("<b>{{ marker['name'] }}</b><br>time : {{ marker['time'] }}<br>Last value : {{ marker['value'] }}")
-									.openPopup();
+							L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}])
+								.addTo(map)
+								.bindPopup("<b>{{ marker['name'] }}</b><br>🕝 time : {{ marker['time'] }}<br>📊 value : {{ marker['value'] }}<br>📌 <a href=\"#{{ marker['name'] }}\">{{ marker['name'] }}</a>")
+								.openPopup();
 							{% endfor %}
 						</script>
 					</div>
 				</div>
 
 				<!-- SENSOR 1 -->
-				<div class="card my-5" id="sensor-1">
+				<div class="card my-5" id="test_sensor">
 					<div class="card-body">
 						<div class="row align-items-center justify-content-center ">
 							<div class="col-md-8 text-center">
@@ -105,9 +106,11 @@
 													<span class="input-group-text">Alert value:</span>
 												</div>
 												<!-- CHANGE LIMIT 1 -->
-												<input type="number" class="form-control" id="input-limit-1" name="limit"
-													min="0.0" max="15.0" step="0.1" value="{{ sensors[0].alert_value }}">
-												<small id="emailHelp" class="form-text text-muted">Set the value limit for email
+												<input type="number" class="form-control" id="input-limit-1"
+													name="limit" min="0.0" max="15.0" step="0.1"
+													value="{{ sensors[0].alert_value }}">
+												<small id="emailHelp" class="form-text text-muted">Set the value limit
+													for email
 													alerts.</small>
 											</div>
 										</div>
@@ -130,90 +133,94 @@
 				</div>
 
 				<!-- SENSOR 2 -->
-				<div class="card my-5" id="sensor-1">
+				<div class="card my-5" id="Newton">
 					<div class="card-body">
-				<div class="row align-items-center  justify-content-center my-4" id="sensor-2">
-					<div class="col-md-8 text-center">
-						<div class="card border-0">
-							<div class="card-body">
-								<!-- PLOT 2 -->
-								<div id="plot-div-2">
-									{{ sensors[1].html_plot|safe }}
-								</div>
-							</div>
-							<div class="row justify-content-center my-3">
-								<div class="col-md-4">
-									<div class="input-group">
-										<div class="input-group-prepend">
-											<span class="input-group-text">Alert value:</span>
+						<div class="row align-items-center  justify-content-center my-4">
+							<div class="col-md-8 text-center">
+								<div class="card border-0">
+									<div class="card-body">
+										<!-- PLOT 2 -->
+										<div id="plot-div-2">
+											{{ sensors[1].html_plot|safe }}
 										</div>
-										<!-- CHANGE LIMIT 2 -->
-										<input type="number" class="form-control" id="input-limit-2" name="limit"
-											min="0.0" max="15.0" step="0.1" value="{{ sensors[1].alert_value }}">
-										<small id="emailHelp" class="form-text text-muted">Set the value limit for email
-											alerts.</small>
+									</div>
+									<div class="row justify-content-center my-3">
+										<div class="col-md-4">
+											<div class="input-group">
+												<div class="input-group-prepend">
+													<span class="input-group-text">Alert value:</span>
+												</div>
+												<!-- CHANGE LIMIT 2 -->
+												<input type="number" class="form-control" id="input-limit-2"
+													name="limit" min="0.0" max="15.0" step="0.1"
+													value="{{ sensors[1].alert_value }}">
+												<small id="emailHelp" class="form-text text-muted">Set the value limit
+													for email
+													alerts.</small>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
+							<div class="col-md-4 text-center">
+								<!-- TABLE 2 -->
+								<div class="card border-0" id="plot-table-2">
+									{{ sensors[1].table|safe }}
+								</div>
+							</div>
+						</div>
+						<!-- ALERT 2 -->
+						<div class="row justify-content-center">
+							<div class="col-md-8 text-center" id="alert-box-2">
+							</div>
 						</div>
 					</div>
-					<div class="col-md-4 text-center">
-						<!-- TABLE 2 -->
-						<div class="card border-0" id="plot-table-2">
-							{{ sensors[1].table|safe }}
-						</div>
-					</div>
-				</div>
-				<!-- ALERT 2 -->
-				<div class="row justify-content-center">
-					<div class="col-md-8 text-center" id="alert-box-2">
-					</div>
-				</div>
-				</div>
 				</div>
 
 				<!-- SENSOR 3 -->
-				<div class="card my-5" id="sensor-1">
+				<div class="card my-5" id="Racine">
 					<div class="card-body">
-				<div class="row align-items-center  justify-content-center my-4" id="sensor-3">
-					<div class="col-md-8 text-center">
-						<div class="card border-0">
-							<div class="card-body">
-								<!-- PLOT 3 -->
-								<div id="plot-div-3">
-									{{ sensors[2].html_plot|safe }}
-								</div>
-							</div>
-							<div class="row justify-content-center my-3">
-								<div class="col-md-4">
-									<div class="input-group">
-										<div class="input-group-prepend">
-											<span class="input-group-text">Alert value:</span>
+						<div class="row align-items-center  justify-content-center my-4">
+							<div class="col-md-8 text-center">
+								<div class="card border-0">
+									<div class="card-body">
+										<!-- PLOT 3 -->
+										<div id="plot-div-3">
+											{{ sensors[2].html_plot|safe }}
 										</div>
-										<!-- CHANGE LIMIT 3 -->
-										<input type="number" class="form-control" id="input-limit-3" name="limit"
-											min="0.0" max="15.0" step="0.1" value="{{ sensors[2].alert_value }}">
-										<small id="emailHelp" class="form-text text-muted">Set the value limit for email
-											alerts.</small>
+									</div>
+									<div class="row justify-content-center my-3">
+										<div class="col-md-4">
+											<div class="input-group">
+												<div class="input-group-prepend">
+													<span class="input-group-text">Alert value:</span>
+												</div>
+												<!-- CHANGE LIMIT 3 -->
+												<input type="number" class="form-control" id="input-limit-3"
+													name="limit" min="0.0" max="15.0" step="0.1"
+													value="{{ sensors[2].alert_value }}">
+												<small id="emailHelp" class="form-text text-muted">Set the value limit
+													for email
+													alerts.</small>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
+							<div class="col-md-4 text-center">
+								<!-- TABLE 3 -->
+								<div class="card" id="plot-table-3">
+									{{ sensors[2].table|safe }}
+								</div>
+							</div>
 						</div>
-					</div>
-					<div class="col-md-4 text-center">
-						<!-- TABLE 3 -->
-						<div class="card" id="plot-table-3">
-							{{ sensors[2].table|safe }}
+						<!-- ALERT 3 -->
+						<div class="row justify-content-center">
+							<div class="col-md-6 text-center" id="alert-box-3">
+							</div>
 						</div>
 					</div>
 				</div>
-				<!-- ALERT 3 -->
-				<div class="row justify-content-center">
-					<div class="col-md-6 text-center" id="alert-box-3">
-					</div>
-				</div>
-			</div>
-			</div>
 			</div>
 
 			{% else %}
