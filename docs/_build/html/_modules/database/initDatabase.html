@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>database.initDatabase &mdash; Loraboard 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Loraboard
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Loraboard</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Loraboard</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">database.initDatabase</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for database.initDatabase</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">database.gestion</span> <span class="kn">import</span> <span class="n">database</span><span class="p">,</span> <span class="n">USERS_DB</span><span class="p">,</span> <span class="n">USERS_TABLE</span><span class="p">,</span> <span class="n">SENSORS_TABLE</span><span class="p">,</span> <span class="n">DATA_TABLE</span><span class="p">,</span> <span class="n">write</span><span class="p">,</span> <span class="n">read</span><span class="p">,</span> <span class="n">SENSOR_NAME_FOR_INITIAL_PLOT</span>
+<span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">sha256</span>
+<span class="kn">from</span> <span class="nn">database.printDatabase</span> <span class="kn">import</span> <span class="n">print_tables</span>
+<span class="kn">from</span> <span class="nn">database.sensor</span> <span class="kn">import</span> <span class="n">get_sensor_id</span><span class="p">,</span> <span class="n">get_random_value</span>
+<span class="c1"># from sys import argv</span>
+<span class="kn">from</span> <span class="nn">traceback</span> <span class="kn">import</span> <span class="n">print_exc</span>
+
+
+
+<div class="viewcode-block" id="create_tables"><a class="viewcode-back" href="../../database.html#database.initDatabase.create_tables">[docs]</a><span class="k">def</span> <span class="nf">create_tables</span><span class="p">(</span><span class="n">connection</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create the tables in the database.&quot;&quot;&quot;</span>
+    
+    <span class="c1"># if len(argv) == 4 and argv[3]:</span>
+    <span class="c1">#     if argv[3] == &#39;reset&#39;:</span>
+    <span class="c1">#         print(&#39;[INFO] The database has been reset&#39;)</span>
+    <span class="c1">#         cursor.execute(&#39;DROP TABLE IF EXISTS users&#39;)</span>
+
+    <span class="n">write</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;DROP TABLE IF EXISTS </span><span class="si">{</span><span class="n">USERS_TABLE</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">write</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;DROP TABLE IF EXISTS </span><span class="si">{</span><span class="n">SENSORS_TABLE</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">write</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;DROP TABLE IF EXISTS </span><span class="si">{</span><span class="n">DATA_TABLE</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[INFO] The database has been reset&#39;</span><span class="p">)</span> 
+    
+    <span class="c1"># Create the users table</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;CREATE TABLE IF NOT EXISTS </span><span class="si">{</span><span class="n">USERS_TABLE</span><span class="si">}</span><span class="s2"> (</span>
+<span class="s2">                      id            integer PRIMARY KEY,</span>
+<span class="s2">                      email         text NOT NULL,</span>
+<span class="s2">                      username      text NOT NULL,</span>
+<span class="s2">                      password_hash text NOT NULL</span>
+<span class="s2">                  );&quot;&quot;&quot;</span>
+    <span class="n">write</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="c1"># Create the sensors table</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;CREATE TABLE IF NOT EXISTS </span><span class="si">{</span><span class="n">SENSORS_TABLE</span><span class="si">}</span><span class="s2"> (</span>
+<span class="s2">                      id            integer PRIMARY KEY,</span>
+<span class="s2">                      deveui        text NOT NULL,</span>
+<span class="s2">                      name          text NOT NULL,</span>
+<span class="s2">                      alert_value   text NOT NULL,</span>
+<span class="s2">                      lat           real NOT NULL,</span>
+<span class="s2">                      long          real NOT NULL</span>
+<span class="s2">                  );&quot;&quot;&quot;</span>
+    <span class="n">write</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="c1"># Create the data table</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;CREATE TABLE IF NOT EXISTS </span><span class="si">{</span><span class="n">DATA_TABLE</span><span class="si">}</span><span class="s2"> (</span>
+<span class="s2">                      id            integer PRIMARY KEY,</span>
+<span class="s2">                      sensor_id     text NOT NULL,</span>
+<span class="s2">                      rssi          text NOT NULL,</span>
+<span class="s2">                      time          text NOT NULL,</span>
+<span class="s2">                      value         text NOT NULL,</span>
+<span class="s2">                      unique(sensor_id, time, value)</span>
+<span class="s2">                  );&quot;&quot;&quot;</span>
+    <span class="n">write</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></div>
+
+
+
+
+<div class="viewcode-block" id="fill_user"><a class="viewcode-back" href="../../database.html#database.initDatabase.fill_user">[docs]</a><span class="k">def</span> <span class="nf">fill_user</span><span class="p">(</span><span class="n">connection</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill the users table with some data.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Add some users into users table</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;INSERT INTO </span><span class="si">{</span><span class="n">USERS_TABLE</span><span class="si">}</span><span class="s1"> (email, username, password_hash) values(?, ?, ?)&#39;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s1">&#39;alexis.vandemoortele.av@gmail.com&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">sha256</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span> <span class="p">]</span>
+    <span class="n">write</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">),</span> <span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Add some sensors into sensors table</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;INSERT INTO </span><span class="si">{</span><span class="n">SENSORS_TABLE</span><span class="si">}</span><span class="s1"> (deveui, name, alert_value, lat, long) values(?, ?, ?, ?, ?)&#39;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span> 
+        <span class="p">(</span><span class="s1">&#39;test_sensor&#39;</span><span class="p">,</span>          <span class="s1">&#39;test_sensor&#39;</span><span class="p">,</span> <span class="s1">&#39;14&#39;</span><span class="p">,</span> <span class="mf">48.420258</span><span class="p">,</span> <span class="o">-</span><span class="mf">71.048619</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;eui-a8610a34351b7a0f&#39;</span><span class="p">,</span> <span class="s1">&#39;Newton&#39;</span><span class="p">,</span>      <span class="s1">&#39;5&#39;</span> <span class="p">,</span> <span class="mf">48.426258</span><span class="p">,</span> <span class="o">-</span><span class="mf">71.058619</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;eui-aaaaaabbbbbbbbbb&#39;</span><span class="p">,</span> <span class="s1">&#39;Racine&#39;</span><span class="p">,</span>      <span class="s1">&#39;6&#39;</span> <span class="p">,</span> <span class="mf">48.420672</span><span class="p">,</span> <span class="o">-</span><span class="mf">71.043423</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;eui-abababababababab&#39;</span><span class="p">,</span> <span class="s1">&#39;Chenevert&#39;</span><span class="p">,</span>   <span class="s1">&#39;7&#39;</span> <span class="p">,</span> <span class="mf">48.427633</span><span class="p">,</span> <span class="o">-</span><span class="mf">71.061468</span><span class="p">),</span>
+    <span class="p">]</span>
+    <span class="n">write</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">),</span> <span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Add some data into data table</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;INSERT INTO </span><span class="si">{</span><span class="n">DATA_TABLE</span><span class="si">}</span><span class="s1"> (sensor_id, rssi, time, value) values(?, ?, ?, ?)&#39;</span>
+    <span class="n">sensor_id</span> <span class="o">=</span> <span class="n">get_sensor_id</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="s1">&#39;test_sensor&#39;</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">get_random_value</span><span class="p">(</span><span class="n">sensor_id</span><span class="p">)</span>
+    <span class="n">write</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">),</span> <span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="init_database"><a class="viewcode-back" href="../../database.html#database.initDatabase.init_database">[docs]</a><span class="k">def</span> <span class="nf">init_database</span><span class="p">(</span><span class="n">connection</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialise the database.&quot;&quot;&quot;</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">USERS_DB</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">create_tables</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
+        <span class="n">fill_user</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="n">print_exc</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[ERROR] : SQL connection failed, the database couldn&#39;t be initialised:&quot;</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../database.html#database.initDatabase.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main function.&quot;&quot;&quot;</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">USERS_TABLE</span><span class="p">)</span> <span class="c1"># create if doesn&#39;t exist</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">create_tables</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
+        <span class="n">fill_user</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
+        <span class="n">print_tables</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="n">print_exc</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[ERROR] : SQL connection failed, the database couldn&#39;t be initialised:&quot;</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Tartopom, Firefoxx, Theo.D.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

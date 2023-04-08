@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>database.deleteUser &mdash; Loraboard 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Loraboard
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Loraboard</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Loraboard</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">database.deleteUser</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for database.deleteUser</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">database.gestion</span> <span class="kn">import</span> <span class="n">USERS_DB</span><span class="p">,</span> <span class="n">USERS_TABLE</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">exit_error</span><span class="p">,</span> <span class="n">return_error</span><span class="p">,</span> <span class="n">read</span><span class="p">,</span> <span class="n">write</span>
+<span class="kn">from</span> <span class="nn">getpass</span> <span class="kn">import</span> <span class="n">getpass</span>
+<span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">sha256</span>
+<span class="kn">from</span> <span class="nn">traceback</span> <span class="kn">import</span> <span class="n">print_exc</span>
+
+
+
+<div class="viewcode-block" id="hash_password"><a class="viewcode-back" href="../../database.html#database.deleteUser.hash_password">[docs]</a><span class="k">def</span> <span class="nf">hash_password</span><span class="p">(</span><span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hash a password using SHA256.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        password: A string representing the password.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A string representing the hashed password.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">sha256</span><span class="p">(</span><span class="n">password</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="get_user_id"><a class="viewcode-back" href="../../database.html#database.deleteUser.get_user_id">[docs]</a><span class="k">def</span> <span class="nf">get_user_id</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks if the user is in the database and if the hash of the input password matches the hash in the database.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        connection (sqlite3.Connection): Connection object to the database.</span>
+<span class="sd">        username (str): Username of the user attempting to log in.</span>
+<span class="sd">        password_hash (str): Hashed password of the user attempting to log in.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: The user&#39;s ID if creds are valids, -1 otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Prepare the database query</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;SELECT id, password_hash FROM </span><span class="si">{</span><span class="n">USERS_TABLE</span><span class="si">}</span><span class="s1"> WHERE username=?&#39;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">username</span><span class="p">,)</span>
+
+    <span class="c1"># Execute the query and fetch the result</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>
+
+    <span class="c1"># If the result is empty, the user account was not found</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">return_error</span><span class="p">(</span><span class="s1">&#39;Account not found.&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Extract the user&#39;s ID and password hash from the result</span>
+    <span class="n">user_id</span><span class="p">,</span> <span class="n">fetched_hash</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Compare the password hash from the database to the input password hash</span>
+    <span class="k">if</span> <span class="n">fetched_hash</span> <span class="o">!=</span> <span class="n">password_hash</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">return_error</span><span class="p">(</span><span class="s1">&#39;Login failed.&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># If the password hashes match, the login was successful</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] : Login successful.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">user_id</span></div>
+
+
+
+<div class="viewcode-block" id="delete_user"><a class="viewcode-back" href="../../database.html#database.deleteUser.delete_user">[docs]</a><span class="k">def</span> <span class="nf">delete_user</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Deletes a user from the database.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        connection (sqlite3.Connection): Connection object to the database.</span>
+<span class="sd">        user_id (int): ID of the user to be deleted.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Prepare the database query to delete the user</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;DELETE FROM </span><span class="si">{</span><span class="n">USERS_TABLE</span><span class="si">}</span><span class="s1"> WHERE id = ?&#39;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="c1"># Execute the query</span>
+    <span class="n">write</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] : The user&quot;</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="s2">&quot;has been deleted from the database.&quot;</span><span class="p">)</span></div>
+
+    
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../database.html#database.deleteUser.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Username: &#39;</span><span class="p">)</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">getpass</span><span class="p">(</span><span class="s1">&#39;Password: &#39;</span><span class="p">)</span>
+
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">USERS_DB</span><span class="p">)</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Get and save user ID</span>
+        <span class="n">userID</span> <span class="o">=</span> <span class="n">get_user_id</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">hash_password</span><span class="p">(</span><span class="n">password</span><span class="p">))</span>
+
+        <span class="n">delete_user</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">userID</span><span class="p">)</span>
+    
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[ERROR] : SQL connection failed, the user has not been deleted from the database:&quot;</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+        <span class="n">print_exc</span><span class="p">()</span>
+
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Tartopom, Firefoxx, Theo.D.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

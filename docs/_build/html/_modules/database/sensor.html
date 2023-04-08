@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>database.sensor &mdash; Loraboard 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Loraboard
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Loraboard</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Loraboard</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">database.sensor</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for database.sensor</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">plotly.graph_objs</span> <span class="k">as</span> <span class="nn">go</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+
+<span class="kn">from</span> <span class="nn">database.gestion</span> <span class="kn">import</span> <span class="n">database</span><span class="p">,</span> <span class="n">USERS_DB</span><span class="p">,</span> <span class="n">SENSORS_TABLE</span><span class="p">,</span> <span class="n">DATA_TABLE</span><span class="p">,</span> <span class="n">write</span><span class="p">,</span> <span class="n">read</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">socketio</span>
+<span class="c1">#from database.mail import send_mail_to_all</span>
+
+<span class="c1"># Sensors object</span>
+<div class="viewcode-block" id="Sensor"><a class="viewcode-back" href="../../database.html#database.sensor.Sensor">[docs]</a><span class="k">class</span> <span class="nc">Sensor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">dataframe</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span> <span class="n">html_plot</span><span class="p">,</span> <span class="n">alert_value</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">long</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">dataframe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="o">=</span> <span class="n">fig</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">html_plot</span> <span class="o">=</span> <span class="n">html_plot</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alert_value</span> <span class="o">=</span> <span class="n">alert_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lat</span> <span class="o">=</span> <span class="n">lat</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">long</span> <span class="o">=</span> <span class="n">long</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Sensor </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+
+
+<div class="viewcode-block" id="make_table"><a class="viewcode-back" href="../../database.html#database.sensor.make_table">[docs]</a><span class="k">def</span> <span class="nf">make_table</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate an HTML table from a Pandas DataFrame</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : Pandas DataFrame</span>
+<span class="sd">        The DataFrame to convert to an HTML table</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    table_html : str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Initialize the HTML table</span>
+    <span class="n">table_html</span> <span class="o">=</span>  <span class="s1">&#39;&lt;h4 class=&quot;mb-4 my-2&quot;&gt;Live data&lt;/h4&gt;&#39;</span>
+    <span class="n">table_html</span> <span class="o">+=</span> <span class="s1">&#39;&lt;div style=&quot;border-radius: 10px; background-color: #fafafa;&quot;&gt;&#39;</span>
+    <span class="n">table_html</span> <span class="o">+=</span> <span class="s1">&#39;&lt;table class=&quot;table&quot;&gt;&#39;</span>
+    
+    <span class="c1"># Add the table headers</span>
+    <span class="n">table_html</span> <span class="o">+=</span> <span class="s1">&#39;&lt;thead&gt;&#39;</span>
+    <span class="n">table_html</span> <span class="o">+=</span> <span class="s1">&#39;&lt;tr&gt;&#39;</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">table_html</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;&lt;th scope=&quot;col&quot;&gt;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s1">&lt;/th&gt;&#39;</span>
+    <span class="n">table_html</span> <span class="o">+=</span> <span class="s1">&#39;&lt;/tr&gt;&#39;</span>
+    <span class="n">table_html</span> <span class="o">+=</span> <span class="s1">&#39;&lt;/thead&gt;&#39;</span>
+    
+    <span class="c1"># Add the table rows (10 max) from the most recent to the oldest</span>
+    <span class="n">table_html</span> <span class="o">+=</span> <span class="s1">&#39;&lt;tbody&gt;&#39;</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">10</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">table_html</span> <span class="o">+=</span> <span class="s1">&#39;&lt;tr&gt;&#39;</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">table_html</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;&lt;td&gt;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="si">}</span><span class="s1">&lt;/td&gt;&#39;</span>
+        <span class="n">table_html</span> <span class="o">+=</span> <span class="s1">&#39;&lt;/tr&gt;&#39;</span>
+    <span class="n">table_html</span> <span class="o">+=</span> <span class="s1">&#39;&lt;/tbody&gt;&#39;</span>
+    
+    <span class="c1"># Finalize the HTML table</span>
+    <span class="n">table_html</span> <span class="o">+=</span> <span class="s1">&#39;&lt;/table&gt;&#39;</span>
+    <span class="n">table_html</span> <span class="o">+=</span> <span class="s1">&#39;&lt;/div&gt;&#39;</span>
+    
+    <span class="k">return</span> <span class="n">table_html</span></div>
+
+
+<div class="viewcode-block" id="make_figure"><a class="viewcode-back" href="../../database.html#database.sensor.make_figure">[docs]</a><span class="k">def</span> <span class="nf">make_figure</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">sensor_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a Plotly figure from a Pandas DataFrame</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : Pandas DataFrame</span>
+<span class="sd">        The DataFrame to convert to a Plotly figure</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : Plotly Figure</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Create a Plotly line plot, set the labels, and add a horizontal line at the alert limit</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">],</span> 
+            <span class="n">y</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">],</span> 
+            <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;markers&#39;</span><span class="p">,</span>
+            <span class="n">marker</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">),</span>
+            <span class="n">fill</span><span class="o">=</span><span class="s1">&#39;tozeroy&#39;</span><span class="p">),</span>  <span class="c1"># fill the area under the line</span>
+        <span class="n">layout</span><span class="o">=</span><span class="n">go</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">sensor_name</span><span class="p">,</span>
+            <span class="n">xaxis_title</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
+            <span class="n">yaxis_title</span><span class="o">=</span><span class="s1">&#39;People&#39;</span><span class="p">,</span>
+            <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">l</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+    <span class="p">)</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">add_hline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">line_dash</span><span class="o">=</span><span class="s2">&quot;dash&quot;</span><span class="p">,</span> <span class="n">line_color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;limit&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+<div class="viewcode-block" id="update_plot"><a class="viewcode-back" href="../../database.html#database.sensor.update_plot">[docs]</a><span class="k">def</span> <span class="nf">update_plot</span><span class="p">(</span><span class="n">sensor</span><span class="p">:</span> <span class="n">Sensor</span><span class="p">,</span> <span class="n">alert_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the plot object with the sensor data from the database.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sensor : Sensor</span>
+<span class="sd">        The sensor object to update</span>
+<span class="sd">    limit : int, optional</span>
+<span class="sd">        The alert limit to set, by default None</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sensor : Sensor</span>
+<span class="sd">        The updated sensor object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">alert_value</span><span class="p">:</span>
+        <span class="n">sensor</span><span class="o">.</span><span class="n">alert_value</span> <span class="o">=</span> <span class="n">alert_value</span>
+        <span class="n">set_sensor_alert_value</span><span class="p">(</span><span class="n">sensor</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">alert_value</span><span class="p">)</span>
+
+    <span class="c1"># Get the sensor data from the database, then make a figure to html and make a table</span>
+    <span class="n">sensor</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">get_sensor_data</span><span class="p">(</span><span class="n">sensor</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">sensor</span><span class="o">.</span><span class="n">fig</span> <span class="o">=</span> <span class="n">make_figure</span><span class="p">(</span><span class="n">sensor</span><span class="o">.</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">sensor</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">sensor</span><span class="o">.</span><span class="n">alert_value</span><span class="p">)</span> 
+    <span class="n">sensor</span><span class="o">.</span><span class="n">html_plot</span> <span class="o">=</span> <span class="n">sensor</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">full_html</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">sensor</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">make_table</span><span class="p">(</span><span class="n">sensor</span><span class="o">.</span><span class="n">dataframe</span><span class="p">)</span>
+
+    <span class="n">socketio</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;sensor_id&#39;</span><span class="p">:</span> <span class="n">sensor</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s1">&#39;html_plot&#39;</span><span class="p">:</span> <span class="n">sensor</span><span class="o">.</span><span class="n">html_plot</span><span class="p">,</span> <span class="s1">&#39;table&#39;</span><span class="p">:</span> <span class="n">sensor</span><span class="o">.</span><span class="n">table</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[INFO] Plot object updated&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sensor</span></div>
+
+
+
+<div class="viewcode-block" id="get_random_value"><a class="viewcode-back" href="../../database.html#database.sensor.get_random_value">[docs]</a><span class="k">def</span> <span class="nf">get_random_value</span><span class="p">(</span><span class="n">sensor_id</span><span class="p">,</span> <span class="n">start_time</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">end_time</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a random value between 0 and 15.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sensor_id : int</span>
+<span class="sd">        The ID of the sensor</span>
+<span class="sd">    start_time : datetime, optional</span>
+<span class="sd">        The start time of the data, by default None</span>
+<span class="sd">    end_time : datetime, optional</span>
+<span class="sd">        The end time of the data, by default None</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : List[Tuple]</span>
+<span class="sd">        A list of tuples containing the sensor ID, RSSI, time, and value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Define the start and end times for the data</span>
+    <span class="k">if</span> <span class="n">start_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2023</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># 2023-04-01 00:00:00</span>
+    <span class="k">if</span> <span class="n">end_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2023</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span> <span class="c1"># 2023-04-01 13:25:00</span>
+
+    <span class="c1"># Define the time step for the data (every 5 minutes)</span>
+    <span class="n">time_step</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+    <span class="c1"># Generate the data as a list of tuples</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">current_time</span> <span class="o">=</span> <span class="n">start_time</span>
+    <span class="k">while</span> <span class="n">current_time</span> <span class="o">&lt;=</span> <span class="n">end_time</span><span class="p">:</span>
+        <span class="n">time_str</span> <span class="o">=</span> <span class="n">current_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+        <span class="n">rssi</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">))</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">))</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">sensor_id</span><span class="p">,</span> <span class="n">rssi</span><span class="p">,</span> <span class="n">time_str</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="n">current_time</span> <span class="o">+=</span> <span class="n">time_step</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+
+<div class="viewcode-block" id="get_sensor_id"><a class="viewcode-back" href="../../database.html#database.sensor.get_sensor_id">[docs]</a><span class="k">def</span> <span class="nf">get_sensor_id</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">,</span> <span class="n">sensor_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the ID of a sensor from the database.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    connection : database.Connection</span>
+<span class="sd">        The database connection</span>
+<span class="sd">    sensor_name : str</span>
+<span class="sd">        The name of the sensor</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        The ID of the sensor</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the sensor name is not in the database</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; get_sensor_id(connection, &#39;sensor1&#39;)</span>
+<span class="sd">    1</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SELECT id FROM </span><span class="si">{</span><span class="n">SENSORS_TABLE</span><span class="si">}</span><span class="s1"> WHERE name=?&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">sensor_name</span><span class="p">,</span> <span class="p">))</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="get_sensor_name_from_deveui"><a class="viewcode-back" href="../../database.html#database.sensor.get_sensor_name_from_deveui">[docs]</a><span class="k">def</span> <span class="nf">get_sensor_name_from_deveui</span><span class="p">(</span><span class="n">deveui</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the name of a sensor from the database.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        deveui: A string representing the EUI of the sensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A string representing the name of the sensor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="n">USERS_DB</span><span class="p">)</span>
+
+    <span class="n">request</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SELECT name FROM </span><span class="si">{</span><span class="n">SENSORS_TABLE</span><span class="si">}</span><span class="s1"> WHERE deveui=?&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">deveui</span><span class="p">,</span> <span class="p">))</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="get_sensor_alert_value"><a class="viewcode-back" href="../../database.html#database.sensor.get_sensor_alert_value">[docs]</a><span class="k">def</span> <span class="nf">get_sensor_alert_value</span><span class="p">(</span><span class="n">sensor_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the alert value of a sensor from the database.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        connection: A sqlite3.Connection object.</span>
+<span class="sd">        sensor_name: A string representing the name of the sensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        An integer representing the limit of the sensor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="n">USERS_DB</span><span class="p">)</span>
+    <span class="n">sensor_id</span> <span class="o">=</span> <span class="n">get_sensor_id</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">sensor_name</span><span class="p">)</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SELECT alert_value FROM </span><span class="si">{</span><span class="n">SENSORS_TABLE</span><span class="si">}</span><span class="s1"> WHERE id=?&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">sensor_id</span><span class="p">,</span> <span class="p">))</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="get_sensor_data"><a class="viewcode-back" href="../../database.html#database.sensor.get_sensor_data">[docs]</a><span class="k">def</span> <span class="nf">get_sensor_data</span><span class="p">(</span><span class="n">sensor_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the data of a sensor from the database.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        connection: A sqlite3.Connection object.</span>
+<span class="sd">        sensor_id: An integer representing the ID of the sensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of tuples representing the data of the sensor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the ID of the sensor</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="n">USERS_DB</span><span class="p">)</span>
+    <span class="n">sensor_id</span> <span class="o">=</span> <span class="n">get_sensor_id</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">sensor_name</span><span class="p">)</span>
+
+    <span class="n">request</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SELECT rssi, time, value FROM </span><span class="si">{</span><span class="n">DATA_TABLE</span><span class="si">}</span><span class="s1"> WHERE sensor_id=?&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">sensor_id</span><span class="p">,</span> <span class="p">))</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># Convert the data to a pandas DataFrame</span>
+    <span class="n">rssi_list</span>  <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">result</span><span class="p">]</span>
+    <span class="n">time_list</span>  <span class="o">=</span> <span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">result</span><span class="p">]</span>
+    <span class="n">value_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">result</span><span class="p">]</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;rssi&#39;</span><span class="p">:</span> <span class="n">rssi_list</span><span class="p">,</span> <span class="s1">&#39;Time&#39;</span><span class="p">:</span> <span class="n">time_list</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="n">value_list</span><span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+
+<div class="viewcode-block" id="add_sensor_data"><a class="viewcode-back" href="../../database.html#database.sensor.add_sensor_data">[docs]</a><span class="k">def</span> <span class="nf">add_sensor_data</span><span class="p">(</span><span class="n">deveui</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rssi</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add the data of a sensor to the database.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sensor_id: An integer representing the ID of the sensor.</span>
+<span class="sd">        rssi: An integer representing the RSSI of the sensor.</span>
+<span class="sd">        data: A list of tuples containing the data of the sensor.</span>
+<span class="sd">        value: An integer representing the value of the sensor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">SENSORS</span> <span class="o">=</span> <span class="n">get_sensors</span><span class="p">()</span>
+    <span class="c1"># Prepare the query with the data for the database</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="n">USERS_DB</span><span class="p">)</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;INSERT INTO </span><span class="si">{</span><span class="n">DATA_TABLE</span><span class="si">}</span><span class="s1"> (sensor_id, rssi, time, value) VALUES (?, ?, ?, ?)&#39;</span>
+
+    <span class="n">sensor_name</span> <span class="o">=</span> <span class="n">get_sensor_name_from_deveui</span><span class="p">(</span><span class="n">deveui</span><span class="p">)</span> <span class="c1"># device id is the deveui</span>
+    <span class="n">sensor_id</span> <span class="o">=</span> <span class="n">get_sensor_id</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">sensor_name</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">sensor_id</span><span class="p">,</span> <span class="n">rssi</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    
+    <span class="c1"># Add the data to the database</span>
+    <span class="n">write</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># Retrieve alert value from deveui in databse</span>
+    <span class="n">alert_value</span> <span class="o">=</span> <span class="n">get_sensor_alert_value</span><span class="p">(</span><span class="n">sensor_name</span><span class="p">)</span>
+
+    <span class="c1"># If alert</span>
+    <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="nb">float</span><span class="p">(</span><span class="n">alert_value</span><span class="p">):</span>
+        <span class="c1">#send_mail_to_all(&quot;IoT Alert&quot;, f&quot;The sensor {sensor_name} has exceeded the threshold {alert_value} with a value of {value}!&quot;)</span>
+        <span class="n">socketio</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s1">&#39;alert&#39;</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s1">&#39;sensor_id&#39;</span><span class="p">:</span> <span class="n">sensor_id</span><span class="p">,</span>
+            <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">                &lt;div class=&quot;alert alert-warning alert-dismissible fade show&quot; role=&quot;alert&quot;&gt;</span>
+<span class="s1">					&lt;strong&gt;Treshold alert!&lt;/strong&gt; The </span><span class="si">{</span><span class="n">sensor_name</span><span class="si">}</span><span class="s1"> sensor value (&lt;strong&gt;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&lt;/strong&gt;) has exceeded the threshold you set (&lt;strong&gt;</span><span class="si">{</span><span class="n">alert_value</span><span class="si">}</span><span class="s1">&lt;/strong&gt;).</span>
+<span class="s1">					&lt;button type=&quot;button&quot; class=&quot;close&quot; data-dismiss=&quot;alert&quot; aria-label=&quot;Close&quot;&gt;</span>
+<span class="s1">					  	&lt;span aria-hidden=&quot;true&quot;&gt;&amp;times;&lt;/span&gt;</span>
+<span class="s1">					&lt;/button&gt;</span>
+<span class="s1">				&lt;/div&gt;</span>
+<span class="s1">            &#39;&#39;&#39;</span>
+        <span class="p">})</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[INFO]: Mail alert sent!&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Update the plot for the web interface (even if it&#39;s not for the current sensor)</span>
+    <span class="n">update_plot</span><span class="p">(</span><span class="n">SENSORS</span><span class="p">[</span><span class="n">sensor_id</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[INFO] The data </span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2"> of the sensor </span><span class="si">{</span><span class="n">sensor_id</span><span class="si">}</span><span class="s2"> has been added to the database.&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="set_sensor_alert_value"><a class="viewcode-back" href="../../database.html#database.sensor.set_sensor_alert_value">[docs]</a><span class="k">def</span> <span class="nf">set_sensor_alert_value</span><span class="p">(</span><span class="n">sensor_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">alert_value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the alert value of a sensor in the database.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        connection: A sqlite3.Connection object.</span>
+<span class="sd">        sensor_id: An integer representing the ID of the sensor.</span>
+<span class="sd">        alert_value: An integer representing the alert value of the sensor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="n">USERS_DB</span><span class="p">)</span>
+
+    <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;UPDATE </span><span class="si">{</span><span class="n">SENSORS_TABLE</span><span class="si">}</span><span class="s1"> SET alert_value=? WHERE id=?&#39;</span>
+    <span class="n">sensor_id</span> <span class="o">=</span> <span class="n">get_sensor_id</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">sensor_name</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">alert_value</span><span class="p">,</span> <span class="n">sensor_id</span><span class="p">)</span>
+
+    <span class="n">write</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] The alert value of the sensor&quot;</span><span class="p">,</span> <span class="n">sensor_id</span><span class="p">,</span> <span class="s2">&quot;has been updated in the database.&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_sensors"><a class="viewcode-back" href="../../database.html#database.sensor.get_sensors">[docs]</a><span class="k">def</span> <span class="nf">get_sensors</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all the sensors from the database.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of Sensor objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="n">USERS_DB</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;SELECT id, name, alert_value, lat, long FROM </span><span class="si">{</span><span class="n">SENSORS_TABLE</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">sensors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span> <span class="c1"># We only want the 1st 3 items for the demo</span>
+        <span class="n">sensor_id</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">sensor_name</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">alert_value</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">dataframe</span> <span class="o">=</span> <span class="n">get_sensor_data</span><span class="p">(</span><span class="n">sensor_name</span><span class="p">)</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">make_figure</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">sensor_name</span><span class="p">,</span> <span class="n">alert_value</span><span class="p">)</span>
+        <span class="n">html_plot</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">full_html</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">make_table</span><span class="p">(</span><span class="n">dataframe</span><span class="p">)</span>
+        <span class="n">lat</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">long</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">sensor</span> <span class="o">=</span> <span class="n">Sensor</span><span class="p">(</span><span class="n">sensor_id</span><span class="p">,</span> <span class="n">sensor_name</span><span class="p">,</span> <span class="n">dataframe</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span> <span class="n">html_plot</span><span class="p">,</span> <span class="n">alert_value</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">long</span><span class="p">)</span>
+        <span class="n">sensors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sensors</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Tartopom, Firefoxx, Theo.D.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

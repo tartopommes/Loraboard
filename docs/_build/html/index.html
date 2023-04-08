@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to Loraboard’s documentation! &mdash; Loraboard 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Loraboard" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            Loraboard
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Loraboard</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Loraboard</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Welcome to Loraboard’s documentation!</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="welcome-to-loraboard-s-documentation">
+<h1>Welcome to Loraboard’s documentation!<a class="headerlink" href="#welcome-to-loraboard-s-documentation" title="Permalink to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Loraboard</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="database.html">database package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scrapper.html">scrapper package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html">server package</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+<section id="readme">
+<h1>README<a class="headerlink" href="#readme" title="Permalink to this heading"></a></h1>
+</section>
+<section id="loraboard">
+<h1>Loraboard<a class="headerlink" href="#loraboard" title="Permalink to this heading"></a></h1>
+<p>Open-source simple dashboard for MKR1310 sensor. The MKR will connect to a <a class="reference external" href="https://www.thethingsnetwork.org/docs/lorawan/what-is-lorawan/">LoRa</a> gateway, then send data to <a class="reference external" href="https://www.thethingsnetwork.org/">TheThingsNetwork</a>. The application will retrieve the live data from TTN, store it into a database and print it on the live dashboard.</p>
+<img alt="Illustration" src="_images/demo.png" />
+<p>Built for an IoT class from <a class="reference external" href="https://www.uqac.ca/">UQAC</a></p>
+<ul class="simple">
+<li><p>Database, Authentication: SQLite</p></li>
+<li><p>HTML: Bootstrap</p></li>
+<li><p>Mail: <a class="reference external" href="https://developers.google.com/identity/protocols/oauth2/scopes?hl=fr#gmail">Google API</a></p></li>
+<li><p>MKR Firmware: Arduino</p></li>
+<li><p>Deployment
+- TODO <a class="reference external" href="youtube_link">Video title</a> (<cite>video presentation</cite>)</p></li>
+</ul>
+<section id="start-the-app">
+<h2>Start the app<a class="headerlink" href="#start-the-app" title="Permalink to this heading"></a></h2>
+<p>Step 1 - Download the code</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/tartopommes/Loraboard.git
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>Loraboard
+</pre></div>
+</div>
+<p>Step 2 - Install the libraries (if you wish the use a virtual environment, see <a class="reference internal" href="#run-with-python-virtual-environment"><span class="std std-ref">Run with python virtual environment</span></a>)</p>
+<div class="highlight-pwsh notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-r</span> <span class="n">requirements</span><span class="p">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>Step 3 - Make sure <code class="docutils literal notranslate"><span class="pre">super_secret.py</span></code> exists and is correct</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Username</span> <span class="o">=</span> <span class="s2">&quot;you-ttn-project-name&quot;</span>
+<span class="n">Username_ssh</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Username</span><span class="si">}</span><span class="s2">@ttn&quot;</span>
+<span class="n">Password</span> <span class="o">=</span> <span class="s2">&quot;XXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span> <span class="c1"># 99 characters in full maj</span>
+
+<span class="n">public_address_url</span> <span class="o">=</span> <span class="s2">&quot;nam1.cloud.thethings.network&quot;</span>
+<span class="n">public_address_port</span> <span class="o">=</span> <span class="mi">1883</span>
+<span class="n">public_address</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">public_address_url</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">public_address_port</span><span class="si">}</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p>Step 4 - Setup the alert sender mail address</p>
+<p>Go to <code class="docutils literal notranslate"><span class="pre">Loraboard/database/gestion.py</span></code> and edit the variable <code class="docutils literal notranslate"><span class="pre">SENDER</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># MAILS</span>
+<span class="n">SENDER</span> <span class="o">=</span> <span class="s1">&#39;your-email@gmail.com&#39;</span> <span class="c1"># set your email address here, must belong to gmail.com</span>
+</pre></div>
+</div>
+<p>Then the application will need to create a <code class="docutils literal notranslate"><span class="pre">token.json</span></code> file. Once you started the application, you will automatically be redirected to a Google connection page to <code class="docutils literal notranslate"><span class="pre">select</span> <span class="pre">your</span> <span class="pre">Google</span> <span class="pre">account</span></code>. Then you will have a danger alert, because the Google application we are using hasn’t been verified by Google yet. However it’s completely fine, the Google application is only used for this project to send email alert, you can click on <code class="docutils literal notranslate"><span class="pre">Advanced</span> <span class="pre">settings</span></code> and then click on <code class="docutils literal notranslate"><span class="pre">Access</span></code> and finally <code class="docutils literal notranslate"><span class="pre">Continue</span></code>. You are free not to accept, in this case you purposely reject email alert notifications.</p>
+<p>Step 5 - Start the App with <code class="docutils literal notranslate"><span class="pre">python</span></code></p>
+<div class="highlight-pwsh notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">main</span><span class="p">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>Step 6 - Visit the dashboard <cite>python</cite></p>
+<p>Go to the default URL: <cite>http://localhost:5000/</cite></p>
+</section>
+<section id="run-with-python-virtual-environment">
+<span id="id1"></span><h2>Run with python virtual environment<a class="headerlink" href="#run-with-python-virtual-environment" title="Permalink to this heading"></a></h2>
+<p>You may want to use a virtual environment for the application, here’s how to proceed</p>
+<p>Step 1 - install virtualenv with python</p>
+<div class="highlight-pwsh notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="p">-</span><span class="n">-upgrade</span> <span class="n">pip</span>
+<span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="p">-</span><span class="n">-user</span> <span class="n">virtualenv</span>
+<span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="n">venv</span>
+</pre></div>
+</div>
+<p>Step 2 - activate the virtual environment</p>
+<ul class="simple">
+<li><p>Unix, MacOS</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>venv/bin/activate
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Windows</p></li>
+</ul>
+<div class="highlight-pwsh notranslate"><div class="highlight"><pre><span></span><span class="p">.\</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">activate</span>
+</pre></div>
+</div>
+<p>Step 3 - install the libraries on the virtual environment</p>
+<div class="highlight-pwsh notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">-p</span> <span class="n">pip</span> <span class="n">install</span> <span class="p">-</span><span class="n">-upgrade</span> <span class="n">pip</span>
+<span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-r</span> <span class="n">requirements</span><span class="p">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+</section>
+<section id="reset-the-database">
+<h2>Reset the database<a class="headerlink" href="#reset-the-database" title="Permalink to this heading"></a></h2>
+<p>When you start the application for the first time, a database file is created: <cite>database/users.db</cite>. Delete this file after shutting down your application and it will be recreated (with default values) the next time you start it.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-right" title="Loraboard" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Tartopom, Firefoxx, Theo.D.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

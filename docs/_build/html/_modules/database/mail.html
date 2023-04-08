@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>database.mail &mdash; Loraboard 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Loraboard
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Loraboard</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Loraboard</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">database.mail</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for database.mail</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">email.mime.text</span> <span class="kn">import</span> <span class="n">MIMEText</span>
+
+<span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+
+<span class="kn">from</span> <span class="nn">database.gestion</span> <span class="kn">import</span> <span class="n">database</span><span class="p">,</span> <span class="n">read</span><span class="p">,</span> <span class="n">exit_error</span><span class="p">,</span> <span class="n">SENDER</span><span class="p">,</span> <span class="n">USERS_DB</span><span class="p">,</span> <span class="n">USERS_TABLE</span><span class="p">,</span> <span class="n">API_CREDS</span><span class="p">,</span> <span class="n">API_SCOPES</span><span class="p">,</span> <span class="n">API_TOKEN</span>
+
+<span class="kn">from</span> <span class="nn">google.auth.transport.requests</span> <span class="kn">import</span> <span class="n">Request</span>
+<span class="kn">from</span> <span class="nn">google.oauth2.credentials</span> <span class="kn">import</span> <span class="n">Credentials</span>
+<span class="kn">from</span> <span class="nn">google_auth_oauthlib.flow</span> <span class="kn">import</span> <span class="n">InstalledAppFlow</span>
+<span class="kn">from</span> <span class="nn">googleapiclient.discovery</span> <span class="kn">import</span> <span class="n">build</span>
+<span class="kn">from</span> <span class="nn">googleapiclient.errors</span> <span class="kn">import</span> <span class="n">HttpError</span>
+
+<span class="c1"># see https://developers.google.com/gmail/api/quickstart/python?hl=fr</span>
+
+
+
+<div class="viewcode-block" id="get_creds"><a class="viewcode-back" href="../../database.html#database.mail.get_creds">[docs]</a><span class="k">def</span> <span class="nf">get_creds</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Credentials</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets the credentials from the user&#39;s machine.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">creds</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">API_TOKEN</span><span class="p">):</span>
+        <span class="n">creds</span> <span class="o">=</span> <span class="n">Credentials</span><span class="o">.</span><span class="n">from_authorized_user_file</span><span class="p">(</span><span class="n">API_TOKEN</span><span class="p">,</span> <span class="n">API_SCOPES</span><span class="p">)</span>
+
+    <span class="c1"># If there are no (valid) credentials available, let the user log in.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">creds</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">creds</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">creds</span> <span class="ow">and</span> <span class="n">creds</span><span class="o">.</span><span class="n">expired</span> <span class="ow">and</span> <span class="n">creds</span><span class="o">.</span><span class="n">refresh_token</span><span class="p">:</span>
+            <span class="n">creds</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">Request</span><span class="p">())</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">flow</span> <span class="o">=</span> <span class="n">InstalledAppFlow</span><span class="o">.</span><span class="n">from_client_secrets_file</span><span class="p">(</span>
+                <span class="n">API_CREDS</span><span class="p">,</span> <span class="n">API_SCOPES</span><span class="p">)</span>
+            <span class="n">creds</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">run_local_server</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Save the credentials for the next run</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">API_TOKEN</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">token</span><span class="p">:</span>
+            <span class="n">token</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">creds</span><span class="o">.</span><span class="n">to_json</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">creds</span></div>
+
+
+
+<div class="viewcode-block" id="send_email"><a class="viewcode-back" href="../../database.html#database.mail.send_email">[docs]</a><span class="k">def</span> <span class="nf">send_email</span><span class="p">(</span><span class="n">recipient</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">subject</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">body</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sends an email to the specified recipient using the Gmail API.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        recipient (string): email that will receive the notification.</span>
+<span class="sd">        subject (string): subject of the notification.</span>
+<span class="sd">        body (string): body the notification.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">creds</span> <span class="o">=</span> <span class="n">get_creds</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Call the Gmail API</span>
+        <span class="n">service</span> <span class="o">=</span> <span class="n">build</span><span class="p">(</span><span class="s1">&#39;gmail&#39;</span><span class="p">,</span> <span class="s1">&#39;v1&#39;</span><span class="p">,</span> <span class="n">credentials</span><span class="o">=</span><span class="n">creds</span><span class="p">)</span>
+        
+        <span class="c1"># Set the default sender of the email</span>
+
+        <span class="c1"># Create a message object and encode it as a base64 string</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">MIMEText</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+        <span class="n">message</span><span class="p">[</span><span class="s1">&#39;to&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">recipient</span>
+        <span class="n">message</span><span class="p">[</span><span class="s1">&#39;subject&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subject</span>
+        <span class="n">raw</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">urlsafe_b64encode</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">as_bytes</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+
+        <span class="c1"># Send the email using the Gmail API</span>
+        <span class="n">send_message</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">users</span><span class="p">()</span><span class="o">.</span><span class="n">messages</span><span class="p">()</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">userId</span><span class="o">=</span><span class="n">SENDER</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;raw&#39;</span><span class="p">:</span> <span class="n">raw</span><span class="p">})</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+        <span class="c1"># print(f&#39;[DEBUG] sent message to {recipient} Message Id: {send_message[&quot;id&quot;]}&#39;, flush=True)</span>
+
+    <span class="k">except</span> <span class="n">HttpError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="c1"># TODO(developer) - Handle errors from gmail API.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;An error occurred: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_all_emails"><a class="viewcode-back" href="../../database.html#database.mail.get_all_emails">[docs]</a><span class="k">def</span> <span class="nf">get_all_emails</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets the email addresses of all users from the database.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        connection (sqlite3.Connection): Connection object to the database.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A list of all the user&#39;s email addresses.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Prepare the database query</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;SELECT email FROM </span><span class="si">{</span><span class="n">USERS_TABLE</span><span class="si">}</span><span class="s1">&#39;</span>
+
+    <span class="c1"># Execute the request and fetch the result</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+
+    <span class="c1"># If the result is empty, the user account was not found</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span>
+        <span class="n">exit_error</span><span class="p">(</span><span class="s1">&#39;Account not found.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Extract the user&#39;s email address from the result</span>
+    <span class="n">emails</span> <span class="o">=</span> <span class="p">[</span><span class="n">email</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">email</span> <span class="ow">in</span> <span class="n">result</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">emails</span></div>
+
+
+
+<div class="viewcode-block" id="send_mail_to_all"><a class="viewcode-back" href="../../database.html#database.mail.send_mail_to_all">[docs]</a><span class="k">def</span> <span class="nf">send_mail_to_all</span><span class="p">(</span><span class="n">subject</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">body</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sends an email to all users in the database.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        subject (string): subject of the notification.</span>
+<span class="sd">        body (string): body the notification.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">USERS_DB</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">email</span> <span class="ow">in</span> <span class="n">get_all_emails</span><span class="p">(</span><span class="n">connection</span><span class="p">):</span>
+        <span class="n">send_email</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span></div>
+
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">recipient_email</span> <span class="o">=</span> <span class="s1">&#39;comando117000@gmail.com&#39;</span>
+    <span class="n">subject</span> <span class="o">=</span> <span class="s1">&#39;Test email&#39;</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="s1">&#39;This is a test email.&#39;</span>
+
+    <span class="n">send_email</span><span class="p">(</span><span class="n">recipient_email</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Tartopom, Firefoxx, Theo.D.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
