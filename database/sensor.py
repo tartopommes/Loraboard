@@ -4,7 +4,8 @@ import plotly.graph_objs as go
 from datetime import datetime, timedelta
 
 from database.gestion import database, USERS_DB, SENSORS_TABLE, DATA_TABLE, write, read, List, Tuple, socketio
-#from database.mail import send_mail_to_all
+### DISABLE MAIL ###
+from database.mail import send_mail_to_all
 
 # Sensors object
 class Sensor:
@@ -334,7 +335,8 @@ def add_sensor_data(deveui: int, rssi:int, time: str, value: int):
 
     # If alert
     if float(value) >= float(alert_value):
-        #send_mail_to_all("IoT Alert", f"The sensor {sensor_name} has exceeded the threshold {alert_value} with a value of {value}!")
+        ### DISABLE MAIL ###
+        send_mail_to_all("IoT Alert", f"The sensor {sensor_name} has exceeded the threshold {alert_value} with a value of {value}!")
         socketio.emit('alert', {
             'sensor_id': sensor_id,
             'message': f'''

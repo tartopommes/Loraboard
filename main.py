@@ -4,7 +4,8 @@ from traceback import print_exc
 
 from database.gestion import database, USERS_DB, API_TOKEN
 from database.initDatabase import init_database, print_tables
-#from database.mail import get_creds
+### DISABLE MAIL ###
+from database.mail import get_creds
 from server.website import app
 from scrapper.scrapper import run
 
@@ -32,7 +33,8 @@ if __name__ == "__main__":
 
         # Initialise the API credentials if they don't exist
         if not exists(API_TOKEN):
-            #get_creds()
+            ### DISABLE MAIL ###
+            get_creds()
             print("[INFO] API credentials created")
 
     except Exception as error:
