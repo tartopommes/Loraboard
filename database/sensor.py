@@ -415,7 +415,7 @@ def get_sensors():
         alert_value = row[2]
         dataframe = get_sensor_data(sensor_name)
         fig = make_figure(dataframe, sensor_name, alert_value)
-        html_plot = fig.to_html(full_html=False)
+        html_plot = fig.to_html(full_html=False, include_plotlyjs='cdn')
         table = make_table(dataframe)
         lat = row[3]
         long = row[4]
