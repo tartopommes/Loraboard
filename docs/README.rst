@@ -1,10 +1,7 @@
-Loraboard
+README
 =========
 
 Open-source simple dashboard for MKR1310 sensor. The MKR will connect to a `LoRa <https://www.thethingsnetwork.org/docs/lorawan/what-is-lorawan/>`_ gateway, then send data to `TheThingsNetwork <https://www.thethingsnetwork.org/>`_. The application will retrieve the live data from TTN, store it into a database and print it on the live dashboard.
-
-.. image:: ../ressources/demo.png
-   :alt: Illustration
 
 Built for an IoT class from `UQAC <https://www.uqac.ca/>`_
 
@@ -13,7 +10,10 @@ Built for an IoT class from `UQAC <https://www.uqac.ca/>`_
 - Mail: `Google API <https://developers.google.com/identity/protocols/oauth2/scopes?hl=fr#gmail>`_
 - MKR Firmware: Arduino
 - Deployment
-  - TODO `Video title <youtube_link>`_ (`video presentation`)
+  - `Quick demo <https://youtu.be/NCrBlrFuqPs>`_ (`video presentation`)
+
+.. image:: ../ressources/demo2.png
+   :alt: Illustration
 
 Start the app
 -------------

@@ -10,11 +10,11 @@ Open-source simple dashboard for MKR1310 sensor. The MKR will connect to a [LoRa
 - ✅ `Mail`: [`Google API`](https://developers.google.com/identity/protocols/oauth2/scopes?hl=fr#gmail)
 - ✅ `MKR Firmware`: `Arduino`
 - 🚀 `Deployment` 
-  - TODO [Video title](youtube_link) (`video presentation`)
+  - [Quick demo](https://youtu.be/NCrBlrFuqPs) (`video presentation`)
 
 <br />
 
-![Illustration](ressources/demo.png)
+![Illustration](ressources/demo2.png)
 
 <br />
 

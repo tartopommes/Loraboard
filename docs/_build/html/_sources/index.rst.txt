@@ -6,11 +6,16 @@
 Welcome to Loraboard's documentation!
 =====================================
 
+Please refer to the README section for presentatio nand usage of the loraboard.
+Modules the documentation of our code.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-
+   
+   README
    modules
+   
 
 Indices and tables
 ==================
@@ -18,8 +23,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
-README
-======
-
-.. include:: README.rst

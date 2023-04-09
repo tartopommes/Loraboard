@@ -1,8 +1,9 @@
-Loraboard
+Modules
 =========
 
 .. toctree::
    :maxdepth: 4
+
 
    database
    main
