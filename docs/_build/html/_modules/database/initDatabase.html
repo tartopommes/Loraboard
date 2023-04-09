@@ -138,18 +138,18 @@
     <span class="c1"># Add some sensors into sensors table</span>
     <span class="n">request</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;INSERT INTO </span><span class="si">{</span><span class="n">SENSORS_TABLE</span><span class="si">}</span><span class="s1"> (deveui, name, alert_value, lat, long) values(?, ?, ?, ?, ?)&#39;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">[</span> 
-        <span class="p">(</span><span class="s1">&#39;test_sensor&#39;</span><span class="p">,</span>          <span class="s1">&#39;test_sensor&#39;</span><span class="p">,</span> <span class="s1">&#39;14&#39;</span><span class="p">,</span> <span class="mf">48.420258</span><span class="p">,</span> <span class="o">-</span><span class="mf">71.048619</span><span class="p">),</span>
+        <span class="c1"># (&#39;test_sensor&#39;,          &#39;test_sensor&#39;, &#39;14&#39;, 48.420258, -71.048619),</span>
         <span class="p">(</span><span class="s1">&#39;eui-a8610a34351b7a0f&#39;</span><span class="p">,</span> <span class="s1">&#39;Newton&#39;</span><span class="p">,</span>      <span class="s1">&#39;5&#39;</span> <span class="p">,</span> <span class="mf">48.426258</span><span class="p">,</span> <span class="o">-</span><span class="mf">71.058619</span><span class="p">),</span>
         <span class="p">(</span><span class="s1">&#39;eui-aaaaaabbbbbbbbbb&#39;</span><span class="p">,</span> <span class="s1">&#39;Racine&#39;</span><span class="p">,</span>      <span class="s1">&#39;6&#39;</span> <span class="p">,</span> <span class="mf">48.420672</span><span class="p">,</span> <span class="o">-</span><span class="mf">71.043423</span><span class="p">),</span>
         <span class="p">(</span><span class="s1">&#39;eui-abababababababab&#39;</span><span class="p">,</span> <span class="s1">&#39;Chenevert&#39;</span><span class="p">,</span>   <span class="s1">&#39;7&#39;</span> <span class="p">,</span> <span class="mf">48.427633</span><span class="p">,</span> <span class="o">-</span><span class="mf">71.061468</span><span class="p">),</span>
     <span class="p">]</span>
-    <span class="n">write</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">),</span> <span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="c1"># Add some data into data table</span>
-    <span class="n">request</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;INSERT INTO </span><span class="si">{</span><span class="n">DATA_TABLE</span><span class="si">}</span><span class="s1"> (sensor_id, rssi, time, value) values(?, ?, ?, ?)&#39;</span>
-    <span class="n">sensor_id</span> <span class="o">=</span> <span class="n">get_sensor_id</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="s1">&#39;test_sensor&#39;</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">get_random_value</span><span class="p">(</span><span class="n">sensor_id</span><span class="p">)</span>
     <span class="n">write</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">),</span> <span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+    <span class="c1"># Add some fake data into data table for test_sensor sensor</span>
+    <span class="c1"># request = f&#39;INSERT INTO {DATA_TABLE} (sensor_id, rssi, time, value) values(?, ?, ?, ?)&#39;</span>
+    <span class="c1"># sensor_id = get_sensor_id(connection, &#39;test_sensor&#39;)</span>
+    <span class="c1"># data = get_random_value(sensor_id)</span>
+    <span class="c1"># write(connection, (request, data), many=True)</span>
 
 
 

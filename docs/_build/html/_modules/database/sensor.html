@@ -73,7 +73,8 @@
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
 <span class="kn">from</span> <span class="nn">database.gestion</span> <span class="kn">import</span> <span class="n">database</span><span class="p">,</span> <span class="n">USERS_DB</span><span class="p">,</span> <span class="n">SENSORS_TABLE</span><span class="p">,</span> <span class="n">DATA_TABLE</span><span class="p">,</span> <span class="n">write</span><span class="p">,</span> <span class="n">read</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">socketio</span>
-<span class="c1">#from database.mail import send_mail_to_all</span>
+<span class="c1">### DISABLE MAIL ###</span>
+<span class="kn">from</span> <span class="nn">database.mail</span> <span class="kn">import</span> <span class="n">send_mail_to_all</span>
 
 <span class="c1"># Sensors object</span>
 <div class="viewcode-block" id="Sensor"><a class="viewcode-back" href="../../database.html#database.sensor.Sensor">[docs]</a><span class="k">class</span> <span class="nc">Sensor</span><span class="p">:</span>
@@ -88,8 +89,42 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">lat</span> <span class="o">=</span> <span class="n">lat</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">long</span> <span class="o">=</span> <span class="n">long</span>
 
+    <span class="c1"># def update_alert_value(self, alert_value):</span>
+    <span class="c1">#     self.alert_value = alert_value</span>
+    <span class="c1">#     self.fig.update_layout(shapes=[dict(type=&quot;line&quot;, yref=&quot;y&quot;, y0=self.alert_value, y1=self.alert_value)])</span>
+    <span class="c1">#     self.html_plot = self.fig.to_html(full_html=False) # include_plotlyjs=&#39;cdn&#39;</span>
+    <span class="c1">#     set_sensor_alert_value(self.name, self.alert_value)</span>
+
+    <span class="c1"># def add_data(self, data):</span>
+    <span class="c1">#     deveui, rssi, time, value = data</span>
+    <span class="c1">#     add_sensor_data(deveui, rssi, time, value)</span>
+    <span class="c1">#     check_for_alert(self.id, self.name, self.alert_value, value)</span>
+
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Sensor </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+    
+
+<span class="c1"># def check_for_alert(sensor_id, sensor_name, alert_value, value):</span>
+<span class="c1">#     &quot;&quot;&quot;Check if the sensor value exceeds the threshold and send an alert if it does&quot;&quot;&quot;</span>
+
+<span class="c1">#     # If not exeeding threshold, return</span>
+<span class="c1">#     if float(value) &lt; float(alert_value): </span>
+<span class="c1">#         return</span>
+
+<span class="c1">#     # Send an alert to the user</span>
+<span class="c1">#     send_mail_to_all(&quot;IoT Alert&quot;, f&quot;The sensor {sensor_name} has exceeded the threshold {alert_value} with a value of {value}!&quot;)</span>
+<span class="c1">#     socketio.emit(&#39;alert&#39;, {</span>
+<span class="c1">#         &#39;sensor_id&#39;: sensor_id,</span>
+<span class="c1">#         &#39;message&#39;: f&#39;&#39;&#39;</span>
+<span class="c1">#             &lt;div class=&quot;alert alert-warning alert-dismissible fade show&quot; role=&quot;alert&quot;&gt;</span>
+<span class="c1">#                 &lt;strong&gt;Treshold alert!&lt;/strong&gt; The {sensor_name} sensor value (&lt;strong&gt;{value}&lt;/strong&gt;) has exceeded the threshold you set (&lt;strong&gt;{alert_value}&lt;/strong&gt;).</span>
+<span class="c1">#                 &lt;button type=&quot;button&quot; class=&quot;close&quot; data-dismiss=&quot;alert&quot; aria-label=&quot;Close&quot;&gt;</span>
+<span class="c1">#                     &lt;span aria-hidden=&quot;true&quot;&gt;&amp;times;&lt;/span&gt;</span>
+<span class="c1">#                 &lt;/button&gt;</span>
+<span class="c1">#             &lt;/div&gt;</span>
+<span class="c1">#         &#39;&#39;&#39;</span>
+<span class="c1">#     })</span>
+<span class="c1">#     print(&#39;[INFO]: Mail alert sent!&#39;)</span>
 
 
 <div class="viewcode-block" id="make_table"><a class="viewcode-back" href="../../database.html#database.sensor.make_table">[docs]</a><span class="k">def</span> <span class="nf">make_table</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -163,6 +198,24 @@
     <span class="p">)</span>
 
     <span class="n">fig</span><span class="o">.</span><span class="n">add_hline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">line_dash</span><span class="o">=</span><span class="s2">&quot;dash&quot;</span><span class="p">,</span> <span class="n">line_color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;limit&quot;</span><span class="p">)</span>
+
+
+    <span class="c1"># Add range slider</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+        <span class="n">xaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">rangeselector</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="n">buttons</span><span class="o">=</span><span class="nb">list</span><span class="p">([</span>
+                    <span class="nb">dict</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;1m&quot;</span><span class="p">,</span>  <span class="n">step</span><span class="o">=</span><span class="s2">&quot;month&quot;</span><span class="p">,</span> <span class="n">stepmode</span><span class="o">=</span><span class="s2">&quot;backward&quot;</span><span class="p">),</span>
+                    <span class="nb">dict</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;6m&quot;</span><span class="p">,</span>  <span class="n">step</span><span class="o">=</span><span class="s2">&quot;month&quot;</span><span class="p">,</span> <span class="n">stepmode</span><span class="o">=</span><span class="s2">&quot;backward&quot;</span><span class="p">),</span>
+                    <span class="nb">dict</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;YTD&quot;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s2">&quot;year&quot;</span><span class="p">,</span>  <span class="n">stepmode</span><span class="o">=</span><span class="s2">&quot;todate&quot;</span><span class="p">),</span>
+                    <span class="nb">dict</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;1y&quot;</span><span class="p">,</span>  <span class="n">step</span><span class="o">=</span><span class="s2">&quot;year&quot;</span><span class="p">,</span>  <span class="n">stepmode</span><span class="o">=</span><span class="s2">&quot;backward&quot;</span><span class="p">),</span>
+                    <span class="nb">dict</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+                <span class="p">])</span>
+            <span class="p">),</span>
+            <span class="n">rangeslider</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;date&quot;</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
     
     <span class="k">return</span> <span class="n">fig</span></div>
 
@@ -372,7 +425,8 @@
 
     <span class="c1"># If alert</span>
     <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="nb">float</span><span class="p">(</span><span class="n">alert_value</span><span class="p">):</span>
-        <span class="c1">#send_mail_to_all(&quot;IoT Alert&quot;, f&quot;The sensor {sensor_name} has exceeded the threshold {alert_value} with a value of {value}!&quot;)</span>
+        <span class="c1">### DISABLE MAIL ###</span>
+        <span class="n">send_mail_to_all</span><span class="p">(</span><span class="s2">&quot;IoT Alert&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;The sensor </span><span class="si">{</span><span class="n">sensor_name</span><span class="si">}</span><span class="s2"> has exceeded the threshold </span><span class="si">{</span><span class="n">alert_value</span><span class="si">}</span><span class="s2"> with a value of </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
         <span class="n">socketio</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s1">&#39;alert&#39;</span><span class="p">,</span> <span class="p">{</span>
             <span class="s1">&#39;sensor_id&#39;</span><span class="p">:</span> <span class="n">sensor_id</span><span class="p">,</span>
             <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
@@ -430,7 +484,7 @@
         <span class="n">alert_value</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
         <span class="n">dataframe</span> <span class="o">=</span> <span class="n">get_sensor_data</span><span class="p">(</span><span class="n">sensor_name</span><span class="p">)</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">make_figure</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">sensor_name</span><span class="p">,</span> <span class="n">alert_value</span><span class="p">)</span>
-        <span class="n">html_plot</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">full_html</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">html_plot</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">full_html</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_plotlyjs</span><span class="o">=</span><span class="s1">&#39;cdn&#39;</span><span class="p">)</span>
         <span class="n">table</span> <span class="o">=</span> <span class="n">make_table</span><span class="p">(</span><span class="n">dataframe</span><span class="p">)</span>
         <span class="n">lat</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
         <span class="n">long</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>

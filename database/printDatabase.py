@@ -29,7 +29,7 @@ def print_tables(connection):
                 content[row] = list(content[row])
 
         elif table == SENSORS_TABLE:
-            header = ('id', 'name', 'alert_value')
+            header = ('id', 'deveui', 'name', 'alert_value', 'lat', 'long')
             for row in range(len(content)):
                 content[row] = list(content[row])
 
