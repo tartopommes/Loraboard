@@ -31,6 +31,7 @@ def handle_set_alert_value(data):
     SENSORS = get_sensors()
     sensor = SENSORS[data['sensor_id']-1]
     alert_value = data['alert_value']
+    print(f'alert_value: {alert_value} for sensor {sensor}', flush=True)
     update_plot(sensor, alert_value)
 
 
@@ -109,7 +110,7 @@ def register():
 
         current_user['is_authenticated'] = True
         current_user['username'] = username
-        return render_template('index.html', current_user=current_user)
+        return redirect(url_for('index'))
     
     else:
         return render_template('register.html', current_user=current_user)

@@ -20,8 +20,42 @@ class Sensor:
         self.lat = lat
         self.long = long
 
+    # def update_alert_value(self, alert_value):
+    #     self.alert_value = alert_value
+    #     self.fig.update_layout(shapes=[dict(type="line", yref="y", y0=self.alert_value, y1=self.alert_value)])
+    #     self.html_plot = self.fig.to_html(full_html=False) # include_plotlyjs='cdn'
+    #     set_sensor_alert_value(self.name, self.alert_value)
+
+    # def add_data(self, data):
+    #     deveui, rssi, time, value = data
+    #     add_sensor_data(deveui, rssi, time, value)
+    #     check_for_alert(self.id, self.name, self.alert_value, value)
+
     def __str__(self):
         return f"Sensor {self.id} ({self.name})"
+    
+
+# def check_for_alert(sensor_id, sensor_name, alert_value, value):
+#     """Check if the sensor value exceeds the threshold and send an alert if it does"""
+
+#     # If not exeeding threshold, return
+#     if float(value) < float(alert_value): 
+#         return
+
+#     # Send an alert to the user
+#     send_mail_to_all("IoT Alert", f"The sensor {sensor_name} has exceeded the threshold {alert_value} with a value of {value}!")
+#     socketio.emit('alert', {
+#         'sensor_id': sensor_id,
+#         'message': f'''
+#             <div class="alert alert-warning alert-dismissible fade show" role="alert">
+#                 <strong>Treshold alert!</strong> The {sensor_name} sensor value (<strong>{value}</strong>) has exceeded the threshold you set (<strong>{alert_value}</strong>).
+#                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+#                     <span aria-hidden="true">&times;</span>
+#                 </button>
+#             </div>
+#         '''
+#     })
+#     print('[INFO]: Mail alert sent!')
 
 
 def make_table(df) -> str:
@@ -96,33 +130,20 @@ def make_figure(df, sensor_name: str, limit: int) -> go.Figure:
 
     fig.add_hline(y=limit, line_width=1, line_dash="dash", line_color="red", name="limit")
 
+
     # Add range slider
     fig.update_layout(
         xaxis=dict(
             rangeselector=dict(
                 buttons=list([
-                    dict(count=1,
-                        label="1m",
-                        step="month",
-                        stepmode="backward"),
-                    dict(count=6,
-                        label="6m",
-                        step="month",
-                        stepmode="backward"),
-                    dict(count=1,
-                        label="YTD",
-                        step="year",
-                        stepmode="todate"),
-                    dict(count=1,
-                        label="1y",
-                        step="year",
-                        stepmode="backward"),
+                    dict(count=1, label="1m",  step="month", stepmode="backward"),
+                    dict(count=6, label="6m",  step="month", stepmode="backward"),
+                    dict(count=1, label="YTD", step="year",  stepmode="todate"),
+                    dict(count=1, label="1y",  step="year",  stepmode="backward"),
                     dict(step="all")
                 ])
             ),
-            rangeslider=dict(
-                visible=True
-            ),
+            rangeslider=dict(visible=True),
             type="date"
         )
     )

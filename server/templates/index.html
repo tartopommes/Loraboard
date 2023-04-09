@@ -98,8 +98,8 @@
 													<span class="input-group-text">Alert value:</span>
 												</div>
 												<!-- CHANGE LIMIT {{ marker['id'] }} -->
-												<input type="number" class="form-control" id="input-limit-{{ marker['id'] }}"
-													name="limit" min="0.0" max="15.0" step="0.1"
+												<input type="number" class="form-control"
+													id="input-limit-{{ marker['id'] }}" name="limit" min="0" max="15"
 													value="{{ sensors[ marker['id'] -1].alert_value }}">
 												<small id="emailHelp" class="form-text text-muted">Set the value limit
 													for email
@@ -124,52 +124,52 @@
 					</div>
 				</div>
 				{% endfor %}
-				
 
-			{% else %}
-			<div class="col-md-8 my-5 text-center">
 
-				<img src="{{ url_for('static', filename='mkr.png') }}" class="img-fluid">
-				<div class="row align-items-center justify-content-center my-5">
-					<div class="text-center">
-						<h3 class="mb-4">Please log in or register first to perform actions.</h3>
-						<!-- <a href="{{ url_for('login') }}" class="btn btn-primary">Login</a> -->
+				{% else %}
+				<div class="col-md-8 my-5 text-center">
+
+					<img src="{{ url_for('static', filename='mkr.png') }}" class="img-fluid">
+					<div class="row align-items-center justify-content-center my-5">
+						<div class="text-center">
+							<h3 class="mb-4">Please log in or register first to perform actions.</h3>
+							<!-- <a href="{{ url_for('login') }}" class="btn btn-primary">Login</a> -->
+						</div>
 					</div>
 				</div>
+				{% endif %}
 			</div>
+
+			{% if current_user.is_authenticated %}
+			<!-- PLOTLY -->
+			<script>
+				$(document).ready(function () {
+					let socket = io.connect('http://' + document.domain + ':' + location.port);
+
+					// [RECEIVE] Update plot and table of the specified sensor_id
+					socket.on('update', function (data) {
+						$('#plot-div-' + data.sensor_id).html(data.html_plot);
+						$('#plot-table-' + data.sensor_id).html(data.table);
+					});
+
+					// [SEND] Update alert value
+					for (let i = 0; i <= 3; i++) {
+						$('#input-limit-' + i).change(function () {
+							socket.emit('set_alert_value', {
+								'sensor_id': i,
+								'alert_value': $('#input-limit-' + i).val()
+							});
+						});
+					}
+
+					// [RECEIVE] 
+					socket.on('alert', function (data) {
+						$('#alert-box-' + data.sensor_id).append(data.message);
+					});
+				});
+			</script>
 			{% endif %}
 		</div>
-
-		{% if current_user.is_authenticated %}
-		<!-- PLOTLY -->
-		<script>
-			$(document).ready(function () {
-				let socket = io.connect('http://' + document.domain + ':' + location.port);
-
-				// [RECEIVE] Update plot and table of the specified sensor_id
-				socket.on('update', function (data) {
-					$('#plot-div-' + data.sensor_id).html(data.html_plot);
-					$('#plot-table-' + data.sensor_id).html(data.table);
-				});
-
-				// [SEND] Update alert value
-				for (let i = 0; i <= 3; i++) {
-					$('#input-limit-' + i).change(function () {
-						socket.emit('set_alert_value', {
-							'sensor_id': i,
-							'alert_value': $('#input-limit-' + i).val()
-						});
-					});
-				}
-
-				// [RECEIVE] 
-				socket.on('alert', function (data) {
-					$('#alert-box-' + data.sensor_id).append(data.message);
-				});
-			});
-		</script>
-		{% endif %}
-	</div>
 </main>
 
 {% endblock %}

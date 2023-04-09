@@ -6,6 +6,8 @@ import base64
 from database.sensor import add_sensor_data, get_sensor_name_from_deveui
 from datetime import datetime
 from pytz import timezone
+from time import time
+
 
 def on_connect(client: mqtt.Client, userdata, flags, rc: int):
     """The callback for when the client receives a CONNACK response from the server."""
@@ -20,19 +22,56 @@ def on_connect(client: mqtt.Client, userdata, flags, rc: int):
 
 # https://pypi.org/project/paho-mqtt/#callbacks
 def on_message(client: mqtt.Client, userdata, msg: str):
-    """The callback for when a PUBLISH message is received from the server."""
+    """The callback for when a PUBLISH message is received from the server.
+    
+    Parameters
+    ----------
+    client : mqtt.Client
+        The client instance for this callback.
+    userdata :
+        The private user data as set in Client() or userdata_set().
+    msg : str
+        An instance of MQTTMessage. This is a class with members topic, payload, qos, retain.
+    """
 
     # Return -1 if the packet is invalid
-    def invalid_packet(json_frame, obj:str) -> int:
-        """Print the invalid packet and return -1."""
+    def invalid_packet(json_frame, obj:str) -> None:
+        """Print the invalid packet and return None.
+        
+        Parameters
+        ----------
+        json_frame : dict
+            The json object of the packet.
+        obj : str
+            The object that is missing in the packet.
+            
+        Returns
+        -------
+        None
+        """
         print(f"Invalid packet received, {obj} is None payload:\n", json.dumps(json_frame, indent=2))
         return None
 
+
     def get_field_from_json(json_object, field: str) -> str:
-        """Get the field from the json object."""
+        """Get the field from the json object.
+        
+        Parameters
+        ----------
+        json_object : dict
+            The json object of the packet.
+        field : str
+            The field to retrieve from the json object.
+            
+        Returns
+        -------
+        str
+            The field from the json object.
+        """
         json_field = json_object.get(field)
         if not json_field: return invalid_packet(json_object, field)
         return json_field
+
 
     # Retrieve the data from the packet as a json object
     json_frame = json.loads(msg.payload)
@@ -67,7 +106,9 @@ def on_message(client: mqtt.Client, userdata, msg: str):
     payload_value += ((decoded_payload >> 24) & 0xFF) << 0 
     print("Payload (converted) :" + str(payload_value))
 
-    fake_db_upload(deveui=device_id, rssi=rssi, value=payload_value) # time must have the following format: '%Y-%m-%d %H:%M'
+    fake_db_upload(deveui=device_id, rssi=rssi, value=payload_value)
+
+
 
 test_sensor_rssi = "0"
 test_sensor_payload_value = 0
@@ -78,8 +119,23 @@ aaaaaabbbbbbbbbb_payload_value = 0
 abababababababab_rssi = "0"
 abababababababab_payload_value = 0
 
+
+
 def fake_db_upload(deveui:str, rssi:str, value:int):
+    """Buffer function that prepares the data for the next record in the database.
+    
+    Parameters
+    ----------
+    deveui : str
+        The deveui of the device.
+    rssi : str
+        The rssi of the device.
+    value : int
+        The value of the device.
+    """
+    
     global test_sensor_rssi, test_sensor_payload_value, a8610a34351b7a0f_rssi, a8610a34351b7a0f_payload_value, aaaaaabbbbbbbbbb_rssi, aaaaaabbbbbbbbbb_payload_value, abababababababab_rssi, abababababababab_payload_value
+    
     if deveui == 'test_sensor':
         test_sensor_rssi = rssi
         test_sensor_payload_value = value
@@ -93,19 +149,23 @@ def fake_db_upload(deveui:str, rssi:str, value:int):
         abababababababab_rssi = rssi
         abababababababab_payload_value = value
     else:
-        print(f"Unknown device eui : {deveui}")
+        print(f"Unknown device eui: {deveui}")
         
+
+
 def real_db_upload():
+    """Upload the data to the database.
+    This function is called every 10 seconds."""
     global test_sensor_rssi, test_sensor_payload_value, a8610a34351b7a0f_rssi, a8610a34351b7a0f_payload_value, aaaaaabbbbbbbbbb_rssi, aaaaaabbbbbbbbbb_payload_value, abababababababab_rssi, abababababababab_payload_value
     time = datetime.now(timezone('America/Montreal')).strftime('%Y-%m-%d %H:%M:%S') # TODO : get the time from the packet with received_at obj.
             
-    add_sensor_data(deveui='test_sensor', rssi=test_sensor_rssi, time=time, value=test_sensor_payload_value)
+    # add_sensor_data(deveui='test_sensor', rssi=test_sensor_rssi, time=time, value=test_sensor_payload_value)
     add_sensor_data(deveui='eui-a8610a34351b7a0f', rssi=a8610a34351b7a0f_rssi, time=time, value=a8610a34351b7a0f_payload_value)
     add_sensor_data(deveui='eui-aaaaaabbbbbbbbbb', rssi=aaaaaabbbbbbbbbb_rssi, time=time, value=aaaaaabbbbbbbbbb_payload_value)
     add_sensor_data(deveui='eui-abababababababab', rssi=abababababababab_rssi, time=time, value=abababababababab_payload_value)
 
-    test_sensor_rssi = "0"
-    test_sensor_payload_value = 0
+    # test_sensor_rssi = "0"
+    # test_sensor_payload_value = 0
     a8610a34351b7a0f_rssi = "0"
     a8610a34351b7a0f_payload_value = 0
     aaaaaabbbbbbbbbb_rssi = "0"
@@ -114,8 +174,11 @@ def real_db_upload():
     abababababababab_payload_value = 0
 
 
+
+
 def run():
-    
+    """Run the MQTT client."""
+
     ### Create a client instance
     mqttc = mqtt.Client(
         client_id=Username_ssh, 
@@ -137,15 +200,14 @@ def run():
         keepalive=60, 
         bind_address="")
 
-    import time
-    last_time = time.time()
+    last_time = time()
     DELAY = 10
 
     # loop wait for data
     while True:
-        if (last_time + DELAY < time.time()):
+        if (last_time + DELAY < time()):
             real_db_upload()
-            last_time = time.time()
+            last_time = time()
 
         mqttc.loop()
 
@@ -153,6 +215,8 @@ def run():
         #     mqttc.loop()
         # except Exception as error:
         #     print("[ERROR] : MQTT eror:", error, "Continuing loop...")    
+
+
 
 if __name__ == "__main__":
     run()

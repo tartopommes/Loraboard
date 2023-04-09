@@ -69,18 +69,18 @@ def fill_user(connection):
     # Add some sensors into sensors table
     request = f'INSERT INTO {SENSORS_TABLE} (deveui, name, alert_value, lat, long) values(?, ?, ?, ?, ?)'
     data = [ 
-        ('test_sensor',          'test_sensor', '14', 48.420258, -71.048619),
+        # ('test_sensor',          'test_sensor', '14', 48.420258, -71.048619),
         ('eui-a8610a34351b7a0f', 'Newton',      '5' , 48.426258, -71.058619),
         ('eui-aaaaaabbbbbbbbbb', 'Racine',      '6' , 48.420672, -71.043423),
         ('eui-abababababababab', 'Chenevert',   '7' , 48.427633, -71.061468),
     ]
     write(connection, (request, data), many=True)
 
-    # Add some data into data table
-    request = f'INSERT INTO {DATA_TABLE} (sensor_id, rssi, time, value) values(?, ?, ?, ?)'
-    sensor_id = get_sensor_id(connection, 'test_sensor')
-    data = get_random_value(sensor_id)
-    write(connection, (request, data), many=True)
+    # Add some fake data into data table for test_sensor sensor
+    # request = f'INSERT INTO {DATA_TABLE} (sensor_id, rssi, time, value) values(?, ?, ?, ?)'
+    # sensor_id = get_sensor_id(connection, 'test_sensor')
+    # data = get_random_value(sensor_id)
+    # write(connection, (request, data), many=True)
 
 
 
