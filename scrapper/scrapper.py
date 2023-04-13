@@ -110,13 +110,11 @@ def on_message(client: mqtt.Client, userdata, msg: str):
 
 
 
-test_sensor_rssi = "0"
-test_sensor_payload_value = 0
-a8610a34351b7a0f_rssi = "0"
+a8610a34351b7a0f_rssi = "42"
 a8610a34351b7a0f_payload_value = 0
-aaaaaabbbbbbbbbb_rssi = "0"
+aaaaaabbbbbbbbbb_rssi = "42"
 aaaaaabbbbbbbbbb_payload_value = 0
-abababababababab_rssi = "0"
+abababababababab_rssi = "42"
 abababababababab_payload_value = 0
 
 
@@ -134,12 +132,9 @@ def fake_db_upload(deveui:str, rssi:str, value:int):
         The value of the device.
     """
     
-    global test_sensor_rssi, test_sensor_payload_value, a8610a34351b7a0f_rssi, a8610a34351b7a0f_payload_value, aaaaaabbbbbbbbbb_rssi, aaaaaabbbbbbbbbb_payload_value, abababababababab_rssi, abababababababab_payload_value
+    global a8610a34351b7a0f_rssi, a8610a34351b7a0f_payload_value, aaaaaabbbbbbbbbb_rssi, aaaaaabbbbbbbbbb_payload_value, abababababababab_rssi, abababababababab_payload_value
     
-    if deveui == 'test_sensor':
-        test_sensor_rssi = rssi
-        test_sensor_payload_value = value
-    elif deveui == 'eui-a8610a34351b7a0f':
+    if deveui == 'eui-a8610a34351b7a0f':
         a8610a34351b7a0f_rssi = rssi
         a8610a34351b7a0f_payload_value = value
     elif deveui == 'eui-aaaaaabbbbbbbbbb':
@@ -159,18 +154,17 @@ def real_db_upload():
     global test_sensor_rssi, test_sensor_payload_value, a8610a34351b7a0f_rssi, a8610a34351b7a0f_payload_value, aaaaaabbbbbbbbbb_rssi, aaaaaabbbbbbbbbb_payload_value, abababababababab_rssi, abababababababab_payload_value
     time = datetime.now(timezone('America/Montreal')).strftime('%Y-%m-%d %H:%M:%S') # TODO : get the time from the packet with received_at obj.
             
-    # add_sensor_data(deveui='test_sensor', rssi=test_sensor_rssi, time=time, value=test_sensor_payload_value)
     add_sensor_data(deveui='eui-a8610a34351b7a0f', rssi=a8610a34351b7a0f_rssi, time=time, value=a8610a34351b7a0f_payload_value)
     add_sensor_data(deveui='eui-aaaaaabbbbbbbbbb', rssi=aaaaaabbbbbbbbbb_rssi, time=time, value=aaaaaabbbbbbbbbb_payload_value)
     add_sensor_data(deveui='eui-abababababababab', rssi=abababababababab_rssi, time=time, value=abababababababab_payload_value)
 
     # test_sensor_rssi = "0"
     # test_sensor_payload_value = 0
-    a8610a34351b7a0f_rssi = "0"
+    a8610a34351b7a0f_rssi = "42"
     a8610a34351b7a0f_payload_value = 0
-    aaaaaabbbbbbbbbb_rssi = "0"
+    aaaaaabbbbbbbbbb_rssi = "42"
     aaaaaabbbbbbbbbb_payload_value = 0
-    abababababababab_rssi = "0"
+    abababababababab_rssi = "42"
     abababababababab_payload_value = 0
 
 
