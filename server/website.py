@@ -121,7 +121,8 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user['is_authenticated']:
-        return redirect(url_for('index'))
+        current_user['is_authenticated'] = False
+        # return redirect(url_for('index'))
 
     if request.method == 'POST':
         # retrieve form data
