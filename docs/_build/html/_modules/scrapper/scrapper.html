@@ -39,7 +39,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Loraboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">README</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
 </ul>
 
         </div>
@@ -179,13 +180,11 @@
 
 
 
-<span class="n">test_sensor_rssi</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
-<span class="n">test_sensor_payload_value</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">a8610a34351b7a0f_rssi</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+<span class="n">a8610a34351b7a0f_rssi</span> <span class="o">=</span> <span class="s2">&quot;42&quot;</span>
 <span class="n">a8610a34351b7a0f_payload_value</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">aaaaaabbbbbbbbbb_rssi</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+<span class="n">aaaaaabbbbbbbbbb_rssi</span> <span class="o">=</span> <span class="s2">&quot;42&quot;</span>
 <span class="n">aaaaaabbbbbbbbbb_payload_value</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">abababababababab_rssi</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+<span class="n">abababababababab_rssi</span> <span class="o">=</span> <span class="s2">&quot;42&quot;</span>
 <span class="n">abababababababab_payload_value</span> <span class="o">=</span> <span class="mi">0</span>
 
 
@@ -203,12 +202,9 @@
 <span class="sd">        The value of the device.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="k">global</span> <span class="n">test_sensor_rssi</span><span class="p">,</span> <span class="n">test_sensor_payload_value</span><span class="p">,</span> <span class="n">a8610a34351b7a0f_rssi</span><span class="p">,</span> <span class="n">a8610a34351b7a0f_payload_value</span><span class="p">,</span> <span class="n">aaaaaabbbbbbbbbb_rssi</span><span class="p">,</span> <span class="n">aaaaaabbbbbbbbbb_payload_value</span><span class="p">,</span> <span class="n">abababababababab_rssi</span><span class="p">,</span> <span class="n">abababababababab_payload_value</span>
+    <span class="k">global</span> <span class="n">a8610a34351b7a0f_rssi</span><span class="p">,</span> <span class="n">a8610a34351b7a0f_payload_value</span><span class="p">,</span> <span class="n">aaaaaabbbbbbbbbb_rssi</span><span class="p">,</span> <span class="n">aaaaaabbbbbbbbbb_payload_value</span><span class="p">,</span> <span class="n">abababababababab_rssi</span><span class="p">,</span> <span class="n">abababababababab_payload_value</span>
     
-    <span class="k">if</span> <span class="n">deveui</span> <span class="o">==</span> <span class="s1">&#39;test_sensor&#39;</span><span class="p">:</span>
-        <span class="n">test_sensor_rssi</span> <span class="o">=</span> <span class="n">rssi</span>
-        <span class="n">test_sensor_payload_value</span> <span class="o">=</span> <span class="n">value</span>
-    <span class="k">elif</span> <span class="n">deveui</span> <span class="o">==</span> <span class="s1">&#39;eui-a8610a34351b7a0f&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">deveui</span> <span class="o">==</span> <span class="s1">&#39;eui-a8610a34351b7a0f&#39;</span><span class="p">:</span>
         <span class="n">a8610a34351b7a0f_rssi</span> <span class="o">=</span> <span class="n">rssi</span>
         <span class="n">a8610a34351b7a0f_payload_value</span> <span class="o">=</span> <span class="n">value</span>
     <span class="k">elif</span> <span class="n">deveui</span> <span class="o">==</span> <span class="s1">&#39;eui-aaaaaabbbbbbbbbb&#39;</span><span class="p">:</span>
@@ -228,18 +224,17 @@
     <span class="k">global</span> <span class="n">test_sensor_rssi</span><span class="p">,</span> <span class="n">test_sensor_payload_value</span><span class="p">,</span> <span class="n">a8610a34351b7a0f_rssi</span><span class="p">,</span> <span class="n">a8610a34351b7a0f_payload_value</span><span class="p">,</span> <span class="n">aaaaaabbbbbbbbbb_rssi</span><span class="p">,</span> <span class="n">aaaaaabbbbbbbbbb_payload_value</span><span class="p">,</span> <span class="n">abababababababab_rssi</span><span class="p">,</span> <span class="n">abababababababab_payload_value</span>
     <span class="n">time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="p">(</span><span class="s1">&#39;America/Montreal&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span> <span class="c1"># TODO : get the time from the packet with received_at obj.</span>
             
-    <span class="c1"># add_sensor_data(deveui=&#39;test_sensor&#39;, rssi=test_sensor_rssi, time=time, value=test_sensor_payload_value)</span>
     <span class="n">add_sensor_data</span><span class="p">(</span><span class="n">deveui</span><span class="o">=</span><span class="s1">&#39;eui-a8610a34351b7a0f&#39;</span><span class="p">,</span> <span class="n">rssi</span><span class="o">=</span><span class="n">a8610a34351b7a0f_rssi</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">a8610a34351b7a0f_payload_value</span><span class="p">)</span>
     <span class="n">add_sensor_data</span><span class="p">(</span><span class="n">deveui</span><span class="o">=</span><span class="s1">&#39;eui-aaaaaabbbbbbbbbb&#39;</span><span class="p">,</span> <span class="n">rssi</span><span class="o">=</span><span class="n">aaaaaabbbbbbbbbb_rssi</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">aaaaaabbbbbbbbbb_payload_value</span><span class="p">)</span>
     <span class="n">add_sensor_data</span><span class="p">(</span><span class="n">deveui</span><span class="o">=</span><span class="s1">&#39;eui-abababababababab&#39;</span><span class="p">,</span> <span class="n">rssi</span><span class="o">=</span><span class="n">abababababababab_rssi</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">abababababababab_payload_value</span><span class="p">)</span>
 
     <span class="c1"># test_sensor_rssi = &quot;0&quot;</span>
     <span class="c1"># test_sensor_payload_value = 0</span>
-    <span class="n">a8610a34351b7a0f_rssi</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+    <span class="n">a8610a34351b7a0f_rssi</span> <span class="o">=</span> <span class="s2">&quot;42&quot;</span>
     <span class="n">a8610a34351b7a0f_payload_value</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">aaaaaabbbbbbbbbb_rssi</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+    <span class="n">aaaaaabbbbbbbbbb_rssi</span> <span class="o">=</span> <span class="s2">&quot;42&quot;</span>
     <span class="n">aaaaaabbbbbbbbbb_payload_value</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">abababababababab_rssi</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+    <span class="n">abababababababab_rssi</span> <span class="o">=</span> <span class="s2">&quot;42&quot;</span>
     <span class="n">abababababababab_payload_value</span> <span class="o">=</span> <span class="mi">0</span></div>
 
 

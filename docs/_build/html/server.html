@@ -41,7 +41,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Loraboard</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">README</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="database.html">database package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scrapper.html">scrapper package</a></li>
@@ -78,7 +79,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">Loraboard</a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Modules</a></li>
       <li class="breadcrumb-item active">server package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/server.rst.txt" rel="nofollow"> View page source</a>
@@ -96,40 +97,92 @@
 </section>
 <section id="module-server.website">
 <span id="server-website-module"></span><h2>server.website module<a class="headerlink" href="#module-server.website" title="Permalink to this heading"></a></h2>
+<p>This module contains the functions related to the website, the pages and the socket events.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="server.website.delete_account">
 <span class="sig-prename descclassname"><span class="pre">server.website.</span></span><span class="sig-name descname"><span class="pre">delete_account</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/server/website.html#delete_account"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.website.delete_account" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Delete the user’s account.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The index page or the delete account page.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="server.website.handle_set_alert_value">
-<span class="sig-prename descclassname"><span class="pre">server.website.</span></span><span class="sig-name descname"><span class="pre">handle_set_alert_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/server/website.html#handle_set_alert_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.website.handle_set_alert_value" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">server.website.</span></span><span class="sig-name descname"><span class="pre">handle_set_alert_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/server/website.html#handle_set_alert_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.website.handle_set_alert_value" title="Permalink to this definition"></a></dt>
+<dd><p>Set the alert value for a sensor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em>) – A dictionary containing the sensor ID and the alert value.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotFound</strong> – If the sensor ID is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="server.website.index">
 <span class="sig-prename descclassname"><span class="pre">server.website.</span></span><span class="sig-name descname"><span class="pre">index</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/server/website.html#index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.website.index" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Display the index page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The index page.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotFound</strong> – If the user is not logged in.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="server.website.login">
 <span class="sig-prename descclassname"><span class="pre">server.website.</span></span><span class="sig-name descname"><span class="pre">login</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/server/website.html#login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.website.login" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Display the login page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The login page.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="server.website.logout">
 <span class="sig-prename descclassname"><span class="pre">server.website.</span></span><span class="sig-name descname"><span class="pre">logout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/server/website.html#logout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.website.logout" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Log the user out.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The index page.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="server.website.page_not_found">
 <span class="sig-prename descclassname"><span class="pre">server.website.</span></span><span class="sig-name descname"><span class="pre">page_not_found</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/server/website.html#page_not_found"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.website.page_not_found" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Handle 404 errors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>error</strong> – The error.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The index page.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="server.website.register">
 <span class="sig-prename descclassname"><span class="pre">server.website.</span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/server/website.html#register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.website.register" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Display the register page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The register page.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-server">

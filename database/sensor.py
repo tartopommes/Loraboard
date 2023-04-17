@@ -1,3 +1,6 @@
+"""This module contains the functions related to the sensors.
+Sensor object and functions to manage the sensors in the database."""
+
 import random
 import base64
 import pandas as pd
@@ -11,6 +14,25 @@ from database.mail import send_mail_to_all
 
 # Sensors object
 class Sensor:
+    """Sensor object.
+    
+    Attributes:
+        id (int): Sensor id.
+        name (str): Sensor name.
+        dataframe (pandas.DataFrame): Dataframe containing the data of the sensor.
+        fig (plotly.graph_objs.Figure): Plotly figure.
+        html_plot (str): Plotly figure in html format.
+        alert_value (float): Alert value of the sensor.
+        table (str): Table containing the data of the sensor.
+        lat (float): Latitude of the sensor.
+        long (float): Longitude of the sensor.
+        
+    Methods:
+        update_alert_value(self, alert_value): Update the alert value of the sensor.
+        add_data(self, data): Add data to the sensor.
+        __str__(self): Return the string representation of the sensor.
+    """
+    
     def __init__(self, id, name, dataframe, fig, html_plot, alert_value, table, lat, long):
         self.id = id
         self.name = name
@@ -60,17 +82,14 @@ class Sensor:
 #     print('[INFO]: Mail alert sent!')
 
 
-def make_table(df) -> str:
+def make_table(df: pd.DataFrame) -> str:
     """Generate an HTML table from a Pandas DataFrame
     
-    Parameters
-    ----------
-    df : Pandas DataFrame
-        The DataFrame to convert to an HTML table
-        
-    Returns
-    -------
-    table_html : str
+    Args:
+        df (Pandas Dataframe) - The DataFrame to convert to an HTML table
+
+    Returns:
+        table_html (String) - The HTML table
     """
 
     # Initialize the HTML table
@@ -102,17 +121,16 @@ def make_table(df) -> str:
     return table_html
 
 
-def make_figure(df, sensor_name: str, limit: int) -> go.Figure:
+def make_figure(df: pd.DataFrame, sensor_name: str, limit: int) -> go.Figure:
     """Generate a Plotly figure from a Pandas DataFrame
     
-    Parameters
-    ----------
-    df : Pandas DataFrame
-        The DataFrame to convert to a Plotly figure
-        
-    Returns
-    -------
-    fig : Plotly Figure
+    Args:
+        df (Pandas Dataframe) - The DataFrame to convert to a Plotly figure
+        sensor_name (String) - The name of the sensor
+        limit (Integer) - The alert limit
+
+    Returns:
+        fig (Plotly Figure) - The Plotly figure
     """
 
     # Create a Plotly line plot, set the labels, and add a horizontal line at the alert limit
@@ -157,14 +175,11 @@ def make_figure(df, sensor_name: str, limit: int) -> go.Figure:
 def get_html_fig(fig: go.Figure) -> str:
     """Convert a Plotly figure to HTML
     
-    Parameters
-    ----------
-    fig : Plotly Figure
-        The figure to convert to HTML
-        
-    Returns
-    -------
-    html_fig : str
+    Args:
+        fig (Plotly Figure) - The Plotly figure to convert to HTML
+
+    Returns:
+        fig (String) - The HTML figure
     """
 
     # Render the plot as a static image
@@ -182,17 +197,12 @@ def get_html_fig(fig: go.Figure) -> str:
 def update_plot(sensor: Sensor, alert_value: int = None) -> Sensor:
     """Update the plot object with the sensor data from the database.
 
-    Parameters
-    ----------
-    sensor : Sensor
-        The sensor object to update
-    limit : int, optional
-        The alert limit to set, by default None
+    Args:
+        sensor (Sensor) - The sensor object to update
+        alert_value (int) - The new alert value to set
 
-    Returns
-    -------
-    sensor : Sensor
-        The updated sensor object
+    Returns:
+        sensor (Sensor) - The updated sensor object
     """
 
     if alert_value:
@@ -211,22 +221,16 @@ def update_plot(sensor: Sensor, alert_value: int = None) -> Sensor:
 
 
 
-def get_random_value(sensor_id, start_time = None, end_time = None) -> List[Tuple]:
+def get_random_value(sensor_id: int, start_time: datetime = None, end_time: datetime = None) -> List[Tuple]:
     """Generate a random value between 0 and 15.
     
-    Parameters
-    ----------
-    sensor_id : int
-        The ID of the sensor
-    start_time : datetime, optional
-        The start time of the data, by default None
-    end_time : datetime, optional
-        The end time of the data, by default None
-    
-    Returns
-    -------
-    data : List[Tuple]
-        A list of tuples containing the sensor ID, RSSI, time, and value
+    Args:
+        sensor_id (Integer) - The ID of the sensor
+        start_time (Datetime) - The start time for the data
+        end_time (Datetime) - The end time for the data
+
+    Returns:
+        data (List of tuples) - The list of tuples containing the sensor ID, time, and value
     """
     # Define the start and end times for the data
     if start_time is None:
@@ -253,22 +257,13 @@ def get_random_value(sensor_id, start_time = None, end_time = None) -> List[Tupl
 def get_sensor_id(connection: database.Connection, sensor_name: str) -> int:
     """Get the ID of a sensor from the database.
 
-    Parameters
-    ----------
-    connection : database.Connection
-        The database connection
-    sensor_name : str
-        The name of the sensor
+    Args:
+        connection (Database Connection): The database connection.
+        sensor_name (String): The name of the sensor.
 
-    Returns
-    -------
-    int
-        The ID of the sensor
+    Returns:
+        result (Integer): The ID of the sensor.
 
-    Raises
-    ------
-    ValueError
-        If the sensor name is not in the database
 
     Examples
     --------
@@ -288,10 +283,10 @@ def get_sensor_name_from_deveui(deveui: str) -> str:
     """Get the name of a sensor from the database.
 
     Args:
-        deveui: A string representing the EUI of the sensor.
+        deveui (String): The deveui of the sensor.
 
     Returns:
-        A string representing the name of the sensor.
+        result (String): The name of the sensor.
     """
     connection = database.Connection(USERS_DB)
 
@@ -310,11 +305,11 @@ def get_sensor_alert_value(sensor_name: str) -> int:
     """Get the alert value of a sensor from the database.
 
     Args:
-        connection: A sqlite3.Connection object.
-        sensor_name: A string representing the name of the sensor.
+        connection (Database Connection): The database connection.
+        sensor_name (String): The name of the sensor.
 
     Returns:
-        An integer representing the limit of the sensor.
+        result (Integer): The alert value of the sensor.
     """
     connection = database.Connection(USERS_DB)
     sensor_id = get_sensor_id(connection, sensor_name)
@@ -328,15 +323,14 @@ def get_sensor_alert_value(sensor_name: str) -> int:
 
 
 
-def get_sensor_data(sensor_name: str) -> List[Tuple]:
+def get_sensor_data(sensor_name: str) -> pd.DataFrame:
     """Get the data of a sensor from the database.
 
     Args:
-        connection: A sqlite3.Connection object.
-        sensor_id: An integer representing the ID of the sensor.
+        sensor_name (String): The name of the sensor.
 
     Returns:
-        A list of tuples representing the data of the sensor.
+        df (Pandas Dataframe): The data of the sensor.
     """
     # Get the ID of the sensor
     connection = database.Connection(USERS_DB)
@@ -361,10 +355,10 @@ def add_sensor_data(deveui: int, rssi:int, time: str, value: int):
     """Add the data of a sensor to the database.
 
     Args:
-        sensor_id: An integer representing the ID of the sensor.
-        rssi: An integer representing the RSSI of the sensor.
-        data: A list of tuples containing the data of the sensor.
-        value: An integer representing the value of the sensor.
+        deveui (Integer): The deveui of the sensor.
+        rssi (Integer): The fm rssi of the sensor (<= 0)
+        time (String): The time of the data.
+        value (Integer): The value of the data.
     """
     SENSORS = get_sensors()
     # Prepare the query with the data for the database
@@ -409,9 +403,8 @@ def set_sensor_alert_value(sensor_name: str, alert_value: int):
     """Set the alert value of a sensor in the database.
 
     Args:
-        connection: A sqlite3.Connection object.
-        sensor_id: An integer representing the ID of the sensor.
-        alert_value: An integer representing the alert value of the sensor.
+        sensor_name (String): The name of the sensor.
+        alert_value (Integer): The alert value of the sensor.
     """
     connection = database.Connection(USERS_DB)
 
@@ -426,11 +419,11 @@ def set_sensor_alert_value(sensor_name: str, alert_value: int):
 
 
 
-def get_sensors():
+def get_sensors() -> List[Sensor]:
     """Get all the sensors from the database.
 
     Returns:
-        A list of Sensor objects.
+        sensors (List[Sensor]): The list of all the sensors.
     """
     connection = database.Connection(USERS_DB)
     result = read(connection, f'SELECT id, name, alert_value, lat, long FROM {SENSORS_TABLE}')

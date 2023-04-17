@@ -18,7 +18,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="main module" href="main.html" />
-    <link rel="prev" title="Loraboard" href="modules.html" /> 
+    <link rel="prev" title="Modules" href="modules.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,7 +42,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Loraboard</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">README</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">database package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-database.addUser">database.addUser module</a><ul>
@@ -50,7 +51,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#database.addUser.create_user"><code class="docutils literal notranslate"><span class="pre">create_user()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#database.addUser.get_username"><code class="docutils literal notranslate"><span class="pre">get_username()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#database.addUser.hash_password"><code class="docutils literal notranslate"><span class="pre">hash_password()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#database.addUser.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#database.addUser.verify_email"><code class="docutils literal notranslate"><span class="pre">verify_email()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#database.addUser.verify_password"><code class="docutils literal notranslate"><span class="pre">verify_password()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#database.addUser.verify_username"><code class="docutils literal notranslate"><span class="pre">verify_username()</span></code></a></li>
@@ -60,7 +60,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#database.deleteUser.delete_user"><code class="docutils literal notranslate"><span class="pre">delete_user()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#database.deleteUser.get_user_id"><code class="docutils literal notranslate"><span class="pre">get_user_id()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#database.deleteUser.hash_password"><code class="docutils literal notranslate"><span class="pre">hash_password()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#database.deleteUser.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-database.gestion">database.gestion module</a><ul>
@@ -74,7 +73,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#database.initDatabase.create_tables"><code class="docutils literal notranslate"><span class="pre">create_tables()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#database.initDatabase.fill_user"><code class="docutils literal notranslate"><span class="pre">fill_user()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#database.initDatabase.init_database"><code class="docutils literal notranslate"><span class="pre">init_database()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#database.initDatabase.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-database.mail">database.mail module</a><ul>
@@ -85,13 +83,13 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-database.printDatabase">database.printDatabase module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#database.printDatabase.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#database.printDatabase.print_tables"><code class="docutils literal notranslate"><span class="pre">print_tables()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-database.sensor">database.sensor module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#database.sensor.Sensor"><code class="docutils literal notranslate"><span class="pre">Sensor</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#database.sensor.add_sensor_data"><code class="docutils literal notranslate"><span class="pre">add_sensor_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#database.sensor.get_html_fig"><code class="docutils literal notranslate"><span class="pre">get_html_fig()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#database.sensor.get_random_value"><code class="docutils literal notranslate"><span class="pre">get_random_value()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#database.sensor.get_sensor_alert_value"><code class="docutils literal notranslate"><span class="pre">get_sensor_alert_value()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#database.sensor.get_sensor_data"><code class="docutils literal notranslate"><span class="pre">get_sensor_data()</span></code></a></li>
@@ -128,7 +126,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">Loraboard</a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Modules</a></li>
       <li class="breadcrumb-item active">database package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/database.rst.txt" rel="nofollow"> View page source</a>
@@ -146,6 +144,7 @@
 </section>
 <section id="module-database.addUser">
 <span id="database-adduser-module"></span><h2>database.addUser module<a class="headerlink" href="#module-database.addUser" title="Permalink to this heading"></a></h2>
+<p>This module contains the functions related to add a user to the database.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="database.addUser.add_user">
 <span class="sig-prename descclassname"><span class="pre">database.addUser.</span></span><span class="sig-name descname"><span class="pre">add_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/addUser.html#add_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.addUser.add_user" title="Permalink to this definition"></a></dt>
@@ -153,10 +152,10 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>connection</strong> – A sqlite3.Connection object.</p></li>
-<li><p><strong>email</strong> – A string representing the email of the user.</p></li>
-<li><p><strong>username</strong> – A string representing the username of the user.</p></li>
-<li><p><strong>password</strong> – A string representing the password of the user.</p></li>
+<li><p><strong>connection</strong> (<em>sqlite3.Connection</em>) – The connection to the database.</p></li>
+<li><p><strong>email</strong> (<em>str</em>) – The email of the user.</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – The username of the user.</p></li>
+<li><p><strong>password</strong> (<em>str</em>) – The password of the user.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -168,7 +167,13 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="database.addUser.create_user">
 <span class="sig-prename descclassname"><span class="pre">database.addUser.</span></span><span class="sig-name descname"><span class="pre">create_user</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/addUser.html#create_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.addUser.create_user" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Create a new user and verify if the email, username and password are valid. If so, add the user to the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>SystemExit</strong> – If the email, username or password is not valid.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="database.addUser.get_username">
@@ -177,8 +182,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>connection</strong> – A sqlite3.Connection object.</p></li>
-<li><p><strong>user_id</strong> – An integer representing the ID of the user.</p></li>
+<li><p><strong>connection</strong> (<em>sqlite3.Connection</em>) – Connection object to the database.</p></li>
+<li><p><strong>user_id</strong> (<em>int</em>) – The ID of the user.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -193,7 +198,7 @@
 <dd><p>Hash a password using SHA256.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>password</strong> – A string representing the password.</p>
+<dd class="field-odd"><p><strong>password</strong> (<em>str</em>) – The password to hash.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A string representing the hashed password.</p>
@@ -202,17 +207,12 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="database.addUser.main">
-<span class="sig-prename descclassname"><span class="pre">database.addUser.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/addUser.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.addUser.main" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="database.addUser.verify_email">
 <span class="sig-prename descclassname"><span class="pre">database.addUser.</span></span><span class="sig-name descname"><span class="pre">verify_email</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/addUser.html#verify_email"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.addUser.verify_email" title="Permalink to this definition"></a></dt>
 <dd><p>Check if the given email address is valid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>email</strong> – A string representing the email.</p>
+<dd class="field-odd"><p><strong>email</strong> (<em>str</em>) – A string representing the email.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>SystemExit</strong> – If the email doesnt not match email type.</p>
@@ -227,8 +227,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>password</strong> – A string representing the password.</p></li>
-<li><p><strong>confirmation</strong> – A string representing the confirmation of the password.</p></li>
+<li><p><strong>password</strong> (<em>str</em>) – The password to verify.</p></li>
+<li><p><strong>confirmation</strong> (<em>str</em>) – The confirmation of the password.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -250,8 +250,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>connection</strong> – A sqlite3.Connection object.</p></li>
-<li><p><strong>username</strong> – A string representing the username to check.</p></li>
+<li><p><strong>connection</strong> (<em>database.Connection</em>) – The connection to the database.</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – The username to verify.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -269,6 +269,7 @@
 </section>
 <section id="module-database.deleteUser">
 <span id="database-deleteuser-module"></span><h2>database.deleteUser module<a class="headerlink" href="#module-database.deleteUser" title="Permalink to this heading"></a></h2>
+<p>This module contains the functions related to delete a user from the database.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="database.deleteUser.delete_user">
 <span class="sig-prename descclassname"><span class="pre">database.deleteUser.</span></span><span class="sig-name descname"><span class="pre">delete_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/deleteUser.html#delete_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.deleteUser.delete_user" title="Permalink to this definition"></a></dt>
@@ -310,7 +311,7 @@
 <dd><p>Hash a password using SHA256.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>password</strong> – A string representing the password.</p>
+<dd class="field-odd"><p><strong>password</strong> (<em>str</em>) – A string representing the password.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A string representing the hashed password.</p>
@@ -318,30 +319,40 @@
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="database.deleteUser.main">
-<span class="sig-prename descclassname"><span class="pre">database.deleteUser.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/deleteUser.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.deleteUser.main" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
 </section>
 <section id="module-database.gestion">
 <span id="database-gestion-module"></span><h2>database.gestion module<a class="headerlink" href="#module-database.gestion" title="Permalink to this heading"></a></h2>
+<p>This module contains functions to read and write to the database, as well as functions to hash passwords and verify email addresses.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="database.gestion.exit_error">
-<span class="sig-prename descclassname"><span class="pre">database.gestion.</span></span><span class="sig-name descname"><span class="pre">exit_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objectToReturn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/gestion.html#exit_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.gestion.exit_error" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">database.gestion.</span></span><span class="sig-name descname"><span class="pre">exit_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objectToReturn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/database/gestion.html#exit_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.gestion.exit_error" title="Permalink to this definition"></a></dt>
 <dd><p>Print an error message and exit the program.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A string representing the error message.</p></li>
+<li><p><strong>objectToReturn</strong> (<em>int</em>) – An object to return when exiting the program.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>systemExit</strong> – An exception that exits the program with the objectToReturn code.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="database.gestion.read">
-<span class="sig-prename descclassname"><span class="pre">database.gestion.</span></span><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">many</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/database/gestion.html#read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.gestion.read" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">database.gestion.</span></span><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">many</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/database/gestion.html#read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.gestion.read" title="Permalink to this definition"></a></dt>
 <dd><p>Executes a SELECT statement on the database and returns the results as a list of tuples.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>connection</strong> – a SQLite3 database connection object</p></li>
-<li><p><strong>request</strong> – the SQL SELECT statement to execute</p></li>
-<li><p><strong>many</strong> – True if the statement should be executed multiple times with different data, False otherwise</p></li>
+<li><p><strong>connection</strong> (<em>database.Connection</em>) – a SQLite3 database connection object</p></li>
+<li><p><strong>request</strong> (<em>Union</em><em>[</em><em>Tuple</em><em>, </em><em>str</em><em>]</em>) – the SQL SELECT statement to execute</p></li>
+<li><p><strong>many</strong> (<em>bool</em>) – True if the statement should be executed multiple times with different data, False otherwise</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -352,20 +363,34 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="database.gestion.return_error">
-<span class="sig-prename descclassname"><span class="pre">database.gestion.</span></span><span class="sig-name descname"><span class="pre">return_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objectToReturn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/gestion.html#return_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.gestion.return_error" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">database.gestion.</span></span><span class="sig-name descname"><span class="pre">return_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objectToReturn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/gestion.html#return_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.gestion.return_error" title="Permalink to this definition"></a></dt>
 <dd><p>Print an error message and return an object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – A string representing the error message.</p></li>
+<li><p><strong>objectToReturn</strong> (<em>int</em>) – An object to return when exiting the program.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An object to return when exiting the program.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>objectToReturn (int)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="database.gestion.write">
-<span class="sig-prename descclassname"><span class="pre">database.gestion.</span></span><span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">many</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/gestion.html#write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.gestion.write" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">database.gestion.</span></span><span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">many</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/gestion.html#write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.gestion.write" title="Permalink to this definition"></a></dt>
 <dd><p>Executes an INSERT, UPDATE, or DELETE statement on the database and commits the changes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>connection</strong> – a SQLite3 database connection object</p></li>
-<li><p><strong>request</strong> – the SQL INSERT, UPDATE, or DELETE statement to execute</p></li>
-<li><p><strong>many</strong> – True if the statement should be executed multiple times with different data, False otherwise</p></li>
+<li><p><strong>connection</strong> (<em>database.Connection</em>) – a SQLite3 database connection object</p></li>
+<li><p><strong>request</strong> (<em>Union</em><em>[</em><em>Tuple</em><em>, </em><em>str</em><em>]</em>) – the SQL INSERT, UPDATE, or DELETE statement to execute</p></li>
+<li><p><strong>many</strong> (<em>bool</em>) – True if the statement should be executed multiple times with different data, False otherwise</p></li>
 </ul>
 </dd>
 </dl>
@@ -374,33 +399,44 @@
 </section>
 <section id="module-database.initDatabase">
 <span id="database-initdatabase-module"></span><h2>database.initDatabase module<a class="headerlink" href="#module-database.initDatabase" title="Permalink to this heading"></a></h2>
+<p>This module contains the functions related to the database initialization.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="database.initDatabase.create_tables">
-<span class="sig-prename descclassname"><span class="pre">database.initDatabase.</span></span><span class="sig-name descname"><span class="pre">create_tables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/initDatabase.html#create_tables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.initDatabase.create_tables" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">database.initDatabase.</span></span><span class="sig-name descname"><span class="pre">create_tables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/initDatabase.html#create_tables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.initDatabase.create_tables" title="Permalink to this definition"></a></dt>
 <dd><p>Create the tables in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>connection</strong> (<em>database.Connection</em>) – a SQLite3 database connection object</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="database.initDatabase.fill_user">
-<span class="sig-prename descclassname"><span class="pre">database.initDatabase.</span></span><span class="sig-name descname"><span class="pre">fill_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/initDatabase.html#fill_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.initDatabase.fill_user" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">database.initDatabase.</span></span><span class="sig-name descname"><span class="pre">fill_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/initDatabase.html#fill_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.initDatabase.fill_user" title="Permalink to this definition"></a></dt>
 <dd><p>Fill the users table with some data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>connection</strong> (<em>database.Connection</em>) – a SQLite3 database connection object</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="database.initDatabase.init_database">
-<span class="sig-prename descclassname"><span class="pre">database.initDatabase.</span></span><span class="sig-name descname"><span class="pre">init_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/initDatabase.html#init_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.initDatabase.init_database" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">database.initDatabase.</span></span><span class="sig-name descname"><span class="pre">init_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/initDatabase.html#init_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.initDatabase.init_database" title="Permalink to this definition"></a></dt>
 <dd><p>Initialise the database.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="database.initDatabase.main">
-<span class="sig-prename descclassname"><span class="pre">database.initDatabase.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/initDatabase.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.initDatabase.main" title="Permalink to this definition"></a></dt>
-<dd><p>Main function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>connection</strong> (<em>database.Connection</em>) – a SQLite3 database connection object</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
 <section id="module-database.mail">
 <span id="database-mail-module"></span><h2>database.mail module<a class="headerlink" href="#module-database.mail" title="Permalink to this heading"></a></h2>
+<p>This module contains the functions related to the mail sending.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="database.mail.get_all_emails">
 <span class="sig-prename descclassname"><span class="pre">database.mail.</span></span><span class="sig-name descname"><span class="pre">get_all_emails</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/database/mail.html#get_all_emails"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.mail.get_all_emails" title="Permalink to this definition"></a></dt>
@@ -422,6 +458,14 @@
 <dt class="sig sig-object py" id="database.mail.get_creds">
 <span class="sig-prename descclassname"><span class="pre">database.mail.</span></span><span class="sig-name descname"><span class="pre">get_creds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Credentials</span></span></span><a class="reference internal" href="_modules/database/mail.html#get_creds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.mail.get_creds" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the credentials from the user’s machine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Credentials object containing the user’s credentials.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Credentials</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -456,18 +500,14 @@
 </section>
 <section id="module-database.printDatabase">
 <span id="database-printdatabase-module"></span><h2>database.printDatabase module<a class="headerlink" href="#module-database.printDatabase" title="Permalink to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="database.printDatabase.main">
-<span class="sig-prename descclassname"><span class="pre">database.printDatabase.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/printDatabase.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.printDatabase.main" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
+<p>This module contains a function to print the content of the database.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="database.printDatabase.print_tables">
 <span class="sig-prename descclassname"><span class="pre">database.printDatabase.</span></span><span class="sig-name descname"><span class="pre">print_tables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/printDatabase.html#print_tables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.printDatabase.print_tables" title="Permalink to this definition"></a></dt>
 <dd><p>Read and print the content of all tables in the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>connection</strong> – A sqlite3.Connection object.</p>
+<dd class="field-odd"><p><strong>connection</strong> (<em>sqlite3.connection</em>) – Connection object to the database.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None.</p>
@@ -478,10 +518,130 @@
 </section>
 <section id="module-database.sensor">
 <span id="database-sensor-module"></span><h2>database.sensor module<a class="headerlink" href="#module-database.sensor" title="Permalink to this heading"></a></h2>
+<p>This module contains the functions related to the sensors.
+Sensor object and functions to manage the sensors in the database.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="database.sensor.Sensor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">database.sensor.</span></span><span class="sig-name descname"><span class="pre">Sensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">html_plot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alert_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/sensor.html#Sensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.sensor.Sensor" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Sensor object.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="database.sensor.Sensor.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#database.sensor.Sensor.id" title="Permalink to this definition"></a></dt>
+<dd><p>Sensor id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="database.sensor.Sensor.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#database.sensor.Sensor.name" title="Permalink to this definition"></a></dt>
+<dd><p>Sensor name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="database.sensor.Sensor.dataframe">
+<span class="sig-name descname"><span class="pre">dataframe</span></span><a class="headerlink" href="#database.sensor.Sensor.dataframe" title="Permalink to this definition"></a></dt>
+<dd><p>Dataframe containing the data of the sensor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="database.sensor.Sensor.fig">
+<span class="sig-name descname"><span class="pre">fig</span></span><a class="headerlink" href="#database.sensor.Sensor.fig" title="Permalink to this definition"></a></dt>
+<dd><p>Plotly figure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>plotly.graph_objs.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="database.sensor.Sensor.html_plot">
+<span class="sig-name descname"><span class="pre">html_plot</span></span><a class="headerlink" href="#database.sensor.Sensor.html_plot" title="Permalink to this definition"></a></dt>
+<dd><p>Plotly figure in html format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="database.sensor.Sensor.alert_value">
+<span class="sig-name descname"><span class="pre">alert_value</span></span><a class="headerlink" href="#database.sensor.Sensor.alert_value" title="Permalink to this definition"></a></dt>
+<dd><p>Alert value of the sensor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="database.sensor.Sensor.table">
+<span class="sig-name descname"><span class="pre">table</span></span><a class="headerlink" href="#database.sensor.Sensor.table" title="Permalink to this definition"></a></dt>
+<dd><p>Table containing the data of the sensor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="database.sensor.Sensor.lat">
+<span class="sig-name descname"><span class="pre">lat</span></span><a class="headerlink" href="#database.sensor.Sensor.lat" title="Permalink to this definition"></a></dt>
+<dd><p>Latitude of the sensor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="database.sensor.Sensor.long">
+<span class="sig-name descname"><span class="pre">long</span></span><a class="headerlink" href="#database.sensor.Sensor.long" title="Permalink to this definition"></a></dt>
+<dd><p>Longitude of the sensor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="database.sensor.Sensor.update_alert_value">
+<span class="sig-name descname"><span class="pre">update_alert_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alert_value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#database.sensor.Sensor.update_alert_value" title="Permalink to this definition"></a></dt>
+<dd><p>Update the alert value of the sensor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="database.sensor.Sensor.add_data">
+<span class="sig-name descname"><span class="pre">add_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#database.sensor.Sensor.add_data" title="Permalink to this definition"></a></dt>
+<dd><p>Add data to the sensor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="database.sensor.Sensor.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/sensor.html#Sensor.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.sensor.Sensor.__str__" title="Permalink to this definition"></a></dt>
+<dd><p>Return the string representation of the sensor.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -491,32 +651,43 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sensor_id</strong> – An integer representing the ID of the sensor.</p></li>
-<li><p><strong>rssi</strong> – An integer representing the RSSI of the sensor.</p></li>
-<li><p><strong>data</strong> – A list of tuples containing the data of the sensor.</p></li>
-<li><p><strong>value</strong> – An integer representing the value of the sensor.</p></li>
+<li><p><strong>deveui</strong> (<em>Integer</em>) – The deveui of the sensor.</p></li>
+<li><p><strong>rssi</strong> (<em>Integer</em>) – The fm rssi of the sensor (&lt;= 0)</p></li>
+<li><p><strong>time</strong> (<em>String</em>) – The time of the data.</p></li>
+<li><p><strong>value</strong> (<em>Integer</em>) – The value of the data.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="database.sensor.get_html_fig">
+<span class="sig-prename descclassname"><span class="pre">database.sensor.</span></span><span class="sig-name descname"><span class="pre">get_html_fig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Figure</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/database/sensor.html#get_html_fig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.sensor.get_html_fig" title="Permalink to this definition"></a></dt>
+<dd><p>Convert a Plotly figure to HTML</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fig</strong> (<em>Plotly Figure</em>) – </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>fig (String) - The HTML figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="database.sensor.get_random_value">
-<span class="sig-prename descclassname"><span class="pre">database.sensor.</span></span><span class="sig-name descname"><span class="pre">get_random_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/database/sensor.html#get_random_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.sensor.get_random_value" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">database.sensor.</span></span><span class="sig-name descname"><span class="pre">get_random_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/database/sensor.html#get_random_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.sensor.get_random_value" title="Permalink to this definition"></a></dt>
 <dd><p>Generate a random value between 0 and 15.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sensor_id</strong> (<em>int</em>) – The ID of the sensor</p></li>
-<li><p><strong>start_time</strong> (<em>datetime</em><em>, </em><em>optional</em>) – The start time of the data, by default None</p></li>
-<li><p><strong>end_time</strong> (<em>datetime</em><em>, </em><em>optional</em>) – The end time of the data, by default None</p></li>
+<li><p><strong>sensor_id</strong> (<em>Integer</em>) – </p></li>
+<li><p><strong>start_time</strong> (<em>Datetime</em>) – </p></li>
+<li><p><strong>end_time</strong> (<em>Datetime</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>data</strong> – A list of tuples containing the sensor ID, RSSI, time, and value</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[Tuple]</p>
+<dd class="field-even"><p>data (List of tuples) - The list of tuples containing the sensor ID, time, and value</p>
 </dd>
 </dl>
 </dd></dl>
@@ -528,29 +699,32 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>connection</strong> – A sqlite3.Connection object.</p></li>
-<li><p><strong>sensor_name</strong> – A string representing the name of the sensor.</p></li>
+<li><p><strong>connection</strong> (<em>Database Connection</em>) – The database connection.</p></li>
+<li><p><strong>sensor_name</strong> (<em>String</em>) – The name of the sensor.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An integer representing the limit of the sensor.</p>
+<dd class="field-even"><p>The alert value of the sensor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>result (Integer)</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="database.sensor.get_sensor_data">
-<span class="sig-prename descclassname"><span class="pre">database.sensor.</span></span><span class="sig-name descname"><span class="pre">get_sensor_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/database/sensor.html#get_sensor_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.sensor.get_sensor_data" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">database.sensor.</span></span><span class="sig-name descname"><span class="pre">get_sensor_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/database/sensor.html#get_sensor_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.sensor.get_sensor_data" title="Permalink to this definition"></a></dt>
 <dd><p>Get the data of a sensor from the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>connection</strong> – A sqlite3.Connection object.</p></li>
-<li><p><strong>sensor_id</strong> – An integer representing the ID of the sensor.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>sensor_name</strong> (<em>String</em>) – The name of the sensor.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of tuples representing the data of the sensor.</p>
+<dd class="field-even"><p>The data of the sensor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>df (Pandas Dataframe)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -562,18 +736,15 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>connection</strong> (<em>database.Connection</em>) – The database connection</p></li>
-<li><p><strong>sensor_name</strong> (<em>str</em>) – The name of the sensor</p></li>
+<li><p><strong>connection</strong> (<em>Database Connection</em>) – The database connection.</p></li>
+<li><p><strong>sensor_name</strong> (<em>String</em>) – The name of the sensor.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The ID of the sensor</p>
+<dd class="field-even"><p>The ID of the sensor.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the sensor name is not in the database</p>
+<dd class="field-odd"><p>result (Integer)</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -589,55 +760,59 @@
 <dd><p>Get the name of a sensor from the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>deveui</strong> – A string representing the EUI of the sensor.</p>
+<dd class="field-odd"><p><strong>deveui</strong> (<em>String</em>) – The deveui of the sensor.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A string representing the name of the sensor.</p>
+<dd class="field-even"><p>The name of the sensor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>result (String)</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="database.sensor.get_sensors">
-<span class="sig-prename descclassname"><span class="pre">database.sensor.</span></span><span class="sig-name descname"><span class="pre">get_sensors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/database/sensor.html#get_sensors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.sensor.get_sensors" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">database.sensor.</span></span><span class="sig-name descname"><span class="pre">get_sensors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#database.sensor.Sensor" title="database.sensor.Sensor"><span class="pre">Sensor</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/database/sensor.html#get_sensors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.sensor.get_sensors" title="Permalink to this definition"></a></dt>
 <dd><p>Get all the sensors from the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of Sensor objects.</p>
+<dd class="field-odd"><p>The list of all the sensors.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>sensors (List[<a class="reference internal" href="#database.sensor.Sensor" title="database.sensor.Sensor">Sensor</a>])</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="database.sensor.make_figure">
-<span class="sig-prename descclassname"><span class="pre">database.sensor.</span></span><span class="sig-name descname"><span class="pre">make_figure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="_modules/database/sensor.html#make_figure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.sensor.make_figure" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">database.sensor.</span></span><span class="sig-name descname"><span class="pre">make_figure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="_modules/database/sensor.html#make_figure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.sensor.make_figure" title="Permalink to this definition"></a></dt>
 <dd><p>Generate a Plotly figure from a Pandas DataFrame</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>df</strong> (<em>Pandas DataFrame</em>) – The DataFrame to convert to a Plotly figure</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>Pandas Dataframe</em>) – </p></li>
+<li><p><strong>sensor_name</strong> (<em>String</em>) – </p></li>
+<li><p><strong>limit</strong> (<em>Integer</em>) – </p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>fig</strong></p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Plotly Figure</p>
+<dd class="field-even"><p>fig (Plotly Figure) - The Plotly figure</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="database.sensor.make_table">
-<span class="sig-prename descclassname"><span class="pre">database.sensor.</span></span><span class="sig-name descname"><span class="pre">make_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/database/sensor.html#make_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.sensor.make_table" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">database.sensor.</span></span><span class="sig-name descname"><span class="pre">make_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/database/sensor.html#make_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#database.sensor.make_table" title="Permalink to this definition"></a></dt>
 <dd><p>Generate an HTML table from a Pandas DataFrame</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>df</strong> (<em>Pandas DataFrame</em>) – The DataFrame to convert to an HTML table</p>
+<dd class="field-odd"><p><strong>df</strong> (<em>Pandas Dataframe</em>) – </p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>table_html</strong></p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-even"><p>table_html (String) - The HTML table</p>
 </dd>
 </dl>
 </dd></dl>
@@ -649,9 +824,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>connection</strong> – A sqlite3.Connection object.</p></li>
-<li><p><strong>sensor_id</strong> – An integer representing the ID of the sensor.</p></li>
-<li><p><strong>alert_value</strong> – An integer representing the alert value of the sensor.</p></li>
+<li><p><strong>sensor_name</strong> (<em>String</em>) – The name of the sensor.</p></li>
+<li><p><strong>alert_value</strong> (<em>Integer</em>) – The alert value of the sensor.</p></li>
 </ul>
 </dd>
 </dl>
@@ -664,15 +838,12 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sensor</strong> (<a class="reference internal" href="#database.sensor.Sensor" title="database.sensor.Sensor"><em>Sensor</em></a>) – The sensor object to update</p></li>
-<li><p><strong>limit</strong> (<em>int</em><em>, </em><em>optional</em>) – The alert limit to set, by default None</p></li>
+<li><p><strong>sensor</strong> (<a class="reference internal" href="#database.sensor.Sensor" title="database.sensor.Sensor"><em>Sensor</em></a>) – </p></li>
+<li><p><strong>alert_value</strong> (<em>int</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>sensor</strong> – The updated sensor object</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#database.sensor.Sensor" title="database.sensor.Sensor">Sensor</a></p>
+<dd class="field-even"><p>sensor (Sensor) - The updated sensor object</p>
 </dd>
 </dl>
 </dd></dl>
@@ -687,7 +858,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="modules.html" class="btn btn-neutral float-left" title="Loraboard" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-left" title="Modules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="main.html" class="btn btn-neutral float-right" title="main module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

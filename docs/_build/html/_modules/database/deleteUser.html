@@ -39,7 +39,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Loraboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">README</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
 </ul>
 
         </div>
@@ -67,7 +68,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for database.deleteUser</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">database.gestion</span> <span class="kn">import</span> <span class="n">USERS_DB</span><span class="p">,</span> <span class="n">USERS_TABLE</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">exit_error</span><span class="p">,</span> <span class="n">return_error</span><span class="p">,</span> <span class="n">read</span><span class="p">,</span> <span class="n">write</span>
+<span></span><span class="sd">&quot;&quot;&quot;This module contains the functions related to delete a user from the database.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">database.gestion</span> <span class="kn">import</span> <span class="n">USERS_DB</span><span class="p">,</span> <span class="n">USERS_TABLE</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">exit_error</span><span class="p">,</span> <span class="n">return_error</span><span class="p">,</span> <span class="n">read</span><span class="p">,</span> <span class="n">write</span>
 <span class="kn">from</span> <span class="nn">getpass</span> <span class="kn">import</span> <span class="n">getpass</span>
 <span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">sha256</span>
 <span class="kn">from</span> <span class="nn">traceback</span> <span class="kn">import</span> <span class="n">print_exc</span>
@@ -78,7 +81,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Hash a password using SHA256.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        password: A string representing the password.</span>
+<span class="sd">        password (str): A string representing the password.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        A string representing the hashed password.</span>
@@ -144,7 +147,9 @@
 
     
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../database.html#database.deleteUser.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Delete a user from the database.&quot;&quot;&quot;</span>
+
     <span class="n">username</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Username: &#39;</span><span class="p">)</span>
     <span class="n">password</span> <span class="o">=</span> <span class="n">getpass</span><span class="p">(</span><span class="s1">&#39;Password: &#39;</span><span class="p">)</span>
 
@@ -161,13 +166,7 @@
         <span class="n">print_exc</span><span class="p">()</span>
 
     <span class="k">finally</span><span class="p">:</span>
-        <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
-
-
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">main</span><span class="p">()</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 
            </div>

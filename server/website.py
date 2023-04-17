@@ -1,5 +1,8 @@
+"""This module contains the functions related to the website, the pages and the socket events."""
+
 from flask import render_template, request, redirect, url_for
 from werkzeug.exceptions import NotFound
+from typing import Dict, Any
 
 from database.gestion import database, USERS_DB, app, socketio
 from database.addUser import hash_password, verify_password, verify_username, get_username, add_user
@@ -27,7 +30,16 @@ current_user = {
 
 
 @socketio.on('set_alert_value')
-def handle_set_alert_value(data):
+def handle_set_alert_value(data: Dict[str, Any]):
+    """Set the alert value for a sensor.
+    
+    Args:
+        data (dict): A dictionary containing the sensor ID and the alert value.
+
+    Raises:
+        NotFound: If the sensor ID is invalid.
+    """
+
     SENSORS = get_sensors()
     sensor = SENSORS[data['sensor_id']-1]
     alert_value = data['alert_value']
@@ -44,6 +56,14 @@ def handle_set_alert_value(data):
 # Index page
 @app.route('/')
 def index():
+    """Display the index page.
+    
+    Returns:
+        The index page.
+        
+    Raises:
+        NotFound: If the user is not logged in.
+    """
     current_user['delete_success'] = False
     
     if current_user['is_authenticated']:
@@ -81,6 +101,11 @@ def index():
 # Register page
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    """Display the register page.
+    
+    Returns:
+        The register page.
+    """
     current_user['register_failed']['password'] = False
     current_user['register_failed']['username'] = False
 
@@ -120,6 +145,10 @@ def register():
 # Login page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """Display the login page.
+    
+    Returns:
+        The login page."""
     if current_user['is_authenticated']:
         current_user['is_authenticated'] = False
         # return redirect(url_for('index'))
@@ -160,6 +189,10 @@ def login():
 # Logout button
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
+    """Log the user out.
+    
+    Returns:
+        The index page."""
     current_user['is_authenticated'] = False
     return redirect(url_for('index'))
 
@@ -168,6 +201,11 @@ def logout():
 # Delete account button
 @app.route('/delete_account', methods=['GET', 'POST'])
 def delete_account():
+    """Delete the user's account.
+
+    Returns:
+        The index page or the delete account page.
+    """
     current_user['delete_failed'] = False
 
     if current_user['is_authenticated'] == False:
@@ -205,6 +243,13 @@ def delete_account():
 # Error handler for 404 errors
 @app.errorhandler(NotFound)
 def page_not_found(error):
+    """Handle 404 errors.
+    
+    Args:
+        error: The error.
+        
+    Returns:
+        The index page."""
     return redirect(url_for('index'))
 
 

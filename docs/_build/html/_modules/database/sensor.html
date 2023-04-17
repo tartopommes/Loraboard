@@ -39,7 +39,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Loraboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">README</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
 </ul>
 
         </div>
@@ -67,9 +68,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for database.sensor</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">random</span>
+<span></span><span class="sd">&quot;&quot;&quot;This module contains the functions related to the sensors.</span>
+<span class="sd">Sensor object and functions to manage the sensors in the database.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">plotly.graph_objs</span> <span class="k">as</span> <span class="nn">go</span>
+<span class="kn">import</span> <span class="nn">plotly.io</span> <span class="k">as</span> <span class="nn">pio</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
 <span class="kn">from</span> <span class="nn">database.gestion</span> <span class="kn">import</span> <span class="n">database</span><span class="p">,</span> <span class="n">USERS_DB</span><span class="p">,</span> <span class="n">SENSORS_TABLE</span><span class="p">,</span> <span class="n">DATA_TABLE</span><span class="p">,</span> <span class="n">write</span><span class="p">,</span> <span class="n">read</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">socketio</span>
@@ -78,6 +84,25 @@
 
 <span class="c1"># Sensors object</span>
 <div class="viewcode-block" id="Sensor"><a class="viewcode-back" href="../../database.html#database.sensor.Sensor">[docs]</a><span class="k">class</span> <span class="nc">Sensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sensor object.</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        id (int): Sensor id.</span>
+<span class="sd">        name (str): Sensor name.</span>
+<span class="sd">        dataframe (pandas.DataFrame): Dataframe containing the data of the sensor.</span>
+<span class="sd">        fig (plotly.graph_objs.Figure): Plotly figure.</span>
+<span class="sd">        html_plot (str): Plotly figure in html format.</span>
+<span class="sd">        alert_value (float): Alert value of the sensor.</span>
+<span class="sd">        table (str): Table containing the data of the sensor.</span>
+<span class="sd">        lat (float): Latitude of the sensor.</span>
+<span class="sd">        long (float): Longitude of the sensor.</span>
+<span class="sd">        </span>
+<span class="sd">    Methods:</span>
+<span class="sd">        update_alert_value(self, alert_value): Update the alert value of the sensor.</span>
+<span class="sd">        add_data(self, data): Add data to the sensor.</span>
+<span class="sd">        __str__(self): Return the string representation of the sensor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">dataframe</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span> <span class="n">html_plot</span><span class="p">,</span> <span class="n">alert_value</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">long</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
@@ -100,8 +125,8 @@
     <span class="c1">#     add_sensor_data(deveui, rssi, time, value)</span>
     <span class="c1">#     check_for_alert(self.id, self.name, self.alert_value, value)</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Sensor </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+<div class="viewcode-block" id="Sensor.__str__"><a class="viewcode-back" href="../../database.html#database.sensor.Sensor.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Sensor </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span></div></div>
     
 
 <span class="c1"># def check_for_alert(sensor_id, sensor_name, alert_value, value):</span>
@@ -127,17 +152,14 @@
 <span class="c1">#     print(&#39;[INFO]: Mail alert sent!&#39;)</span>
 
 
-<div class="viewcode-block" id="make_table"><a class="viewcode-back" href="../../database.html#database.sensor.make_table">[docs]</a><span class="k">def</span> <span class="nf">make_table</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="make_table"><a class="viewcode-back" href="../../database.html#database.sensor.make_table">[docs]</a><span class="k">def</span> <span class="nf">make_table</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate an HTML table from a Pandas DataFrame</span>
 <span class="sd">    </span>
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    df : Pandas DataFrame</span>
-<span class="sd">        The DataFrame to convert to an HTML table</span>
-<span class="sd">        </span>
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    table_html : str</span>
+<span class="sd">    Args:</span>
+<span class="sd">        df (Pandas Dataframe) - The DataFrame to convert to an HTML table</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        table_html (String) - The HTML table</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Initialize the HTML table</span>
@@ -169,17 +191,16 @@
     <span class="k">return</span> <span class="n">table_html</span></div>
 
 
-<div class="viewcode-block" id="make_figure"><a class="viewcode-back" href="../../database.html#database.sensor.make_figure">[docs]</a><span class="k">def</span> <span class="nf">make_figure</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">sensor_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+<div class="viewcode-block" id="make_figure"><a class="viewcode-back" href="../../database.html#database.sensor.make_figure">[docs]</a><span class="k">def</span> <span class="nf">make_figure</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">sensor_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a Plotly figure from a Pandas DataFrame</span>
 <span class="sd">    </span>
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    df : Pandas DataFrame</span>
-<span class="sd">        The DataFrame to convert to a Plotly figure</span>
-<span class="sd">        </span>
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    fig : Plotly Figure</span>
+<span class="sd">    Args:</span>
+<span class="sd">        df (Pandas Dataframe) - The DataFrame to convert to a Plotly figure</span>
+<span class="sd">        sensor_name (String) - The name of the sensor</span>
+<span class="sd">        limit (Integer) - The alert limit</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        fig (Plotly Figure) - The Plotly figure</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Create a Plotly line plot, set the labels, and add a horizontal line at the alert limit</span>
@@ -220,20 +241,38 @@
     <span class="k">return</span> <span class="n">fig</span></div>
 
 
+
+<div class="viewcode-block" id="get_html_fig"><a class="viewcode-back" href="../../database.html#database.sensor.get_html_fig">[docs]</a><span class="k">def</span> <span class="nf">get_html_fig</span><span class="p">(</span><span class="n">fig</span><span class="p">:</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a Plotly figure to HTML</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        fig (Plotly Figure) - The Plotly figure to convert to HTML</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        fig (String) - The HTML figure</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Render the plot as a static image</span>
+    <span class="n">image_bytes</span> <span class="o">=</span> <span class="n">pio</span><span class="o">.</span><span class="n">to_image</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Convert the image bytes to a base64-encoded string</span>
+    <span class="n">image_str</span> <span class="o">=</span> <span class="s1">&#39;data:image/png;base64,&#39;</span> <span class="o">+</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_bytes</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;img src=&quot;</span><span class="si">{</span><span class="n">image_str</span><span class="si">}</span><span class="s1">&quot; alt=&quot;My Plot&quot;&gt;&#39;</span>
+
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+
 <div class="viewcode-block" id="update_plot"><a class="viewcode-back" href="../../database.html#database.sensor.update_plot">[docs]</a><span class="k">def</span> <span class="nf">update_plot</span><span class="p">(</span><span class="n">sensor</span><span class="p">:</span> <span class="n">Sensor</span><span class="p">,</span> <span class="n">alert_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the plot object with the sensor data from the database.</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    sensor : Sensor</span>
-<span class="sd">        The sensor object to update</span>
-<span class="sd">    limit : int, optional</span>
-<span class="sd">        The alert limit to set, by default None</span>
+<span class="sd">    Args:</span>
+<span class="sd">        sensor (Sensor) - The sensor object to update</span>
+<span class="sd">        alert_value (int) - The new alert value to set</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    sensor : Sensor</span>
-<span class="sd">        The updated sensor object</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        sensor (Sensor) - The updated sensor object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">alert_value</span><span class="p">:</span>
@@ -243,7 +282,7 @@
     <span class="c1"># Get the sensor data from the database, then make a figure to html and make a table</span>
     <span class="n">sensor</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">get_sensor_data</span><span class="p">(</span><span class="n">sensor</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
     <span class="n">sensor</span><span class="o">.</span><span class="n">fig</span> <span class="o">=</span> <span class="n">make_figure</span><span class="p">(</span><span class="n">sensor</span><span class="o">.</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">sensor</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">sensor</span><span class="o">.</span><span class="n">alert_value</span><span class="p">)</span> 
-    <span class="n">sensor</span><span class="o">.</span><span class="n">html_plot</span> <span class="o">=</span> <span class="n">sensor</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">full_html</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">sensor</span><span class="o">.</span><span class="n">html_plot</span> <span class="o">=</span> <span class="n">get_html_fig</span><span class="p">(</span><span class="n">sensor</span><span class="o">.</span><span class="n">fig</span><span class="p">)</span>
     <span class="n">sensor</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">make_table</span><span class="p">(</span><span class="n">sensor</span><span class="o">.</span><span class="n">dataframe</span><span class="p">)</span>
 
     <span class="n">socketio</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;sensor_id&#39;</span><span class="p">:</span> <span class="n">sensor</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s1">&#39;html_plot&#39;</span><span class="p">:</span> <span class="n">sensor</span><span class="o">.</span><span class="n">html_plot</span><span class="p">,</span> <span class="s1">&#39;table&#39;</span><span class="p">:</span> <span class="n">sensor</span><span class="o">.</span><span class="n">table</span><span class="p">})</span>
@@ -252,22 +291,16 @@
 
 
 
-<div class="viewcode-block" id="get_random_value"><a class="viewcode-back" href="../../database.html#database.sensor.get_random_value">[docs]</a><span class="k">def</span> <span class="nf">get_random_value</span><span class="p">(</span><span class="n">sensor_id</span><span class="p">,</span> <span class="n">start_time</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">end_time</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]:</span>
+<div class="viewcode-block" id="get_random_value"><a class="viewcode-back" href="../../database.html#database.sensor.get_random_value">[docs]</a><span class="k">def</span> <span class="nf">get_random_value</span><span class="p">(</span><span class="n">sensor_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">start_time</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">end_time</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a random value between 0 and 15.</span>
 <span class="sd">    </span>
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    sensor_id : int</span>
-<span class="sd">        The ID of the sensor</span>
-<span class="sd">    start_time : datetime, optional</span>
-<span class="sd">        The start time of the data, by default None</span>
-<span class="sd">    end_time : datetime, optional</span>
-<span class="sd">        The end time of the data, by default None</span>
-<span class="sd">    </span>
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    data : List[Tuple]</span>
-<span class="sd">        A list of tuples containing the sensor ID, RSSI, time, and value</span>
+<span class="sd">    Args:</span>
+<span class="sd">        sensor_id (Integer) - The ID of the sensor</span>
+<span class="sd">        start_time (Datetime) - The start time for the data</span>
+<span class="sd">        end_time (Datetime) - The end time for the data</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        data (List of tuples) - The list of tuples containing the sensor ID, time, and value</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Define the start and end times for the data</span>
     <span class="k">if</span> <span class="n">start_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -294,22 +327,13 @@
 <div class="viewcode-block" id="get_sensor_id"><a class="viewcode-back" href="../../database.html#database.sensor.get_sensor_id">[docs]</a><span class="k">def</span> <span class="nf">get_sensor_id</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">,</span> <span class="n">sensor_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the ID of a sensor from the database.</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    connection : database.Connection</span>
-<span class="sd">        The database connection</span>
-<span class="sd">    sensor_name : str</span>
-<span class="sd">        The name of the sensor</span>
+<span class="sd">    Args:</span>
+<span class="sd">        connection (Database Connection): The database connection.</span>
+<span class="sd">        sensor_name (String): The name of the sensor.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    int</span>
-<span class="sd">        The ID of the sensor</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        result (Integer): The ID of the sensor.</span>
 
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    ValueError</span>
-<span class="sd">        If the sensor name is not in the database</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -329,10 +353,10 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the name of a sensor from the database.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        deveui: A string representing the EUI of the sensor.</span>
+<span class="sd">        deveui (String): The deveui of the sensor.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        A string representing the name of the sensor.</span>
+<span class="sd">        result (String): The name of the sensor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">connection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="n">USERS_DB</span><span class="p">)</span>
 
@@ -351,11 +375,11 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the alert value of a sensor from the database.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        connection: A sqlite3.Connection object.</span>
-<span class="sd">        sensor_name: A string representing the name of the sensor.</span>
+<span class="sd">        connection (Database Connection): The database connection.</span>
+<span class="sd">        sensor_name (String): The name of the sensor.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        An integer representing the limit of the sensor.</span>
+<span class="sd">        result (Integer): The alert value of the sensor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">connection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="n">USERS_DB</span><span class="p">)</span>
     <span class="n">sensor_id</span> <span class="o">=</span> <span class="n">get_sensor_id</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">sensor_name</span><span class="p">)</span>
@@ -369,15 +393,14 @@
 
 
 
-<div class="viewcode-block" id="get_sensor_data"><a class="viewcode-back" href="../../database.html#database.sensor.get_sensor_data">[docs]</a><span class="k">def</span> <span class="nf">get_sensor_data</span><span class="p">(</span><span class="n">sensor_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]:</span>
+<div class="viewcode-block" id="get_sensor_data"><a class="viewcode-back" href="../../database.html#database.sensor.get_sensor_data">[docs]</a><span class="k">def</span> <span class="nf">get_sensor_data</span><span class="p">(</span><span class="n">sensor_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the data of a sensor from the database.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        connection: A sqlite3.Connection object.</span>
-<span class="sd">        sensor_id: An integer representing the ID of the sensor.</span>
+<span class="sd">        sensor_name (String): The name of the sensor.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        A list of tuples representing the data of the sensor.</span>
+<span class="sd">        df (Pandas Dataframe): The data of the sensor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Get the ID of the sensor</span>
     <span class="n">connection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="n">USERS_DB</span><span class="p">)</span>
@@ -402,10 +425,10 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add the data of a sensor to the database.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        sensor_id: An integer representing the ID of the sensor.</span>
-<span class="sd">        rssi: An integer representing the RSSI of the sensor.</span>
-<span class="sd">        data: A list of tuples containing the data of the sensor.</span>
-<span class="sd">        value: An integer representing the value of the sensor.</span>
+<span class="sd">        deveui (Integer): The deveui of the sensor.</span>
+<span class="sd">        rssi (Integer): The fm rssi of the sensor (&lt;= 0)</span>
+<span class="sd">        time (String): The time of the data.</span>
+<span class="sd">        value (Integer): The value of the data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SENSORS</span> <span class="o">=</span> <span class="n">get_sensors</span><span class="p">()</span>
     <span class="c1"># Prepare the query with the data for the database</span>
@@ -450,9 +473,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the alert value of a sensor in the database.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        connection: A sqlite3.Connection object.</span>
-<span class="sd">        sensor_id: An integer representing the ID of the sensor.</span>
-<span class="sd">        alert_value: An integer representing the alert value of the sensor.</span>
+<span class="sd">        sensor_name (String): The name of the sensor.</span>
+<span class="sd">        alert_value (Integer): The alert value of the sensor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">connection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="n">USERS_DB</span><span class="p">)</span>
 
@@ -467,11 +489,11 @@
 
 
 
-<div class="viewcode-block" id="get_sensors"><a class="viewcode-back" href="../../database.html#database.sensor.get_sensors">[docs]</a><span class="k">def</span> <span class="nf">get_sensors</span><span class="p">():</span>
+<div class="viewcode-block" id="get_sensors"><a class="viewcode-back" href="../../database.html#database.sensor.get_sensors">[docs]</a><span class="k">def</span> <span class="nf">get_sensors</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Sensor</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all the sensors from the database.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        A list of Sensor objects.</span>
+<span class="sd">        sensors (List[Sensor]): The list of all the sensors.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">connection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="n">USERS_DB</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;SELECT id, name, alert_value, lat, long FROM </span><span class="si">{</span><span class="n">SENSORS_TABLE</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>

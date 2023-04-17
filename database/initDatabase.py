@@ -1,14 +1,17 @@
-from database.gestion import database, USERS_DB, USERS_TABLE, SENSORS_TABLE, DATA_TABLE, write, read, SENSOR_NAME_FOR_INITIAL_PLOT
+"""This module contains the functions related to the database initialization."""
+
+from database.gestion import database, USERS_DB, USERS_TABLE, SENSORS_TABLE, DATA_TABLE, write
 from hashlib import sha256
 from database.printDatabase import print_tables
-from database.sensor import get_sensor_id, get_random_value
-# from sys import argv
 from traceback import print_exc
 
 
 
-def create_tables(connection):
-    """Create the tables in the database."""
+def create_tables(connection: database.Connection):
+    """Create the tables in the database.
+    
+    Args:
+        connection (database.Connection): a SQLite3 database connection object"""
     
     # if len(argv) == 4 and argv[3]:
     #     if argv[3] == 'reset':
@@ -57,8 +60,11 @@ def create_tables(connection):
 
 
 
-def fill_user(connection):
-    """Fill the users table with some data."""
+def fill_user(connection: database.Connection):
+    """Fill the users table with some data.
+    
+    Args:
+        connection (database.Connection): a SQLite3 database connection object"""
 
     # Add some users into users table
     request = f'INSERT INTO {USERS_TABLE} (email, username, password_hash) values(?, ?, ?)'
@@ -84,8 +90,11 @@ def fill_user(connection):
 
 
 
-def init_database(connection):
-    """Initialise the database."""
+def init_database(connection: database.Connection):
+    """Initialise the database.
+    
+    Args:
+        connection (database.Connection): a SQLite3 database connection object"""
     connection = database.connect(USERS_DB)
     try:
         create_tables(connection)
@@ -98,8 +107,8 @@ def init_database(connection):
 
 
 
-def main():
-    """Main function."""
+if __name__ == "__main__":
+    """Initialise the database."""
     connection = database.connect(USERS_TABLE) # create if doesn't exist
 
     try:
@@ -113,10 +122,3 @@ def main():
 
     finally:
         connection.close()
-
-    return
-
-
-
-if __name__ == "__main__":
-    main()

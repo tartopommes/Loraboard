@@ -1,3 +1,5 @@
+"""This module contains the functions related to the mail sending."""
+
 from email.mime.text import MIMEText
 
 import os.path
@@ -18,6 +20,9 @@ from googleapiclient.errors import HttpError
 def get_creds() -> Credentials:
     """
     Gets the credentials from the user's machine.
+
+    Returns:
+        Credentials: Credentials object containing the user's credentials.
     """
     creds = None
 

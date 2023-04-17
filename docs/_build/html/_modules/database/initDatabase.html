@@ -39,7 +39,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Loraboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">README</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
 </ul>
 
         </div>
@@ -67,17 +68,20 @@
            <div itemprop="articleBody">
              
   <h1>Source code for database.initDatabase</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">database.gestion</span> <span class="kn">import</span> <span class="n">database</span><span class="p">,</span> <span class="n">USERS_DB</span><span class="p">,</span> <span class="n">USERS_TABLE</span><span class="p">,</span> <span class="n">SENSORS_TABLE</span><span class="p">,</span> <span class="n">DATA_TABLE</span><span class="p">,</span> <span class="n">write</span><span class="p">,</span> <span class="n">read</span><span class="p">,</span> <span class="n">SENSOR_NAME_FOR_INITIAL_PLOT</span>
+<span></span><span class="sd">&quot;&quot;&quot;This module contains the functions related to the database initialization.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">database.gestion</span> <span class="kn">import</span> <span class="n">database</span><span class="p">,</span> <span class="n">USERS_DB</span><span class="p">,</span> <span class="n">USERS_TABLE</span><span class="p">,</span> <span class="n">SENSORS_TABLE</span><span class="p">,</span> <span class="n">DATA_TABLE</span><span class="p">,</span> <span class="n">write</span>
 <span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">sha256</span>
 <span class="kn">from</span> <span class="nn">database.printDatabase</span> <span class="kn">import</span> <span class="n">print_tables</span>
-<span class="kn">from</span> <span class="nn">database.sensor</span> <span class="kn">import</span> <span class="n">get_sensor_id</span><span class="p">,</span> <span class="n">get_random_value</span>
-<span class="c1"># from sys import argv</span>
 <span class="kn">from</span> <span class="nn">traceback</span> <span class="kn">import</span> <span class="n">print_exc</span>
 
 
 
-<div class="viewcode-block" id="create_tables"><a class="viewcode-back" href="../../database.html#database.initDatabase.create_tables">[docs]</a><span class="k">def</span> <span class="nf">create_tables</span><span class="p">(</span><span class="n">connection</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create the tables in the database.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="create_tables"><a class="viewcode-back" href="../../database.html#database.initDatabase.create_tables">[docs]</a><span class="k">def</span> <span class="nf">create_tables</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create the tables in the database.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        connection (database.Connection): a SQLite3 database connection object&quot;&quot;&quot;</span>
     
     <span class="c1"># if len(argv) == 4 and argv[3]:</span>
     <span class="c1">#     if argv[3] == &#39;reset&#39;:</span>
@@ -126,8 +130,11 @@
 
 
 
-<div class="viewcode-block" id="fill_user"><a class="viewcode-back" href="../../database.html#database.initDatabase.fill_user">[docs]</a><span class="k">def</span> <span class="nf">fill_user</span><span class="p">(</span><span class="n">connection</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill the users table with some data.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="fill_user"><a class="viewcode-back" href="../../database.html#database.initDatabase.fill_user">[docs]</a><span class="k">def</span> <span class="nf">fill_user</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill the users table with some data.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        connection (database.Connection): a SQLite3 database connection object&quot;&quot;&quot;</span>
 
     <span class="c1"># Add some users into users table</span>
     <span class="n">request</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;INSERT INTO </span><span class="si">{</span><span class="n">USERS_TABLE</span><span class="si">}</span><span class="s1"> (email, username, password_hash) values(?, ?, ?)&#39;</span>
@@ -153,8 +160,11 @@
 
 
 
-<div class="viewcode-block" id="init_database"><a class="viewcode-back" href="../../database.html#database.initDatabase.init_database">[docs]</a><span class="k">def</span> <span class="nf">init_database</span><span class="p">(</span><span class="n">connection</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialise the database.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="init_database"><a class="viewcode-back" href="../../database.html#database.initDatabase.init_database">[docs]</a><span class="k">def</span> <span class="nf">init_database</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialise the database.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        connection (database.Connection): a SQLite3 database connection object&quot;&quot;&quot;</span>
     <span class="n">connection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">USERS_DB</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">create_tables</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
@@ -167,8 +177,8 @@
 
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../database.html#database.initDatabase.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main function.&quot;&quot;&quot;</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialise the database.&quot;&quot;&quot;</span>
     <span class="n">connection</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">USERS_TABLE</span><span class="p">)</span> <span class="c1"># create if doesn&#39;t exist</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -182,13 +192,6 @@
 
     <span class="k">finally</span><span class="p">:</span>
         <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-    <span class="k">return</span></div>
-
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">main</span><span class="p">()</span>
 </pre></div>
 
            </div>

@@ -39,7 +39,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Loraboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">README</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
 </ul>
 
         </div>
@@ -67,8 +68,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for server.website</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">url_for</span>
+<span></span><span class="sd">&quot;&quot;&quot;This module contains the functions related to the website, the pages and the socket events.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">url_for</span>
 <span class="kn">from</span> <span class="nn">werkzeug.exceptions</span> <span class="kn">import</span> <span class="n">NotFound</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">from</span> <span class="nn">database.gestion</span> <span class="kn">import</span> <span class="n">database</span><span class="p">,</span> <span class="n">USERS_DB</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">socketio</span>
 <span class="kn">from</span> <span class="nn">database.addUser</span> <span class="kn">import</span> <span class="n">hash_password</span><span class="p">,</span> <span class="n">verify_password</span><span class="p">,</span> <span class="n">verify_username</span><span class="p">,</span> <span class="n">get_username</span><span class="p">,</span> <span class="n">add_user</span>
@@ -96,7 +100,16 @@
 
 
 <div class="viewcode-block" id="handle_set_alert_value"><a class="viewcode-back" href="../../server.html#server.website.handle_set_alert_value">[docs]</a><span class="nd">@socketio</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">&#39;set_alert_value&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">handle_set_alert_value</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">handle_set_alert_value</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the alert value for a sensor.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        data (dict): A dictionary containing the sensor ID and the alert value.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        NotFound: If the sensor ID is invalid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">SENSORS</span> <span class="o">=</span> <span class="n">get_sensors</span><span class="p">()</span>
     <span class="n">sensor</span> <span class="o">=</span> <span class="n">SENSORS</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sensor_id&#39;</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">alert_value</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;alert_value&#39;</span><span class="p">]</span>
@@ -113,6 +126,14 @@
 <span class="c1"># Index page</span>
 <div class="viewcode-block" id="index"><a class="viewcode-back" href="../../server.html#server.website.index">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Display the index page.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        The index page.</span>
+<span class="sd">        </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        NotFound: If the user is not logged in.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">current_user</span><span class="p">[</span><span class="s1">&#39;delete_success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
     
     <span class="k">if</span> <span class="n">current_user</span><span class="p">[</span><span class="s1">&#39;is_authenticated&#39;</span><span class="p">]:</span>
@@ -150,6 +171,11 @@
 <span class="c1"># Register page</span>
 <div class="viewcode-block" id="register"><a class="viewcode-back" href="../../server.html#server.website.register">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/register&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">register</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Display the register page.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        The register page.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">current_user</span><span class="p">[</span><span class="s1">&#39;register_failed&#39;</span><span class="p">][</span><span class="s1">&#39;password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">current_user</span><span class="p">[</span><span class="s1">&#39;register_failed&#39;</span><span class="p">][</span><span class="s1">&#39;username&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -189,8 +215,13 @@
 <span class="c1"># Login page</span>
 <div class="viewcode-block" id="login"><a class="viewcode-back" href="../../server.html#server.website.login">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">login</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Display the login page.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        The login page.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">current_user</span><span class="p">[</span><span class="s1">&#39;is_authenticated&#39;</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">))</span>
+        <span class="n">current_user</span><span class="p">[</span><span class="s1">&#39;is_authenticated&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># return redirect(url_for(&#39;index&#39;))</span>
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
         <span class="c1"># retrieve form data</span>
@@ -228,6 +259,10 @@
 <span class="c1"># Logout button</span>
 <div class="viewcode-block" id="logout"><a class="viewcode-back" href="../../server.html#server.website.logout">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/logout&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">logout</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Log the user out.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        The index page.&quot;&quot;&quot;</span>
     <span class="n">current_user</span><span class="p">[</span><span class="s1">&#39;is_authenticated&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">))</span></div>
 
@@ -236,6 +271,11 @@
 <span class="c1"># Delete account button</span>
 <div class="viewcode-block" id="delete_account"><a class="viewcode-back" href="../../server.html#server.website.delete_account">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/delete_account&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">delete_account</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Delete the user&#39;s account.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The index page or the delete account page.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">current_user</span><span class="p">[</span><span class="s1">&#39;delete_failed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">if</span> <span class="n">current_user</span><span class="p">[</span><span class="s1">&#39;is_authenticated&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
@@ -273,6 +313,13 @@
 <span class="c1"># Error handler for 404 errors</span>
 <div class="viewcode-block" id="page_not_found"><a class="viewcode-back" href="../../server.html#server.website.page_not_found">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="n">NotFound</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">page_not_found</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Handle 404 errors.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        error: The error.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        The index page.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">))</span></div>
 
 

@@ -1,3 +1,5 @@
+"""This module contains the functions related to add a user to the database."""
+
 from hashlib import sha256
 from getpass import getpass
 from database.gestion import database, USERS_DB, USERS_TABLE, read, write, exit_error, return_error
@@ -9,7 +11,7 @@ def verify_email(email: str):
     """Check if the given email address is valid.
 
     Args:
-        email: A string representing the email.
+        email (str): A string representing the email.
 
 
     Raises:
@@ -28,8 +30,8 @@ def verify_username(connection: database.Connection, username: str) -> bool:
     """Verify if a username already exists in the database.
 
     Args:
-        connection: A sqlite3.Connection object.
-        username: A string representing the username to check.
+        connection (database.Connection): The connection to the database.
+        username (str): The username to verify.
 
     Returns:
         Bool: True if the username does not exist, False otherwise.
@@ -50,8 +52,8 @@ def verify_password(password: str, confirmation: str) -> bool:
     """Verify if two passwords match.
 
     Args:
-        password: A string representing the password.
-        confirmation: A string representing the confirmation of the password.
+        password (str): The password to verify.
+        confirmation (str): The confirmation of the password.
 
     Returns:
         Bool: True if the passwords match, False otherwise.
@@ -69,7 +71,7 @@ def hash_password(password: str) -> str:
     """Hash a password using SHA256.
 
     Args:
-        password: A string representing the password.
+        password (str): The password to hash.
 
     Returns:
         A string representing the hashed password.
@@ -82,8 +84,8 @@ def get_username(connection: database.Connection, user_id: int) -> str:
     """Get the username of a user from the database.
 
     Args:
-        connection: A sqlite3.Connection object.
-        user_id: An integer representing the ID of the user.
+        connection (sqlite3.Connection): Connection object to the database.
+        user_id (int): The ID of the user.
 
     Returns:
         A string representing the username of the user.
@@ -99,10 +101,10 @@ def add_user(connection: database.Connection, email: str, username: str, passwor
     """Add a new user to the database.
 
     Args:
-        connection: A sqlite3.Connection object.
-        email: A string representing the email of the user.
-        username: A string representing the username of the user.
-        password: A string representing the password of the user.
+        connection (sqlite3.Connection): The connection to the database.
+        email (str): The email of the user.
+        username (str): The username of the user.
+        password (str): The password of the user.
 
     Returns:
         None.
@@ -118,6 +120,12 @@ def add_user(connection: database.Connection, email: str, username: str, passwor
     
 
 def create_user():
+    """Create a new user and verify if the email, username and password are valid. If so, add the user to the database.
+
+    Raises:
+        SystemExit: If the email, username or password is not valid.
+        
+    """
 
     connection = database.connect(USERS_DB)
 
@@ -143,10 +151,5 @@ def create_user():
 
 
 
-def main():
-    create_user()
-
-
-
 if __name__ == "__main__":
-    main()
+    create_user()

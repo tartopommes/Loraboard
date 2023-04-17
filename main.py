@@ -1,3 +1,12 @@
+"""
+Main file of the project, it will initialise the database and the API credentials if they don't exist, and run the website and the scrapper.
+
+
+:author: AlexisV, ErwanR, TheoD
+:date: 2023-04-17
+"""
+
+
 from threading import Thread
 from os.path import getsize, exists
 from traceback import print_exc
@@ -14,7 +23,9 @@ from scrapper.scrapper import run
 # 🚧                                                                                     🚧
 # 🚧               BEFORE RUNNING, GO TO GESTION AND PUT YOUR GMAIL ADRESS               🚧
 # 🚧 FOR THE FIRST RUN, YOU WILL NEED TO ACCEPT THE GOOGLE AUTHORIZATION IN YOUR BROWSER 🚧
-# 🚧            s                                                                         🚧
+# 🚧                                                                                     🚧
+
+""""""
 
 if __name__ == "__main__":
     

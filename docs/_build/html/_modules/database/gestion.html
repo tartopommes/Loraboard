@@ -39,7 +39,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Loraboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">README</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
 </ul>
 
         </div>
@@ -67,7 +68,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for database.gestion</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">sqlite3</span> <span class="k">as</span> <span class="nn">database</span>
+<span></span><span class="sd">&quot;&quot;&quot;This module contains functions to read and write to the database, as well as functions to hash passwords and verify email addresses.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sqlite3</span> <span class="k">as</span> <span class="nn">database</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
 <span class="kn">from</span> <span class="nn">flask_socketio</span> <span class="kn">import</span> <span class="n">SocketIO</span>
@@ -89,9 +92,6 @@
                                   <span class="c1"># created automatically when the authorization flow completes for the first</span>
                                   <span class="c1"># time.</span>
 
-<span class="c1"># SENSOR</span>
-<span class="n">SENSOR_NAME_FOR_INITIAL_PLOT</span> <span class="o">=</span> <span class="s1">&#39;Newton&#39;</span> <span class="c1">#device_ID #eui-a8610a34351b7a0f</span>
-
 <span class="c1"># website</span>
 <span class="n">WEBSITE_MODULE_NAME</span> <span class="o">=</span> <span class="s1">&#39;server.website&#39;</span>
 <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">WEBSITE_MODULE_NAME</span><span class="p">)</span>
@@ -99,14 +99,14 @@
 <span class="n">socketio</span> <span class="o">=</span> <span class="n">SocketIO</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="read"><a class="viewcode-back" href="../../database.html#database.gestion.read">[docs]</a><span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">many</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]:</span>
+<div class="viewcode-block" id="read"><a class="viewcode-back" href="../../database.html#database.gestion.read">[docs]</a><span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">many</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Executes a SELECT statement on the database and returns the results as a list of tuples.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
-<span class="sd">        connection: a SQLite3 database connection object</span>
-<span class="sd">        request: the SQL SELECT statement to execute</span>
-<span class="sd">        many: True if the statement should be executed multiple times with different data, False otherwise</span>
+<span class="sd">        connection (database.Connection): a SQLite3 database connection object</span>
+<span class="sd">        request (Union[Tuple, str]): the SQL SELECT statement to execute</span>
+<span class="sd">        many (bool): True if the statement should be executed multiple times with different data, False otherwise</span>
 <span class="sd">        </span>
 <span class="sd">    Returns:</span>
 <span class="sd">        a list of tuples containing the results of the SELECT statement</span>
@@ -125,14 +125,14 @@
         <span class="k">else</span><span class="p">:</span>    <span class="k">return</span> <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">request</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span></div>
 
     
-<div class="viewcode-block" id="write"><a class="viewcode-back" href="../../database.html#database.gestion.write">[docs]</a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">many</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="write"><a class="viewcode-back" href="../../database.html#database.gestion.write">[docs]</a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">database</span><span class="o">.</span><span class="n">Connection</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">many</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Executes an INSERT, UPDATE, or DELETE statement on the database and commits the changes.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
-<span class="sd">        connection: a SQLite3 database connection object</span>
-<span class="sd">        request: the SQL INSERT, UPDATE, or DELETE statement to execute</span>
-<span class="sd">        many: True if the statement should be executed multiple times with different data, False otherwise</span>
+<span class="sd">        connection (database.Connection): a SQLite3 database connection object</span>
+<span class="sd">        request (Union[Tuple, str]): the SQL INSERT, UPDATE, or DELETE statement to execute</span>
+<span class="sd">        many (bool): True if the statement should be executed multiple times with different data, False otherwise</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
 
@@ -153,18 +153,35 @@
 
 
 
-<div class="viewcode-block" id="return_error"><a class="viewcode-back" href="../../database.html#database.gestion.return_error">[docs]</a><span class="k">def</span> <span class="nf">return_error</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">objectToReturn</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="return_error"><a class="viewcode-back" href="../../database.html#database.gestion.return_error">[docs]</a><span class="k">def</span> <span class="nf">return_error</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">objectToReturn</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Print an error message and return an object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (str): A string representing the error message.</span>
+<span class="sd">        objectToReturn (int): An object to return when exiting the program.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        objectToReturn (int): An object to return when exiting the program.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[Error] : </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">objectToReturn</span></div>
     
     
 
-<div class="viewcode-block" id="exit_error"><a class="viewcode-back" href="../../database.html#database.gestion.exit_error">[docs]</a><span class="k">def</span> <span class="nf">exit_error</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">objectToReturn</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="exit_error"><a class="viewcode-back" href="../../database.html#database.gestion.exit_error">[docs]</a><span class="k">def</span> <span class="nf">exit_error</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">objectToReturn</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Print an error message and exit the program.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (str): A string representing the error message.</span>
+<span class="sd">        objectToReturn (int): An object to return when exiting the program.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        systemExit: An exception that exits the program with the objectToReturn code.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[Error] : </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">exit</span><span class="p">(</span><span class="n">objectToReturn</span><span class="p">)</span></div>

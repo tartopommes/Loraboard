@@ -1,3 +1,5 @@
+"""This module contains the functions related to delete a user from the database."""
+
 from database.gestion import USERS_DB, USERS_TABLE, database, exit_error, return_error, read, write
 from getpass import getpass
 from hashlib import sha256
@@ -9,7 +11,7 @@ def hash_password(password: str) -> str:
     """Hash a password using SHA256.
 
     Args:
-        password: A string representing the password.
+        password (str): A string representing the password.
 
     Returns:
         A string representing the hashed password.
@@ -75,7 +77,9 @@ def delete_user(connection: database.Connection, user_id: int):
 
     
 
-def main():
+if __name__ == "__main__":
+    """Delete a user from the database."""
+
     username = input('Username: ')
     password = getpass('Password: ')
 
@@ -93,9 +97,3 @@ def main():
 
     finally:
         connection.close()
-
-
-
-
-if __name__ == "__main__":
-    main()

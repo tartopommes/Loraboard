@@ -39,7 +39,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Loraboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">README</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
 </ul>
 
         </div>
@@ -67,7 +68,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for database.mail</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">email.mime.text</span> <span class="kn">import</span> <span class="n">MIMEText</span>
+<span></span><span class="sd">&quot;&quot;&quot;This module contains the functions related to the mail sending.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">email.mime.text</span> <span class="kn">import</span> <span class="n">MIMEText</span>
 
 <span class="kn">import</span> <span class="nn">os.path</span>
 <span class="kn">import</span> <span class="nn">base64</span>
@@ -87,6 +90,9 @@
 <div class="viewcode-block" id="get_creds"><a class="viewcode-back" href="../../database.html#database.mail.get_creds">[docs]</a><span class="k">def</span> <span class="nf">get_creds</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Credentials</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gets the credentials from the user&#39;s machine.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Credentials: Credentials object containing the user&#39;s credentials.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">creds</span> <span class="o">=</span> <span class="kc">None</span>
 

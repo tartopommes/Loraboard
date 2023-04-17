@@ -1,3 +1,5 @@
+"""This module contains functions to read and write to the database, as well as functions to hash passwords and verify email addresses."""
+
 import sqlite3 as database
 from typing import List, Tuple, Union
 from flask import Flask
@@ -20,9 +22,6 @@ API_TOKEN = 'database/token.json' # The token is used to store the credentials o
                                   # created automatically when the authorization flow completes for the first
                                   # time.
 
-# SENSOR
-SENSOR_NAME_FOR_INITIAL_PLOT = 'Newton' #device_ID #eui-a8610a34351b7a0f
-
 # website
 WEBSITE_MODULE_NAME = 'server.website'
 app = Flask(WEBSITE_MODULE_NAME)
@@ -30,14 +29,14 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 
-def read(connection: database.Connection, request: Union[Tuple, str], many=False) -> List[Tuple]:
+def read(connection: database.Connection, request: Union[Tuple, str], many: bool = False) -> List[Tuple]:
     """
     Executes a SELECT statement on the database and returns the results as a list of tuples.
     
     Args:
-        connection: a SQLite3 database connection object
-        request: the SQL SELECT statement to execute
-        many: True if the statement should be executed multiple times with different data, False otherwise
+        connection (database.Connection): a SQLite3 database connection object
+        request (Union[Tuple, str]): the SQL SELECT statement to execute
+        many (bool): True if the statement should be executed multiple times with different data, False otherwise
         
     Returns:
         a list of tuples containing the results of the SELECT statement
@@ -56,14 +55,14 @@ def read(connection: database.Connection, request: Union[Tuple, str], many=False
         else:    return cursor.execute(request).fetchall()
 
     
-def write(connection: database.Connection, request: Union[Tuple, str], many=False):
+def write(connection: database.Connection, request: Union[Tuple, str], many: bool = False):
     """
     Executes an INSERT, UPDATE, or DELETE statement on the database and commits the changes.
     
     Args:
-        connection: a SQLite3 database connection object
-        request: the SQL INSERT, UPDATE, or DELETE statement to execute
-        many: True if the statement should be executed multiple times with different data, False otherwise
+        connection (database.Connection): a SQLite3 database connection object
+        request (Union[Tuple, str]): the SQL INSERT, UPDATE, or DELETE statement to execute
+        many (bool): True if the statement should be executed multiple times with different data, False otherwise
     """
     cursor = connection.cursor()
 
@@ -84,18 +83,35 @@ def write(connection: database.Connection, request: Union[Tuple, str], many=Fals
 
 
 
-def return_error(message, objectToReturn=1):
+def return_error(message: str, objectToReturn: int = 1):
     """
     Print an error message and return an object.
+
+    Args:
+        message (str): A string representing the error message.
+        objectToReturn (int): An object to return when exiting the program.
+
+    Returns:
+        objectToReturn (int): An object to return when exiting the program.
     """
     print(f'[Error] : {message}')
     return objectToReturn
     
     
 
-def exit_error(message: str, objectToReturn=1):
+def exit_error(message: str, objectToReturn: int = 1) -> None:
     """
     Print an error message and exit the program.
+
+    Args:
+        message (str): A string representing the error message.
+        objectToReturn (int): An object to return when exiting the program.
+
+    Returns:
+        None.
+
+    Raises:
+        systemExit: An exception that exits the program with the objectToReturn code.
     """
     print(f'[Error] : {message}')
     exit(objectToReturn)

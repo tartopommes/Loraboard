@@ -1,3 +1,5 @@
+"""This module contains a function to print the content of the database."""
+
 from database.gestion import database, USERS_DB, USERS_TABLE, SENSORS_TABLE, DATA_TABLE, read
 from tabulate import tabulate
 
@@ -6,7 +8,7 @@ def print_tables(connection):
     """Read and print the content of all tables in the database.
 
     Args:
-        connection: A sqlite3.Connection object.
+        connection (sqlite3.connection): Connection object to the database.
 
     Returns:
         None.
@@ -52,10 +54,8 @@ def print_tables(connection):
         print(table_content, '\n')
 
 
-        
 
-def main():
-    
+if __name__ == "__main__":
     connection = database.connect(USERS_DB)
 
     try:
@@ -66,7 +66,3 @@ def main():
 
     finally:
         connection.close()
-
-
-if __name__ == "__main__":
-    main()
