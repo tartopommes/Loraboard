@@ -1,6 +1,8 @@
 import random
+import base64
 import pandas as pd
 import plotly.graph_objs as go
+import plotly.io as pio
 from datetime import datetime, timedelta
 
 from database.gestion import database, USERS_DB, SENSORS_TABLE, DATA_TABLE, write, read, List, Tuple, socketio
@@ -151,6 +153,32 @@ def make_figure(df, sensor_name: str, limit: int) -> go.Figure:
     return fig
 
 
+
+def get_html_fig(fig: go.Figure) -> str:
+    """Convert a Plotly figure to HTML
+    
+    Parameters
+    ----------
+    fig : Plotly Figure
+        The figure to convert to HTML
+        
+    Returns
+    -------
+    html_fig : str
+    """
+
+    # Render the plot as a static image
+    image_bytes = pio.to_image(fig, format='png')
+
+    # Convert the image bytes to a base64-encoded string
+    image_str = 'data:image/png;base64,' + base64.b64encode(image_bytes).decode()
+
+    fig = f'<img src="{image_str}" alt="My Plot">'
+
+    return fig
+
+
+
 def update_plot(sensor: Sensor, alert_value: int = None) -> Sensor:
     """Update the plot object with the sensor data from the database.
 
@@ -174,7 +202,7 @@ def update_plot(sensor: Sensor, alert_value: int = None) -> Sensor:
     # Get the sensor data from the database, then make a figure to html and make a table
     sensor.dataframe = get_sensor_data(sensor.name)
     sensor.fig = make_figure(sensor.dataframe, sensor.name, sensor.alert_value) 
-    sensor.html_plot = sensor.fig.to_html(full_html=False)
+    sensor.html_plot = get_html_fig(sensor.fig)
     sensor.table = make_table(sensor.dataframe)
 
     socketio.emit('update', {'sensor_id': sensor.id, 'html_plot': sensor.html_plot, 'table': sensor.table})
