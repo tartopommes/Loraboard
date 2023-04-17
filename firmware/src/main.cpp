@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <MKRWAN.h>
+#include <ArduinoLowPower.h>
 #include "arduino_secrets.h"
 
 LoRaModem modem;
@@ -31,7 +32,9 @@ void setup() {
   while (!Serial);
   Serial.println("Starting MKR1310");
   pinMode(PIN_A1, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(PIN_A1), button_pressed, RISING);//set interrupt
+  
+  //attachInterrupt(digitalPinToInterrupt(PIN_A1), button_pressed, RISING);//set interrupt
+  LowPower.attachInterruptWakeup(digitalPinToInterrupt(PIN_A1), button_pressed, RISING);
 
   // setup regional band (eg. US915, AS923, ...)
   if (!modem.begin(US915)) {
@@ -58,7 +61,10 @@ void setup() {
 
 
 void loop() {
-  while (counter == 0) {};//wait for event
+  
+  while (counter == 0) {  ////wait for event
+    LowPower.deepSleep(); //deep sleep mode for energy saving -> exited after first interrupt
+  }
 
   unsigned long eventTime = millis();
   while (eventTime > millis() - DELAY_BTW_TRANSMIT);//wait delay to transmit
@@ -72,6 +78,6 @@ void loop() {
 
   Serial.println(err > 0 ? "Message sent correctly :)":"Error sending message  :(");
 
-  counter=0;
+  counter=0;//reset counter
   return;
 }
